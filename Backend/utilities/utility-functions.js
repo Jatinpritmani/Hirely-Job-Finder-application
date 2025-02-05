@@ -1,6 +1,5 @@
 
 module.exports = {
-  jsonCons: require('./constants/json-constant.constants'),
   logsCons: require('./constants/logs-constant.constants'),
   responseCons: require('./constants/response-constant.constants'),
   httpStatus: require('http-status-codes'),
