@@ -1,4 +1,6 @@
 module.exports = {
+
+    USER_TYPES:['job_seeker','recruiter'],
     RESP_HJFA_MS: 'HJFA_MS',
     RESP_ERROR_STATUS: 'error_status',
     RESP_CODE: 'code',
@@ -12,6 +14,7 @@ module.exports = {
     RESP_UNAUTHORIZED_USER: 'Unauthorized User!!.',
     RESP_EMPTY_LIST_FOUND: 'Empty List Found.',
 
-    RESP_EMAIL_EXISTS:"Email already registered"
+    RESP_EMAIL_EXISTS:"Email already registered",
+    RESP_FILE_SIZE_EXCEEDS:"File size should be less then 16MB"
 
 }

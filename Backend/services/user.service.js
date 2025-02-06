@@ -7,14 +7,22 @@ module.exports={
     userRegistration:userRegistration
 }
 
-
 async function userRegistration(req, res) {
     let func_name = "userRegistration"
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
     try {
+        
         let { user_email, user_password,user_name,user_type } = req.body;
         
+        if( !user_email || !user_password || !user_name || !user_type || !(utility_func.responseCons.USER_TYPES).includes(user_type)){
+            return utility_func.responseGenerator(
+                'user_email, user_password, user_name and user_type are required',
+                utility_func.statusGenerator(
+                    utility_func.httpStatus.ReasonPhrases.UNPROCESSABLE_ENTITY, utility_func.httpStatus.StatusCodes.UNPROCESSABLE_ENTITY
+                ), true
+            )
+        }
         const userExists = await userFindByEmail(user_email)
         if(userExists){
             return utility_func.responseGenerator(
@@ -26,7 +34,15 @@ async function userRegistration(req, res) {
         }
         user_password = await  encryptPassword(user_password)
         
-        let user = await User.create({ user_email, user_password,user_name,user_type});
+        let user={ user_email, user_password,user_name,user_type}
+        if(req.file){
+            user["resume"]={
+                filename: req.file.originalname,
+                contentType: req.file.mimetype,
+                data: req.file.buffer,
+            }
+        }
+        await User.create(user);
         
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
 
