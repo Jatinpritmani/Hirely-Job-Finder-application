@@ -17,6 +17,12 @@ const userSchema = new mongoose.Schema({
   {
     autoCreate: true,
     timestamps: true,
+    toJSON: { 
+      virtuals: true, 
+      transform: (doc, ret) => { 
+        ret.user_id=ret._id.toString(); 
+        delete ret._id; 
+        return ret; } }   // Ensure aliases work in JSON responses
   });
 
 

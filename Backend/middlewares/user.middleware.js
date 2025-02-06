@@ -27,8 +27,19 @@ const validateUserRegistration = [
     //     .isString()
     //     .isIn(USER_TYPES)
 ];
+const validateUserLogin=[
+    body('user_email','user_email required and should be string')
+        .exists()
+        .bail()
+        .isEmail(),
+    body('user_password','user_password required and should be string')
+        .exists()
+        .bail()
+        .isString()
+]
 
 
 module.exports={
-    validateUserRegistration:validateUserRegistration
+    validateUserRegistration:validateUserRegistration,
+    validateUserLogin:validateUserLogin
 }

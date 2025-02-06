@@ -4,6 +4,7 @@ const app = express();
 const routes = require('./config/routes.js')
 const figlet = require('figlet');
 const {dbConnect} =require('./utilities/services/db.js')
+
 app.use(express.json({ limit: '300mb' }));
 
 app.use(express.urlencoded({ extended: true, limit: '150mb' }));
@@ -13,7 +14,7 @@ app.use('/hjfa', routes);
 
 let server = app.listen(process.env.PORT, () => {
 
-  figlet.text(`Hirely Job Finder application`, { horizontalLayout: 'default', verticalLayout: 'default', width: 120, whitespaceBreak: true }, function (err, data) {
+  figlet.text(`Hirely Job Finder application`, { horizontalLayout: 'default', verticalLayout: 'default', width: 240, whitespaceBreak: true }, function (err, data) {
     if (err) {
       console.log('Something went wrong...');
       console.dir(err);
