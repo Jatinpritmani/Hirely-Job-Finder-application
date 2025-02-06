@@ -8,6 +8,6 @@ const userController = require('../controllers/user.controller')
 // const globalErrorHandling= require('../../utilities/middlewares/globalErrorHandling')
 
 router.post('/registration/v1', userMiddleware.validateUserRegistration,middleware.validation,fileUploadMiddleware.uploadFile,fileUploadMiddleware.handleFileUploadError,userController.userRegistration)
-router.post('/login/v1', userMiddleware.validateUserRegistration,middleware.validation,userController.userLogin)
+router.post('/login/v1', userMiddleware.validateUserLogin,middleware.validation,userController.userLogin)
 
 module.exports=router
