@@ -3,6 +3,7 @@ module.exports = {
   logsCons: require('./constants/logs-constant.constants'),
   responseCons: require('./constants/response-constant.constants'),
   httpStatus: require('http-status-codes'),
+  jsonCons: require('./constants/json-constant.constants'),
 
   responseGenerator: function (msg, code, isError, data) {
     let responseJson = {};

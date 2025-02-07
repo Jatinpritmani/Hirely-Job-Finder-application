@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema({
     user_name: { type: String, required: true },
     user_password: { type: String, required: true },
     user_type: { type:String,enum : utility_func.responseCons.USER_TYPES,default:'job_seeker'},
-    resume: resumeSchema, 
+    resume: resumeSchema,
+    designation : {type:String} 
   },
   {
     autoCreate: true,

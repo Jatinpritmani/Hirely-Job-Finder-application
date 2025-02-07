@@ -33,7 +33,7 @@ async function verifyToken(req,res,next) {
         const token = req.headers[utility_func.jsonCons.FIELD_TOKEN];
 
         const jwtResp = await jwt.verify(token, jwtKey,jwtOptions);
-        req["user_details"] =jwtResp
+        req[utility_func.jsonCons.FIELD_USER_DETAILS] =jwtResp
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_JWT_MIDDLEWARE + ' => ' + func_name)
         next()
     } catch (tokenErr) {

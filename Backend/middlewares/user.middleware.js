@@ -37,9 +37,16 @@ const validateUserLogin=[
         .bail()
         .isString()
 ]
+const validateToken=[
+    header('token','token required and should be string')
+        .exists()
+        .bail()
+        .isString()
+]
 
 
 module.exports={
     validateUserRegistration:validateUserRegistration,
-    validateUserLogin:validateUserLogin
+    validateUserLogin:validateUserLogin,
+    validateToken:validateToken
 }

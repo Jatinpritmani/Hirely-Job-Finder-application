@@ -7,7 +7,10 @@ const bcrypt = require("bcrypt")
 
 module.exports={
     userRegistration:userRegistration,
-    userLogin:userLogin
+    userLogin:userLogin,
+    getUserDetails:getUserDetails,
+    getUserResume:getUserResume,
+    uploadUserResume:uploadUserResume
 }
 
 async function encryptPassword(password){
@@ -20,8 +23,11 @@ async function validatePassword(password,encrypted_password){
 async function userFindByEmail(user_email){
     return await User.findOne({user_email:user_email })
 }
+async function userFindByID(user_id){
+    return await User.findOne({_id:user_id })
+}
 
-async function userRegistration(req, res) {
+async function userRegistration(req) {
     let func_name = "userRegistration"
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
@@ -80,7 +86,7 @@ async function userRegistration(req, res) {
     }
 }
 
-async function userLogin(req, res) {
+async function userLogin(req) {
     let func_name = "userLogin"
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
@@ -99,7 +105,7 @@ async function userLogin(req, res) {
         }
         let user=userExists.toJSON()
 
-        let userDetails={user_email:user["user_email"],user_id: user["user_id"]}
+        let userDetails={user_email:user[utility_func.jsonCons.FIELD_USER_EMAIL],user_id: user[utility_func.jsonCons.FIELD_USER_ID]}
        
         let token = await generateToken(userDetails)
         
@@ -112,6 +118,92 @@ async function userLogin(req, res) {
             {token}
         )
 
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+async function getUserDetails(req) {
+    let func_name = "getUserDetails"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        
+        let userDetails = await User.findOne({_id : req[utility_func.jsonCons.FIELD_USER_DETAILS][utility_func.jsonCons.FIELD_USER_ID]},
+            {user_id:1, user_email:1, user_name:1, user_type:1}
+        )
+        userDetails = userDetails.toJSON(); 
+
+        userDetails["designation"] = "Software Developer";
+        userDetails["total_job_applied"] = 12;
+
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false,
+            userDetails
+        )
+
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+async function getUserResume(req,res) {
+    let func_name = "getUserResume"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        
+        let userDetails = await User.findOne({_id : req[utility_func.jsonCons.FIELD_USER_DETAILS][utility_func.jsonCons.FIELD_USER_ID]},
+            {resume:1}
+        )
+        
+        userDetails = userDetails.toJSON(); 
+        return userDetails.resume
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        throw error
+    }
+}
+
+async function uploadUserResume(req) {
+    let func_name = "uploadUserResume"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        const user_id=req[utility_func.jsonCons.FIELD_USER_DETAILS][utility_func.jsonCons.FIELD_USER_ID]
+        if(req.file){
+            let resume={
+                filename: req.file.originalname,
+                contentType: req.file.mimetype,
+                data: req.file.buffer,
+            }
+            await User.findByIdAndUpdate({_id:user_id},{$set:{resume:resume}})
+        }
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false
+        )
     } catch (error) {
         logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
         return utility_func.responseGenerator(
