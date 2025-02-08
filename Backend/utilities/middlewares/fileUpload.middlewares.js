@@ -1,30 +1,49 @@
 const multer = require("multer");
 const utility_func = require("../utility-functions")
+const path = require("path")
+const allowedExtensions = [".pdf", ".doc", ".docx"];
+const logger = require('../../utilities/services/logger.services');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "resumes/"); // Upload directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now()+'_'+file.originalname); // Rename file
+  },
+});
+
+
 const fileFilter = (req, file, cb) => {
-    const allowedMimes = [
-      "application/msword",       // .doc
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
-      "application/pdf"           // .pdf
-    ];
-  
-    if (allowedMimes.includes(file.mimetype)) {
-      cb(null, true); // Accept the file
-    } else {
-      cb("Invalid file format. Only .doc, .docx, and .pdf are allowed.", false); // Reject the file
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (!allowedExtensions.includes(ext)) {
+      return cb("Only .pdf, .doc, and .docx files are allowed!",false)
     }
+    cb(null, true);
   };
-const storage = multer.memoryStorage();
-const upload = multer(
-    { storage,
+
+  const upload = multer(
+    {  storage,
        limits: { fileSize: 16 * 1024 * 1024 },
        fileFilter
     },
 );
 
-let uploadFile = upload.single("file"); 
+let uploadFile = (req, res, next) => {
+  let func_name = "uploadFile"
+  
+  logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+  upload.single("file")(req, res, function (err) {
+    if (err) {
+      logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(err)+ ' => ' + func_name)
+      return next(err);
+    }
+    logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' => ' + func_name)
+    next();
+  });
+};
 
 const handleFileUploadError = (err, req, res, next) => {
-    
     if (err instanceof multer.MulterError) {
       if (err.code == "LIMIT_FILE_SIZE") {
         return res.status(utility_func.httpStatus.StatusCodes.UNPROCESSABLE_ENTITY).send(utility_func.responseGenerator(
@@ -42,6 +61,7 @@ const handleFileUploadError = (err, req, res, next) => {
             ), true
         ))
     }
+    
     return res.status(utility_func.httpStatus.StatusCodes.UNPROCESSABLE_ENTITY).send(utility_func.responseGenerator(
         err,
         utility_func.statusGenerator(

@@ -2,9 +2,10 @@ const mongoose=require("mongoose")
 const utility_func=require("../utilities/utility-functions")
 
 const resumeSchema = new mongoose.Schema({
+  originalname: { type: String, required: true },
   filename: { type: String, required: true },
   contentType: { type: String, required: true },
-  data: { type: Buffer, required: true }, 
+  path: { type: String, required: true }, 
 });
 const userSchema = new mongoose.Schema({
     user_id: { type: mongoose.Schema.Types.ObjectId, alias: '_id'}, 

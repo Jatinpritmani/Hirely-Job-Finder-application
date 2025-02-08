@@ -4,6 +4,8 @@ const logger = require('../utilities/services/logger.services');
 const { User }=require('../models/user.model')
 const {generateToken}=require("../utilities/middlewares/jwt-service.middlewares")
 const bcrypt = require("bcrypt")
+const fs=require("fs")
+const path=require("path")
 
 module.exports={
     userRegistration:userRegistration,
@@ -55,11 +57,13 @@ async function userRegistration(req) {
         user_password = await  encryptPassword(user_password)
         
         let user={ user_email, user_password,user_name,user_type}
+
         if(req.file){
-            user["resume"]={
-                filename: req.file.originalname,
+            user[utility_func.jsonCons.FIELD_RESUME]={
+                filename: req.file.filename,
                 contentType: req.file.mimetype,
-                data: req.file.buffer,
+                originalname:req.file.originalname,
+                path:req.file.path
             }
         }
         await User.create(user);
@@ -165,7 +169,7 @@ async function getUserDetails(req) {
     }
 }
 
-async function getUserResume(req,res) {
+async function getUserResume(req) {
     let func_name = "getUserResume"
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
@@ -176,7 +180,12 @@ async function getUserResume(req,res) {
         )
         
         userDetails = userDetails.toJSON(); 
-        return userDetails.resume
+        let filePath
+        let filename=userDetails.resume.originalname
+        if(userDetails.resume){
+            filePath = path.join(__dirname, "../resumes", userDetails.resume.filename);
+        }
+        return {filename,filePath}
     } catch (error) {
         logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
         throw error
@@ -189,11 +198,23 @@ async function uploadUserResume(req) {
 
     try {
         const user_id=req[utility_func.jsonCons.FIELD_USER_DETAILS][utility_func.jsonCons.FIELD_USER_ID]
+
+        let userDetails = await User.findOne({_id : req[utility_func.jsonCons.FIELD_USER_DETAILS][utility_func.jsonCons.FIELD_USER_ID]},
+            {resume:1}
+        )
+        userDetails = userDetails.toJSON(); 
+        if(userDetails.resume){
+            const filePath = path.join(__dirname, "../resumes", userDetails.resume.filename);
+            if(fs.existsSync(filePath)){
+                await fs.promises.unlink(filePath)
+            }
+        }
         if(req.file){
             let resume={
-                filename: req.file.originalname,
+                filename: req.file.filename,
                 contentType: req.file.mimetype,
-                data: req.file.buffer,
+                originalname:req.file.originalname,
+                path:req.file.path
             }
             await User.findByIdAndUpdate({_id:user_id},{$set:{resume:resume}})
         }
