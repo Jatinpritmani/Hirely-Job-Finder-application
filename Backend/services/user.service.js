@@ -119,7 +119,7 @@ async function userLogin(req) {
                 utility_func.httpStatus.ReasonPhrases.OK,
                 utility_func.httpStatus.StatusCodes.OK),
             false,
-            {token}
+            {token,user_type:user["user_type"]}
         )
 
     } catch (error) {
