@@ -5,6 +5,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import Toast from 'react-native-toast-message';
+
 
 // local imports 
 
@@ -54,8 +56,13 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         {/* <Stack.Screen name="index" /> */}
         <Stack.Screen name="start" />
+        <Stack.Screen name="login" />
+        <Stack.Screen name="register" />
+        <Stack.Screen name="submitProfileDetail" />
+        <Stack.Screen name="forgotPassword" />
       </Stack>
       <StatusBar style="auto" />
+      <Toast />
     </ThemeProvider>
   );
 }

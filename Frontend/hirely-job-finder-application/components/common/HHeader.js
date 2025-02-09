@@ -1,39 +1,42 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+//library imports
+import { StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
 import React from 'react';
+import { router } from 'expo-router'
+
+// local imports
 import { styles } from '../../themes';
-import { useNavigation } from '@react-navigation/native';
-import ZText from './HText';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
-import { moderateScale } from '../../common/constants';
+import HText from './HText';
+import { moderateScale } from '../../constants/constants';
+import { ArrowLeft } from '../../assets/svgs';
+import { Colors } from '@/constants/Colors'
 
-export default function ZHeader(props) {
+
+export default function HHeader(props) {
   const { title, onPressBack, rightIcon, isHideBack, isLeftIcon } = props;
-  const navigation = useNavigation();
-  const colors = useSelector(state => state.theme.theme);
 
-  const goBack = () => navigation.goBack();
+  const goBack = () => { router.back() };
+  const colorsScheme = useColorScheme()
   return (
-    <View style={[localStyles.container, !!isHideBack && styles.pr10]}>
-      <View style={[styles.rowStart, styles.flex]}>
+    <View style={[localStyles.container]}>
+      <View style={styles.rowCenter}>
         {!isHideBack && (
-          <TouchableOpacity style={styles.pr10} onPress={onPressBack || goBack}>
-            <Ionicons
-              name="arrow-back-outline"
-              size={moderateScale(26)}
-              color={colors.textColor}
-            />
+          <TouchableOpacity style={[localStyles.backBtnStyle, { borderColor: Colors[colorsScheme]?.borderColor2 }]} onPress={onPressBack || goBack}>
+            <ArrowLeft />
           </TouchableOpacity>
         )}
         {!!isLeftIcon && isLeftIcon}
 
-        <ZText
+        <HText
+          color={Colors[colorsScheme]?.headerColor}
           numberOfLines={1}
-          style={[styles.pr10, styles.mr10, localStyles.titleText]}
-          type={'B24'}>
+          align={'center'}
+          style={[localStyles.titleText]}
+          type={'B16'}>
           {title}
-        </ZText>
+        </HText>
+
       </View>
+
       {!!rightIcon && rightIcon}
     </View>
   );
@@ -41,12 +44,18 @@ export default function ZHeader(props) {
 
 const localStyles = StyleSheet.create({
   container: {
+    ...styles.mt25,
     ...styles.rowSpaceBetween,
-    ...styles.ph20,
-    ...styles.pv15,
+
+  },
+  backBtnStyle: {
+    width: moderateScale(42),
+    height: moderateScale(42),
     ...styles.center,
+    borderWidth: moderateScale(1),
+    borderRadius: moderateScale(21),
   },
   titleText: {
-    width: moderateScale(200),
+    marginLeft: moderateScale(54)
   },
 });

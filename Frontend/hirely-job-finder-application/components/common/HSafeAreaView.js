@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, useColorScheme } from 'react-native';
+import { SafeAreaView, StyleSheet, useColorScheme, View } from 'react-native';
 import React from 'react';
 import { styles } from '../../themes';
 
@@ -10,7 +10,10 @@ const HSafeAreaView = ({ children, ...props }) => {
 
   return (
     <SafeAreaView {...props} style={[localStyles(colorScheme, props.style).root]}>
-      {children}
+      <View style={[localStyles(colorScheme, props.style).container, props.containerStyle]}>
+
+        {children}
+      </View>
     </SafeAreaView>
   );
 };
@@ -22,5 +25,10 @@ const localStyles = (colorScheme, style) =>
       backgroundColor: Colors[colorScheme]?.background,
       ...style,
     },
+    container: {
+      ...styles.ph25,
+      ...styles.flex,
+
+    }
   });
 export default HSafeAreaView

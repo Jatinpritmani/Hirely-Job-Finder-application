@@ -52,7 +52,7 @@ export default function HButton({
 
 const localStyle = StyleSheet.create({
   btnContainer: {
-    height: moderateScale(50),
+    height: moderateScale(56),
     borderRadius: moderateScale(12),
   },
 });

@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
-import { useSelector } from 'react-redux';
-import { getHeight, moderateScale } from '../../common/constants';
+import { StyleSheet, View, TextInput, useColorScheme } from 'react-native';
+import { getHeight, moderateScale } from '../../constants/constants';
 import { styles } from '../../themes';
 import typography from '../../themes/typography';
-import ZText from './HText';
+import HText from './HText';
+import { Colors } from '@/constants/Colors';
 
-export default ZInput = props => {
+export default HInput = props => {
   let {
     _value,
     label,
@@ -33,22 +33,23 @@ export default ZInput = props => {
     rightAccessory,
   } = props;
 
-  const colors = useSelector(state => state.theme.theme);
+  const colorScheme = useColorScheme();
 
   // Change Text Input Value
   const onChangeText = val => {
     toGetTextFieldValue(val);
   };
 
+
   return (
-    <View style={styles.mv10}>
+    <View >
       {label && (
         <View style={[localStyle.labelContainer, labelStyle]}>
           <View style={styles.flexRow}>
-            <ZText style={localStyle.labelText} type={'b18'}>
+            <HText style={localStyle.labelText} type={'S14'}>
               {label}
-            </ZText>
-            {required && <ZText style={{ color: colors.lightRed }}>{' *'}</ZText>}
+            </HText>
+            {required && <HText type={'S14'} style={{ color: Colors[colorScheme]?.danger }}>{' *'}</HText>}
           </View>
         </View>
       )}
@@ -56,8 +57,8 @@ export default ZInput = props => {
         style={[
           localStyle.inputContainer,
           {
-            borderColor: _errorText ? colors.lightRed : colors.bColor,
-            height: multiline ? getHeight(75) : getHeight(50),
+            borderColor: _errorText ? Colors[colorScheme]?.danger : Colors[colorScheme]?.grayScale2,
+            height: multiline ? getHeight(75) : getHeight(52),
           },
           inputContainerStyle,
         ]}>
@@ -73,7 +74,7 @@ export default ZInput = props => {
           autoFocus={_autoFocus}
           autoCorrect={false}
           autoCapitalize={autoCapitalize}
-          placeholderTextColor={colors.placeHolderColor}
+          placeholderTextColor={Colors[colorScheme]?.grayScale2}
           onChangeText={onChangeText}
           keyboardType={keyBoardType}
           multiline={multiline}
@@ -83,10 +84,10 @@ export default ZInput = props => {
           placeholder={placeHolder}
           style={[
             localStyle.inputBox,
-            { color: colors.textColor },
+            { color: Colors[colorScheme]?.headerColor },
             { height: multiline ? getHeight(75) : getHeight(50) },
             inputBoxStyle,
-            _editable == false && { color: colors.placeHolderColor },
+            _editable == false && { color: Colors[colorScheme]?.grayScale2 },
           ]}
           {...props}
         />
@@ -97,21 +98,21 @@ export default ZInput = props => {
       </View>
       {/* Error Text Message Of Input */}
       {!!_errorText?.length ? (
-        <ZText
+        <HText
           type={'r12'}
           style={{
             ...localStyle.errorText,
             ...errorStyle,
-            color: colors.lightRed,
+            color: Colors[colorScheme]?.danger,
           }}>
           {_errorText}
-        </ZText>
+        </HText>
       ) : null}
 
       {_maxLength && showError && _value?.length > _maxLength ? (
-        <ZText style={{ ...localStyle.errorText, ...errorStyle }}>
+        <HText style={{ ...localStyle.errorText, ...errorStyle }}>
           It should be maximum {_maxLength} character
-        </ZText>
+        </HText>
       ) : null}
     </View>
   );
@@ -120,25 +121,23 @@ export default ZInput = props => {
 const localStyle = StyleSheet.create({
   labelText: {
     textAlign: 'left',
-    opacity: 0.9,
   },
   inputBox: {
-    ...typography.fontSizes.f16,
-    ...typography.fontWeights.Regular,
+    ...typography.fontSizes.f14,
+    ...typography.fontWeights.Medium,
     ...styles.ph10,
     ...styles.flex,
   },
   inputContainer: {
     borderWidth: moderateScale(1),
-    borderRadius: moderateScale(6),
+    borderRadius: moderateScale(12),
     ...styles.rowSpaceBetween,
-    ...styles.mt5,
     width: '100%',
   },
   labelContainer: {
-    ...styles.mt10,
+    ...styles.mt15,
     ...styles.rowSpaceBetween,
-    ...styles.mb5,
+    marginBottom: moderateScale(8)
   },
   errorText: {
     textAlign: 'left',

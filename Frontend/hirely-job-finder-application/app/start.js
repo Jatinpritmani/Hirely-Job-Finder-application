@@ -1,4 +1,6 @@
 import { ImageBackground, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { router } from "expo-router";
+
 import React, { createRef, useState } from 'react'
 import images from '../assets/images'
 import { isUserJobSeeker, isUserRecruiter, moderateScale, screenHeight, screenWidth } from '../constants/constants'
@@ -11,6 +13,17 @@ import { CheckMark, UnCheckedMark } from '../assets/svgs'
 const start = () => {
     const colorScheme = useColorScheme()
     const [userType, setUserType] = useState('')
+
+    const onPressUserType = (userType) => {
+        setUserType(userType)
+        if (userType == 'job_seeker') {
+
+        }
+        else if (userType == 'recruiter') {
+
+        }
+        router.replace('login')
+    }
 
     return (
         <View style={styles.flex}>
@@ -28,8 +41,8 @@ const start = () => {
                         What are you looking for ?
                     </HText>
                     <View style={localStyles.btnContainer}>
-                        <HButton onPress={() => setUserType('job_seeker')} textType={'S12'} frontIcon={isUserJobSeeker(userType) ? <CheckMark /> : <UnCheckedMark />} color={'text'} title={'I want Job'} containerStyle={[localStyles.btnStyle, { borderColor: Colors[colorScheme]?.borderColor }]} bgColor={Colors[colorScheme]?.white} ></HButton>
-                        <HButton onPress={() => setUserType('recruiter')} textType={'S12'} frontIcon={isUserRecruiter(userType) ? <CheckMark /> : <UnCheckedMark />} color={'text'} title={'I want Employee'} containerStyle={[localStyles.btnStyle, { borderColor: Colors[colorScheme]?.borderColor }]} bgColor={Colors[colorScheme]?.white}></HButton>
+                        <HButton onPress={() => onPressUserType('job_seeker')} textType={'S12'} frontIcon={isUserJobSeeker(userType) ? <CheckMark width={moderateScale(20)} height={moderateScale(20)} /> : <UnCheckedMark width={moderateScale(20)} height={moderateScale(20)} />} color={Colors[colorScheme]?.text} title={'I want Job'} containerStyle={[localStyles.btnStyle, { borderColor: isUserJobSeeker(userType) ? Colors[colorScheme]?.primary : Colors[colorScheme]?.borderColor }]} bgColor={Colors[colorScheme]?.white} ></HButton>
+                        <HButton onPress={() => onPressUserType('recruiter')} textType={'S12'} frontIcon={isUserRecruiter(userType) ? <CheckMark width={moderateScale(20)} height={moderateScale(20)} /> : <UnCheckedMark width={moderateScale(20)} height={moderateScale(20)} />} color={Colors[colorScheme]?.text} title={'I want Employee'} containerStyle={[localStyles.btnStyle, { borderColor: isUserRecruiter(userType) ? Colors[colorScheme]?.primary : Colors[colorScheme]?.borderColor }]} bgColor={Colors[colorScheme]?.white}></HButton>
                     </View>
                 </View>
             </ImageBackground >
