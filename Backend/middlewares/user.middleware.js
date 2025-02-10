@@ -31,7 +31,7 @@ const validateUserLogin=[
     body('user_email','user_email required and should be string')
         .exists()
         .bail()
-        .isEmail(),
+        .isString(),
     body('user_password','user_password required and should be string')
         .exists()
         .bail()

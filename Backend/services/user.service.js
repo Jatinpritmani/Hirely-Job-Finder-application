@@ -34,8 +34,7 @@ async function userRegistration(req) {
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
     try {
-        
-        let { user_email, user_password,user_name,user_type } = req.body;
+        let { user_email, user_password,user_name,user_type,experience,bio,designation } = req.body;
         
         if( !user_email || !user_password || !user_name || !user_type || !(utility_func.responseCons.USER_TYPES).includes(user_type)){
             return utility_func.responseGenerator(
@@ -55,8 +54,8 @@ async function userRegistration(req) {
             )
         }
         user_password = await  encryptPassword(user_password)
-        
-        let user={ user_email, user_password,user_name,user_type}
+
+        let user={ user_email, user_password,user_name,user_type,experience,bio,designation}
 
         if(req.file){
             user[utility_func.jsonCons.FIELD_RESUME]={
@@ -66,7 +65,7 @@ async function userRegistration(req) {
                 path:req.file.path
             }
         }
-        await User.create(user);
+        const userDetails = await User.create(user);
         
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
 
@@ -75,7 +74,8 @@ async function userRegistration(req) {
             utility_func.statusGenerator(
                 utility_func.httpStatus.ReasonPhrases.OK,
                 utility_func.httpStatus.StatusCodes.OK),
-            false
+            false,
+            {user_id : userDetails["_id"]}
         )
 
     } catch (error) {
@@ -119,7 +119,7 @@ async function userLogin(req) {
                 utility_func.httpStatus.ReasonPhrases.OK,
                 utility_func.httpStatus.StatusCodes.OK),
             false,
-            {token,user_type:user["user_type"]}
+            {user_type:user["user_type"],user_id:user["user_id"]}
         )
 
     } catch (error) {
@@ -140,12 +140,12 @@ async function getUserDetails(req) {
 
     try {
         
-        let userDetails = await User.findOne({_id : req[utility_func.jsonCons.FIELD_USER_DETAILS][utility_func.jsonCons.FIELD_USER_ID]},
-            {user_id:1, user_email:1, user_name:1, user_type:1}
+        let user_id = req.body.user_id 
+        let userDetails = await User.findOne({_id : user_id},
+            {resume:0,user_password:0,__v:0,createdAt:0,updatedAt:0}
         )
+        
         userDetails = userDetails.toJSON(); 
-
-        userDetails["designation"] = "Software Developer";
         userDetails["total_job_applied"] = 12;
 
         return utility_func.responseGenerator(
@@ -174,8 +174,9 @@ async function getUserResume(req) {
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
     try {
-        
-        let userDetails = await User.findOne({_id : req[utility_func.jsonCons.FIELD_USER_DETAILS][utility_func.jsonCons.FIELD_USER_ID]},
+        let user_id = req.body.user_id 
+
+        let userDetails = await User.findOne({_id : user_id},
             {resume:1}
         )
         
@@ -197,11 +198,13 @@ async function uploadUserResume(req) {
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
     try {
-        const user_id=req[utility_func.jsonCons.FIELD_USER_DETAILS][utility_func.jsonCons.FIELD_USER_ID]
-
-        let userDetails = await User.findOne({_id : req[utility_func.jsonCons.FIELD_USER_DETAILS][utility_func.jsonCons.FIELD_USER_ID]},
+        let user_id = req.body.user_id         
+        
+        let userDetails = await User.findOne({_id : user_id},
             {resume:1}
         )
+        console.log("userDetails",userDetails);
+        
         userDetails = userDetails.toJSON(); 
         if(userDetails.resume){
             const filePath = path.join(__dirname, "../resumes", userDetails.resume.filename);
