@@ -8,7 +8,9 @@ module.exports={
     userLogin:userLogin,
     getUserDetails:getUserDetails,
     getUserResume:getUserResume,
-    uploadUserResume:uploadUserResume
+    uploadUserResume:uploadUserResume,
+    createJobPost:createJobPost,
+    getAllJobPosts:getAllJobPosts
 }
 
 async function userRegistration(req,res) {
@@ -102,6 +104,39 @@ async function uploadUserResume(req,res) {
 
     try {
         const response = await userService.uploadUserResume(req);
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+        res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(response);
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
+        res.status(parseInt(error[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(error);
+    } 
+}
+
+
+async function createJobPost(req,res) {
+    const func_name = 'createJobPost';
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+
+    try {
+        const response = await userService.createJobPost(req);
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+        res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(response);
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
+        res.status(parseInt(error[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(error);
+    } 
+}
+
+async function getAllJobPosts(req,res) {
+    const func_name = 'getAllJobPosts';
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+
+    try {
+        const response = await userService.getAllJobPosts(req);
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
         res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
         res.send(response);

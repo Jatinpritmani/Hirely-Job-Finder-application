@@ -6,11 +6,15 @@ const jwtMiddleware = require('../utilities/middlewares/jwt-service.middlewares'
 const userMiddleware = require('../middlewares/user.middleware')
 const userController = require('../controllers/user.controller')
 
-router.post('/registration/v1', userMiddleware.validateUserRegistration,middleware.validation,fileUploadMiddleware.uploadFile,fileUploadMiddleware.handleFileUploadError,userController.userRegistration)
-router.post('/login/v1', userMiddleware.validateUserLogin,middleware.validation,userController.userLogin)
-router.post('/userDetails/v1', userMiddleware.validateToken,middleware.validation,userController.getUserDetails)
+router.post('/registration/v1',userController.userRegistration)
+router.post('/login/v1',userController.userLogin)
+router.post('/userDetails/v1',userController.getUserDetails)
 
-router.post('/get/resume/v1', userMiddleware.validateToken,middleware.validation,userController.getUserResume)
-router.post('/upload/resume/v1', userMiddleware.validateToken,middleware.validation,fileUploadMiddleware.uploadFile,fileUploadMiddleware.handleFileUploadError,userController.uploadUserResume)
+router.post('/get/resume/v1',userController.getUserResume)
+router.post('/upload/resume/v1',fileUploadMiddleware.uploadFile,fileUploadMiddleware.handleFileUploadError,userController.uploadUserResume)
+
+router.post('/createJobPost/v1',userController.createJobPost)
+router.post('/get/AllJobPosts/v1',userController.getAllJobPosts)
+
 
 module.exports=router

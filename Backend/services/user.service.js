@@ -2,6 +2,9 @@
 const utility_func = require('../utilities/utility-functions')
 const logger = require('../utilities/services/logger.services');
 const { User }=require('../models/user.model')
+const {Job}=require("../models/job.model")
+const {Application}=require("../models/application.model")
+const {SavedJob}=require("../models/savedJobs.model")
 const {generateToken}=require("../utilities/middlewares/jwt-service.middlewares")
 const bcrypt = require("bcrypt")
 const fs=require("fs")
@@ -12,7 +15,9 @@ module.exports={
     userLogin:userLogin,
     getUserDetails:getUserDetails,
     getUserResume:getUserResume,
-    uploadUserResume:uploadUserResume
+    uploadUserResume:uploadUserResume,
+    createJobPost:createJobPost,
+    getAllJobPosts:getAllJobPosts
 }
 
 async function encryptPassword(password){
@@ -228,6 +233,68 @@ async function uploadUserResume(req) {
                 utility_func.httpStatus.StatusCodes.OK),
             false
         )
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+
+async function createJobPost(req) {
+    let func_name = "createJobPost"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let { recruiter_id ,position ,location ,salary ,job_type ,summary ,requirenment } = req.body;
+        
+        
+        const jobDetails = await Job.create( { recruiter_id ,position ,location ,salary ,job_type ,summary ,requirenment } );
+        
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
+
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false
+        )
+
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+async function getAllJobPosts(req) {
+    let func_name = "getAllJobPosts"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        
+        let jobDetails=await Job.find({},{createdAt:0,updateAt:0})
+
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false,
+            jobDetails
+        )
+
     } catch (error) {
         logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
         return utility_func.responseGenerator(
