@@ -15,6 +15,11 @@ router.post('/upload/resume/v1',fileUploadMiddleware.uploadFile,fileUploadMiddle
 
 router.post('/createJobPost/v1',userController.createJobPost)
 router.post('/get/AllJobPosts/v1',userController.getAllJobPosts)
+router.post('/get/savedJobs/v1',userController.getSavedJobs)
+router.post('/get/appliedJobs/v1',userController.getAppliedJobs)
+
+router.post('/apply/job/v1',userController.applyJob)
+router.post('/unsave/job/v1',userController.unsaveJob)
 
 
 module.exports=router

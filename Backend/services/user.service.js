@@ -9,6 +9,7 @@ const {generateToken}=require("../utilities/middlewares/jwt-service.middlewares"
 const bcrypt = require("bcrypt")
 const fs=require("fs")
 const path=require("path")
+const mongoose=require("mongoose")
 
 module.exports={
     userRegistration:userRegistration,
@@ -17,7 +18,11 @@ module.exports={
     getUserResume:getUserResume,
     uploadUserResume:uploadUserResume,
     createJobPost:createJobPost,
-    getAllJobPosts:getAllJobPosts
+    getAllJobPosts:getAllJobPosts,
+    applyJob:applyJob,
+    getSavedJobs:getSavedJobs,
+    getAppliedJobs:getAppliedJobs,
+    unsaveJob:unsaveJob
 }
 
 async function encryptPassword(password){
@@ -293,6 +298,189 @@ async function getAllJobPosts(req) {
                 utility_func.httpStatus.StatusCodes.OK),
             false,
             jobDetails
+        )
+
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+
+async function applyJob(req) {
+    let func_name = "applyJob"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let { apply_type,job_id,job_seeker_id,recruiter_id,cover_letter,status} = req.body;
+        
+        if(apply_type == "save_job"){
+            await SavedJob.create( { job_id,job_seeker_id } );
+        }
+        if(apply_type == "apply_job"){
+            await Application.create( { job_id,job_seeker_id,recruiter_id,cover_letter ,status} );
+        }
+        
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
+
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false
+        )
+
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+async function getSavedJobs(req) {
+    let func_name = "getSavedJobs"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let user_id=req.body.user_id
+        
+        let jobDetails= await SavedJob.aggregate([
+            {
+                $match: { job_seeker_id: new mongoose.Types.ObjectId(user_id) }
+            },
+            {
+                $lookup: {
+                    from: "jobs",  // Make sure the actual collection name is correct
+                    localField: "job_id",
+                    foreignField: "_id",
+                    as: "jobDetails"
+                }
+            },
+            { $unwind: "$jobDetails" }, // Unwind to convert array to object
+            {
+                $project: {
+                    saved_job_id: "$_id",
+                    recruiter_id: "$jobDetails.recruiter_id",
+                    position: "$jobDetails.position",
+                    location: "$jobDetails.location",
+                    salary: "$jobDetails.salary",
+                    job_type: "$jobDetails.job_type",
+                    summary: "$jobDetails.summary",
+                    requirenment: "$jobDetails.requirenment",
+                    job_id: "$jobDetails._id"
+                }
+            }
+        ]);
+            console.log("jobDetails",jobDetails);
+            
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false,
+            jobDetails
+        )
+
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+
+async function getAppliedJobs(req) {
+    let func_name = "getAppliedJobs"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let user_id=req.body.user_id
+        
+        let jobDetails= await Application.aggregate([
+            {
+                $match: { job_seeker_id: new mongoose.Types.ObjectId(user_id) }
+            },
+            {
+                $lookup: {
+                    from: "jobs",  // Make sure the actual collection name is correct
+                    localField: "job_id",
+                    foreignField: "_id",
+                    as: "jobDetails"
+                }
+            },
+            { $unwind: "$jobDetails" }, // Unwind to convert array to object
+            {
+                $project: {
+                    applied_job_id: "$_id",
+                    status:"$status",
+                    recruiter_id: "$jobDetails.recruiter_id",
+                    position: "$jobDetails.position",
+                    location: "$jobDetails.location",
+                    salary: "$jobDetails.salary",
+                    job_type: "$jobDetails.job_type",
+                    summary: "$jobDetails.summary",
+                    requirenment: "$jobDetails.requirenment",
+                    job_id: "$jobDetails._id"
+                }
+            }
+        ]);
+            
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false,
+            jobDetails
+        )
+
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+async function unsaveJob(req) {
+    let func_name = "unsaveJob"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let { saved_job_id} = req.body;
+        
+        await SavedJob.findByIdAndDelete(saved_job_id);
+        
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
+
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false
         )
 
     } catch (error) {

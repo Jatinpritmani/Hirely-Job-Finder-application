@@ -10,7 +10,11 @@ module.exports={
     getUserResume:getUserResume,
     uploadUserResume:uploadUserResume,
     createJobPost:createJobPost,
-    getAllJobPosts:getAllJobPosts
+    getAllJobPosts:getAllJobPosts,
+    applyJob:applyJob,
+    getSavedJobs:getSavedJobs,
+    getAppliedJobs:getAppliedJobs,
+    unsaveJob:unsaveJob
 }
 
 async function userRegistration(req,res) {
@@ -137,6 +141,70 @@ async function getAllJobPosts(req,res) {
 
     try {
         const response = await userService.getAllJobPosts(req);
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+        res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(response);
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
+        res.status(parseInt(error[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(error);
+    } 
+}
+
+async function applyJob(req,res) {
+    const func_name = 'applyJob';
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+
+    try {
+        const response = await userService.applyJob(req);
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+        res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(response);
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
+        res.status(parseInt(error[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(error);
+    } 
+}
+
+async function getSavedJobs(req,res) {
+    const func_name = 'getSavedJobs';
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+
+    try {
+        const response = await userService.getSavedJobs(req);
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+        res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(response);
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
+        res.status(parseInt(error[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(error);
+    } 
+}
+
+async function getAppliedJobs(req,res) {
+    const func_name = 'getAppliedJobs';
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+
+    try {
+        const response = await userService.getAppliedJobs(req);
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+        res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(response);
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
+        res.status(parseInt(error[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(error);
+    } 
+}
+
+async function unsaveJob(req,res) {
+    const func_name = 'unsaveJob';
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+
+    try {
+        const response = await userService.unsaveJob(req);
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
         res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
         res.send(response);

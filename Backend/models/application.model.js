@@ -6,7 +6,8 @@ const applicationSchema = new mongoose.Schema({
     job_id:{type: mongoose.Schema.Types.ObjectId, ref:'Job'},
     job_seeker_id:{type: mongoose.Schema.Types.ObjectId, ref:'User'},
     recruiter_id:{type: mongoose.Schema.Types.ObjectId, ref:'User'},
-    status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' }
+    status: { type: String },
+    cover_letter:{type:String}
   },
   {
     autoCreate: true,
