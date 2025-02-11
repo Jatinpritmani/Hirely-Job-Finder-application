@@ -8,21 +8,19 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
-import MonthPicker from 'react-native-month-year-picker';
 
 
 // local imports
 import HSafeAreaView from "../components/common/HSafeAreaView";
 import { styles } from "../themes";
 import AuthHeader from "../components/common/AuthHeader";
-import { EyeIconDark, EyeIconLight, TickSquare, TickSquareChecked } from "../assets/svgs";
 import HInput from "../components/common/HInput";
 import HText from "../components/common/HText";
 import HButton from "../components/common/HButton";
 import { moderateScale } from "../constants/constants";
 import { Colors } from "@/constants/Colors";
-import { isValidEmail } from "../utils/validator";
 import { router } from "expo-router";
+import MonthYearPicker from "../components/modals/monthYearPicker";
 
 const SubmitPforileDetail = () => {
     const colorScheme = useColorScheme();
@@ -40,20 +38,11 @@ const SubmitPforileDetail = () => {
     const [companyLocationErrorMessage, setCompanyLocationErrorMessage] = useState("");
 
 
-    const [startFrom, setStartFrom] = useState(new Date());
-    const [show, setShow] = useState(false);
-    const showPicker = useCallback((value) => setShow(value), []);
+    const [startFromDate, setStartFromDate] = useState();
+    const [startfromModal, setStartfromModal] = useState(false);
+    const [endToDate, setEndToDate] = useState();
+    const [endToModal, setendToModal] = useState(false);
 
-
-    const onValueChange = useCallback(
-        (event, newDate) => {
-            const selectedDate = newDate || date;
-
-            showPicker(false);
-            setStartFrom(selectedDate);
-        },
-        [startFrom, showPicker],
-    );
 
     const onChangeabout = (text) => {
         setAbout(text);
@@ -121,6 +110,16 @@ const SubmitPforileDetail = () => {
 
     }
 
+    const onPressStartDate = () => {
+        setStartfromModal(true)
+    }
+    const onPressEndDate = () => {
+        if (startFromDate) {
+
+            setendToModal(true)
+        }
+    }
+
 
     return (
         <HSafeAreaView style={localStyles.main}>
@@ -175,16 +174,16 @@ const SubmitPforileDetail = () => {
                                     required={true}
                                 />
                                 <View style={localStyles.experincePeriodStyle}>
-                                    <View style={[localStyles.periodboxStyle, { borderColor: Colors[colorScheme]?.borderColor }]}>
+                                    <TouchableOpacity onPress={onPressStartDate} style={[localStyles.periodboxStyle, { borderColor: Colors[colorScheme]?.borderColor }]}>
                                         <HText type={'M14'}>
-                                            Start Date
+                                            {startFromDate || 'Start Date'}
                                         </HText>
-                                    </View>
-                                    <View style={[localStyles.periodboxStyle, { borderColor: Colors[colorScheme]?.borderColor }]}>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={onPressEndDate} style={[localStyles.periodboxStyle, { borderColor: Colors[colorScheme]?.borderColor }]}>
                                         <HText type={'M14'}>
-                                            End Date
+                                            {endToDate || 'End Date'}
                                         </HText>
-                                    </View>
+                                    </TouchableOpacity>
                                 </View>
                                 <HButton
                                     onPress={onPressConfirmAddExperience}
@@ -229,14 +228,11 @@ const SubmitPforileDetail = () => {
                                 : Colors[colorScheme]?.primary
                         }
                     ></HButton>
+                    <MonthYearPicker modalVisible={startfromModal} setModalVisible={setStartfromModal} setDate={setStartFromDate} />
+                    <MonthYearPicker modalVisible={endToModal} setModalVisible={setendToModal} setDate={setEndToDate} minMonthYear={startFromDate} />
                 </ScrollView>
+
             </View>
-            {show && (
-                <MonthPicker
-                    onChange={onValueChange}
-                    value={startFrom}
-                />
-            )}
         </HSafeAreaView>
     );
 };

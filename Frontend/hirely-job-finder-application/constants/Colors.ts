@@ -28,6 +28,7 @@ export const Colors = {
     grayScale6: "#A9A9A9",
     grayScale7: "#979797",
     borderColor2: "#F3F3F3",
+    transparent: "rgba(0,0,0,0.1)",
   },
   dark: {
     primary: "#1A4780CC",
@@ -50,5 +51,6 @@ export const Colors = {
     grayScale6: "#A9A9A9",
     grayScale7: "#979797",
     borderColor2: "#F3F3F3",
+    transparent: "rgba(0, 0, 0, 0.1)",
   },
 };

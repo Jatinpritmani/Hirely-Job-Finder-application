@@ -47,11 +47,6 @@ const forgotPassword = ({ params }) => {
 
                 title={"Continue"}
                 containerStyle={[localStyles.btnStyle]}
-            // bgColor={
-            //     isLoginDisabled
-            //         ? Colors[colorScheme]?.grayScale5
-            //         : Colors[colorScheme]?.primary
-            // }
             ></HButton>
         </HSafeAreaView >
     )

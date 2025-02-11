@@ -53,3 +53,6 @@ export const isUserRecruiter = (userType) => {
   }
 }
 
+export const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+export const years = Array.from({ length: 2025 - 1971 + 1 }, (_, i) => 2025 - i);
