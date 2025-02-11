@@ -7,10 +7,10 @@ import HText from '../common/HText'
 import { moderateScale } from '../../constants/constants'
 import { styles } from '../../themes'
 
-const AuthHeader = ({ title, description }) => {
+const AuthHeader = ({ title, description, style }) => {
     const colorScheme = useColorScheme()
     return (
-        <View style={localStyles.main}>
+        <View style={[localStyles.main, style]}>
             <HText type="S24" color={Colors[colorScheme]?.headerColor}>{title}</HText>
             <HText type="R14" color={Colors[colorScheme]?.headerColor} style={{ opacity: 0.4 }}>{description}</HText>
         </View>

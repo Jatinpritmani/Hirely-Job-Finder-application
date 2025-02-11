@@ -20,3 +20,25 @@ console.log(isValidEmail("invalid..email@example.com")); // false ❌ (No consec
 console.log(isValidEmail("user@invalid_domain.com")); // false ❌ (Invalid character in domain)
 console.log(isValidEmail("valid-email@longtld.technology")); // true ✅
 
+
+/**
+ * Checks whether a given string is truthy or falsy.
+ * 
+ * @param {string} str - The string to be evaluated.
+ * @returns {boolean} - Returns `true` if the string is truthy, otherwise `false`.
+ */
+export function isTruthyString(str) {
+    // Convert the input to a boolean using !! (double NOT operator)
+    return !!str;
+}
+
+// Example Usage:
+console.log(isTruthyString("Hello"));  // true (Truthy)
+console.log(isTruthyString(""));       // false (Falsy)
+console.log(isTruthyString("0"));      // true (Truthy, because it's a non-empty string)
+console.log(isTruthyString("false"));  // true (Truthy, because it's a non-empty string)
+console.log(isTruthyString(null));     // false (Falsy)
+console.log(isTruthyString(undefined)); // false (Falsy)
+console.log(isTruthyString(" "));      // true (Truthy, because it's a non-empty space)
+
+

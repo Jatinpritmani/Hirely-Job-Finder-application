@@ -1,7 +1,9 @@
 import { ImageBackground, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import { router } from "expo-router";
+import { useDispatch, useSelector } from 'react-redux';
 
-import React, { createRef, useState } from 'react'
+
+import React, { createRef, useEffect, useState } from 'react'
 import images from '../assets/images'
 import { isUserJobSeeker, isUserRecruiter, moderateScale, screenHeight, screenWidth } from '../constants/constants'
 import { Colors } from '@/constants/Colors'
@@ -9,20 +11,23 @@ import HText from '../components/common/HText'
 import { styles } from '../themes'
 import HButton from '../components/common/HButton'
 import { CheckMark, UnCheckedMark } from '../assets/svgs'
+import { setCurrentUserType } from './context/actions/commonActioin';
 
 const start = () => {
     const colorScheme = useColorScheme()
     const [userType, setUserType] = useState('')
+    const dispatch = useDispatch()
+    const currentUserType = useSelector(state => state.commonReducer.current_user_type)
+
+    useEffect(() => {
+        setUserType(currentUserType)
+    }, [currentUserType])
 
     const onPressUserType = (userType) => {
-        setUserType(userType)
-        if (userType == 'job_seeker') {
-
-        }
-        else if (userType == 'recruiter') {
-
-        }
-        router.replace('login')
+        dispatch(setCurrentUserType(userType))
+        setTimeout(() => {
+            router.push('login')
+        }, 1000);
     }
 
     return (

@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import Swiper from "react-native-swiper";
 
+
+
 // local imports
 import HText from "../components/common/HText";
 import HSafeAreaView from "../components/common/HSafeAreaView";

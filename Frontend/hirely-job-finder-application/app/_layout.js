@@ -11,6 +11,8 @@ import Toast from 'react-native-toast-message';
 // local imports 
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { Provider } from 'react-redux';
+import store from './context/store';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -53,16 +55,19 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="index" /> */}
-        <Stack.Screen name="start" />
-        <Stack.Screen name="login" />
-        <Stack.Screen name="register" />
-        <Stack.Screen name="submitProfileDetail" />
-        <Stack.Screen name="forgotPassword" />
-      </Stack>
-      <StatusBar style="auto" />
-      <Toast />
+      <Provider store={store}>
+
+        <Stack screenOptions={{ headerShown: false }}>
+          {/* <Stack.Screen name="index" /> */}
+          <Stack.Screen name="start" />
+          <Stack.Screen name="login" />
+          <Stack.Screen name="register" />
+          <Stack.Screen name="submitProfileDetail" />
+          <Stack.Screen name="forgotPassword" />
+        </Stack>
+        <StatusBar style="auto" />
+        <Toast />
+      </Provider>
     </ThemeProvider>
   );
 }

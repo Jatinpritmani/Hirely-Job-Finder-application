@@ -1,0 +1,2 @@
+
+export const SET_CURRENT_USER_TYPE = 'SET_CURRENT_USER_TYPE'
