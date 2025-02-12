@@ -1,7 +1,7 @@
 const multer = require("multer");
 const utility_func = require("../utility-functions")
 const path = require("path")
-const allowedExtensions = [".pdf", ".doc", ".docx"];
+const allowedExtensions = [".pdf"];
 const logger = require('../../utilities/services/logger.services');
 
 const storage = multer.diskStorage({
@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
     if (!allowedExtensions.includes(ext)) {
-      return cb("Only .pdf, .doc, and .docx files are allowed!",false)
+      return cb("Only .pdf files are allowed!",false)
     }
     cb(null, true);
   };

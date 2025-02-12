@@ -44,7 +44,7 @@ async function userRegistration(req) {
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
     try {
-        let { user_email, user_password,user_name,user_type,experience,bio,designation } = req.body;
+        let { user_email, user_password,user_name,user_type,experience,bio,designation,company_name } = req.body;
         
         if( !user_email || !user_password || !user_name || !user_type || !(utility_func.responseCons.USER_TYPES).includes(user_type)){
             return utility_func.responseGenerator(
@@ -65,7 +65,7 @@ async function userRegistration(req) {
         }
         user_password = await  encryptPassword(user_password)
 
-        let user={ user_email, user_password,user_name,user_type,experience,bio,designation}
+        let user={ user_email, user_password,user_name,user_type,experience,bio,designation,company_name}
 
         if(req.file){
             user[utility_func.jsonCons.FIELD_RESUME]={
@@ -106,7 +106,7 @@ async function userLogin(req) {
 
     try {
         
-        let { user_email, user_password } = req.body;
+        let { user_email, user_password, fcm_token } = req.body;
         
         const userExists = await userFindByEmail(user_email)
         if(!userExists || !(await validatePassword(user_password,userExists.user_password))){
@@ -118,10 +118,9 @@ async function userLogin(req) {
             )
         }
         let user=userExists.toJSON()
-
-        let userDetails={user_email:user[utility_func.jsonCons.FIELD_USER_EMAIL],user_id: user[utility_func.jsonCons.FIELD_USER_ID]}
-       
-        let token = await generateToken(userDetails)
+        await User.findOneAndUpdate({user_email:user_email}, {$set:{fcm_token:fcm_token}})
+        // let userDetails={user_email:user[utility_func.jsonCons.FIELD_USER_EMAIL],user_id: user[utility_func.jsonCons.FIELD_USER_ID]}
+        // let token = await generateToken(userDetails)
         
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_LOGIN_SUCCESS_MSG,
@@ -288,8 +287,31 @@ async function getAllJobPosts(req) {
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
     try {
-        
-        let jobDetails=await Job.find({},{createdAt:0,updateAt:0})
+        const user_id =req.body.user_id
+        let jobDetails=await Job.aggregate([
+            {
+                $lookup: {
+                    from: "users",  
+                    localField: "recruiter_id",
+                    foreignField: "_id",
+                    as: "recruiterDetails"
+                }
+            },
+            { $unwind: "$recruiterDetails" }, 
+            {
+                $project: {
+                    company_name: "$recruiterDetails.company_name",
+                    job_id: "$_id",
+                    recruiter_id: "$recruiter_id",
+                    position: "$position",
+                    location: "$location",
+                    salary: "$salary",
+                    job_type: "$job_type",
+                    summary: "$summary",
+                    requirenment: "$requirenment",
+                }
+            }
+        ])
 
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,
@@ -362,13 +384,22 @@ async function getSavedJobs(req) {
             },
             {
                 $lookup: {
-                    from: "jobs",  // Make sure the actual collection name is correct
+                    from: "jobs",  
                     localField: "job_id",
                     foreignField: "_id",
                     as: "jobDetails"
                 }
             },
-            { $unwind: "$jobDetails" }, // Unwind to convert array to object
+            { $unwind: "$jobDetails" }, 
+            {
+                $lookup: {
+                    from: "users",  
+                    localField: "jobDetails.recruiter_id",
+                    foreignField: "_id",
+                    as: "recruiterDetails"
+                }
+            },
+            { $unwind: "$recruiterDetails" },
             {
                 $project: {
                     saved_job_id: "$_id",
@@ -379,11 +410,11 @@ async function getSavedJobs(req) {
                     job_type: "$jobDetails.job_type",
                     summary: "$jobDetails.summary",
                     requirenment: "$jobDetails.requirenment",
-                    job_id: "$jobDetails._id"
+                    job_id: "$jobDetails._id",
+                    company_name:"$recruiterDetails.company_name"
                 }
             }
         ]);
-            console.log("jobDetails",jobDetails);
             
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,
@@ -420,13 +451,23 @@ async function getAppliedJobs(req) {
             },
             {
                 $lookup: {
-                    from: "jobs",  // Make sure the actual collection name is correct
+                    from: "jobs",  
                     localField: "job_id",
                     foreignField: "_id",
                     as: "jobDetails"
                 }
             },
-            { $unwind: "$jobDetails" }, // Unwind to convert array to object
+            { $unwind: "$jobDetails" }, 
+            {
+                $lookup:{
+                    from :"users",
+                    localField:"jobDetails.recruiter_id",
+                    foreignField:"_id",
+                    as:"recruiterDetails"
+                }
+
+            },
+            {$unwind:"$recruiterDetails"},
             {
                 $project: {
                     applied_job_id: "$_id",
@@ -438,7 +479,8 @@ async function getAppliedJobs(req) {
                     job_type: "$jobDetails.job_type",
                     summary: "$jobDetails.summary",
                     requirenment: "$jobDetails.requirenment",
-                    job_id: "$jobDetails._id"
+                    job_id: "$jobDetails._id",
+                    company_name:"$recruiterDetails.company_name"
                 }
             }
         ]);

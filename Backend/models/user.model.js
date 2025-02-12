@@ -13,6 +13,8 @@ const userSchema = new mongoose.Schema({
     user_name: { type: String, required: true },
     user_password: { type: String, required: true },
     user_type: { type:String,enum : utility_func.responseCons.USER_TYPES,default:'job_seeker'},
+    company_name:{type:String},
+    fcm_token:{type:String}, 
     resume: resumeSchema,
     designation : {type:String},
     experience: [
