@@ -12,7 +12,7 @@ const AuthHeader = ({ title, description, style }) => {
     return (
         <View style={[localStyles.main, style]}>
             <HText type="S24" color={Colors[colorScheme]?.headerColor}>{title}</HText>
-            <HText type="R14" color={Colors[colorScheme]?.headerColor} style={{ opacity: 0.4 }}>{description}</HText>
+            <HText type="R14" color={Colors[colorScheme]?.headerColor} style={[styles.mt10, { opacity: 0.4 }]}>{description}</HText>
         </View>
     )
 }

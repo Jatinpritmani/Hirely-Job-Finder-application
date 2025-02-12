@@ -11,7 +11,7 @@ import HText from '../components/common/HText'
 import { styles } from '../themes'
 import HButton from '../components/common/HButton'
 import { CheckMark, UnCheckedMark } from '../assets/svgs'
-import { setCurrentUserType } from './context/actions/commonActioin';
+import { setCurrentUserType } from '../context/actions/commonActioin';
 
 const start = () => {
     const colorScheme = useColorScheme()

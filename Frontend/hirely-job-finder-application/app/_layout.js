@@ -5,14 +5,17 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import Toast from 'react-native-toast-message';
+import Toast, { BaseToast } from 'react-native-toast-message';
 
 
 // local imports 
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Provider } from 'react-redux';
-import store from './context/store';
+import store from '../context/store';
+import typography from '@/themes/typography';
+import { Colors } from '@/constants/Colors';
+import { moderateScale } from '@/constants/constants';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -67,7 +70,60 @@ export default function RootLayout() {
           <Stack.Screen name="uploadCV" />
         </Stack>
         <StatusBar style="auto" />
-        <Toast />
+        <Toast position='top' topOffset={70}
+          config={{
+            success: (props) => (
+              <BaseToast
+                {...props}
+                style={{ borderLeftColor: Colors[colorScheme]?.success, backgroundColor: '#f0f8f5' }}
+                contentContainerStyle={{ paddingHorizontal: moderateScale(15) }}
+                text1Style={{
+                  ...typography.fontSizes.f14,
+                  ...typography.fontWeights.Medium,
+                  color: Colors[colorScheme]?.success
+                }}
+                text2Style={{
+                  ...typography.fontSizes.f12,
+                  ...typography.fontWeights.Medium,
+                  color: Colors[colorScheme]?.text
+                }}
+              />
+            ),
+            error: (props) => (
+              <BaseToast
+                {...props}
+                style={{ borderLeftColor: Colors[colorScheme]?.danger, backgroundColor: '#fdecea' }}
+                contentContainerStyle={{ paddingHorizontal: moderateScale(15) }}
+                text1Style={{
+                  ...typography.fontSizes.f14,
+                  ...typography.fontWeights.Medium,
+                  color: Colors[colorScheme]?.danger
+                }}
+                text2Style={{
+                  ...typography.fontSizes.f12,
+                  ...typography.fontWeights.Medium,
+                  color: Colors[colorScheme]?.text
+                }}
+              />
+            ),
+            info: (props) => (
+              <BaseToast
+                {...props}
+                style={{ borderLeftColor: Colors[colorScheme]?.info, backgroundColor: '#e8f4ff' }}
+                contentContainerStyle={{ paddingHorizontal: moderateScale(15) }}
+                text1Style={{
+                  ...typography.fontSizes.f14,
+                  ...typography.fontWeights.Medium,
+                  color: Colors[colorScheme]?.info
+                }}
+                text2Style={{
+                  ...typography.fontSizes.f12,
+                  ...typography.fontWeights.Medium,
+                  color: Colors[colorScheme]?.text
+                }}
+              />
+            )
+          }} />
       </Provider>
     </ThemeProvider>
   );

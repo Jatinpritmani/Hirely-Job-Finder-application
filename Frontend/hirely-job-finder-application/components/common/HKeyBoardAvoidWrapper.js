@@ -1,14 +1,13 @@
 // Library Imports
 import React from 'react';
-import {KeyboardAvoidingView, ScrollView} from 'react-native';
+import { KeyboardAvoidingView, ScrollView } from 'react-native';
 
 // Local Imports
-import {moderateScale} from '../../common/constants';
-import {styles} from '../../themes';
-import {checkPlatform} from '../../utils/helpers';
+import { styles } from '../../themes';
+import { checkPlatform, moderateScale } from '../../constants/constants';
 
 // KeyboardAvoidWrapper Component
-export default ZKeyBoardAvoidWrapper = ({
+const HKeyBoardAvoidWrapper = ({
   children,
   containerStyle,
   contentContainerStyle,
@@ -23,10 +22,11 @@ export default ZKeyBoardAvoidWrapper = ({
       <ScrollView
         nestedScrollEnabled={true}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={contentContainerStyle}
-        bounces={false}>
+        contentContainerStyle={contentContainerStyle}>
         {children}
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
+
+export default HKeyBoardAvoidWrapper

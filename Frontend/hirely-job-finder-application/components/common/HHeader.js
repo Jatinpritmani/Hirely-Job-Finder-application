@@ -14,12 +14,12 @@ import { Colors } from '@/constants/Colors'
 
 
 export default function HHeader(props) {
-  const { title, onPressBack, rightIcon, isHideBack, isLeftIcon } = props;
+  const { title, onPressBack, rightIcon, isHideBack, isLeftIcon, containerStyle } = props;
 
   const goBack = () => { router.back() };
   const colorsScheme = useColorScheme()
   return (
-    <View style={[localStyles.container]}>
+    <View style={[localStyles.container, containerStyle]}>
       <View style={styles.rowCenter}>
         {!isHideBack && (
           <TouchableOpacity style={[localStyles.backBtnStyle, { borderColor: Colors[colorsScheme]?.borderColor2 }]} onPress={onPressBack || goBack}>

@@ -1,6 +1,5 @@
 import {
     StyleSheet,
-    Text,
     TouchableOpacity,
     useColorScheme,
     View,
@@ -152,7 +151,7 @@ const login = () => {
                     >
                         Haven’t an account?
                     </HText>
-                    <TouchableOpacity onPress={onPressRegister} style={localStyles.registerBtnStyle}>
+                    <TouchableOpacity onPress={onPressRegister} >
                         <HText
                             align={"center"}
                             style={styles.ml5}
@@ -179,7 +178,7 @@ const localStyles = StyleSheet.create({
         ...styles.flex,
     },
     inputContainer: {
-        ...styles.mt30,
+        ...styles.mt10,
     },
     forgotPasswordBtnStyle: {
         marginTop: moderateScale(12),
@@ -189,10 +188,7 @@ const localStyles = StyleSheet.create({
         ...styles.mt30,
     },
     haventAccountContainer: {
-        // position: 'absolute',
-        // bottom: 0
         ...styles.rowCenter,
         ...styles.mb20,
     },
-    registerBtnStyle: {},
 });

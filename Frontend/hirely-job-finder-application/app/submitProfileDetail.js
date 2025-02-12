@@ -2,20 +2,17 @@ import {
     FlatList,
     ScrollView,
     StyleSheet,
-    Text,
     TouchableOpacity,
     useColorScheme,
     View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import Toast from "react-native-toast-message";
-import { router } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
 
 
 // local imports
 import HSafeAreaView from "../components/common/HSafeAreaView";
 import { styles } from "../themes";
-import AuthHeader from "../components/common/AuthHeader";
 import HInput from "../components/common/HInput";
 import HText from "../components/common/HText";
 import HButton from "../components/common/HButton";
@@ -23,7 +20,8 @@ import { moderateScale } from "../constants/constants";
 import { Colors } from "@/constants/Colors";
 import MonthYearPicker from "../components/modals/monthYearPicker";
 import { isTruthyString } from "../utils/validator";
-import { CrossIcon, TrashIcon } from "../assets/svgs";
+import { TrashIcon } from "../assets/svgs";
+import HHeader from "../components/common/HHeader";
 
 const SubmitPforileDetail = () => {
     const colorScheme = useColorScheme();
@@ -47,6 +45,7 @@ const SubmitPforileDetail = () => {
     const [endDateErrorMessage, setEndDateErrorMessage] = useState('')
     const [endToDate, setEndToDate] = useState();
     const [endToModal, setendToModal] = useState(false);
+    const { userDetail } = useLocalSearchParams();
 
 
     const onChangeabout = (text) => {
@@ -117,7 +116,29 @@ const SubmitPforileDetail = () => {
 
 
     const onPressNext = () => {
-        router.push('uploadCV')
+        if (!isTruthyString(about)) {
+            setAboutErrorMessage("*Please Enter a About Youself.");
+
+        }
+        if (!isTruthyString(jobRole)) {
+            setJobRoleErrorMessage("*Please Enter a Job Role ");
+
+        }
+        if (!isTruthyString(about) || !isTruthyString(jobRole)) {
+            return
+        } else {
+            let userUpdatedDetail = {
+                ...JSON.parse(userDetail),
+                designation: jobRole,
+                bio: about,
+                experience: experience?.length > 0 ? experience : null
+            }
+            // add userDetail and pass it to upload cv file 
+            router.push({
+                pathname: "/uploadCV",
+                params: { userDetail: JSON.stringify(userUpdatedDetail) }, // Pass parameters
+            })
+        }
     };
     const onPressAddExperince = () => {
         setIsShowExperienceFields(true)
@@ -151,7 +172,7 @@ const SubmitPforileDetail = () => {
             let experience = {
                 company_name: companyName,
                 job_role: experienceJobRole,
-                experience_location: companyLocation,
+                location: companyLocation,
                 experience_from: startFromDate,
                 experience_to: endToDate
             }
@@ -162,6 +183,7 @@ const SubmitPforileDetail = () => {
             setStartFromDate('')
             setEndToDate('')
             setIsShowExperienceFields(false)
+
         }
 
         // setCom
@@ -178,7 +200,7 @@ const SubmitPforileDetail = () => {
     }
 
 
-
+    // experience card render item
     const renderItem = ({ item, index }) => {
         return (
             <ExperienceCard item={item} index={index} experience={experience} setExperience={setExperience} />
@@ -187,10 +209,9 @@ const SubmitPforileDetail = () => {
 
     return (
         <HSafeAreaView containerStyle={styles.ph0} style={localStyles.main}>
-            <AuthHeader
+            <HHeader
                 title="Complete Your Profile"
-                description={"Tell us more about yourself and your experience! "}
-                style={styles.ph20}
+                containerStyle={styles.ph20}
             />
             <View style={localStyles.innerContainer}>
                 <ScrollView showsVerticalScrollIndicator={false} style={localStyles.inputContainer}>
@@ -341,13 +362,13 @@ const ExperienceCard = ({ item, index, experience, setExperience }) => {
 
     }
     return (
-        <View style={[localStyles.card, { backgroundColor: Colors[colorScheme]?.white }]}>
+        <View style={[localStyles.card, { backgroundColor: Colors[colorScheme]?.white, borderColor: Colors[colorScheme]?.borderColor }]}>
             <View style={styles.rowSpaceBetween}>
                 <HText type="S14">
                     {item?.job_role}
                 </HText>
                 <HText type="M12">
-                    {item?.experience_location}
+                    {item?.location}
                 </HText>
             </View>
             <View style={styles.rowSpaceBetween}>
@@ -355,7 +376,7 @@ const ExperienceCard = ({ item, index, experience, setExperience }) => {
                     {item?.company_name}
                 </HText>
                 <HText type="R12">
-                    {item?.experience_from} -    {item?.experience_to}
+                    {item?.experience_from} - {item?.experience_to}
                 </HText>
             </View>
             <TouchableOpacity onPress={onPressDeleteExperience} style={[localStyles.crossIcon, { backgroundColor: Colors[colorScheme]?.borderColor2 }]}>
@@ -412,6 +433,7 @@ const localStyles = StyleSheet.create({
         ...styles.mt10,
         ...styles.mh20,
         borderRadius: moderateScale(10),
+        borderWidth: moderateScale(1)
     },
     crossIcon: {
         position: 'absolute',

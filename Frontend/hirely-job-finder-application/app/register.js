@@ -1,13 +1,10 @@
 import {
-    ScrollView,
     StyleSheet,
-    Text,
     TouchableOpacity,
     useColorScheme,
     View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import Toast from "react-native-toast-message";
+import React, { useEffect, useRef, useState } from "react";
 
 // local imports
 import HSafeAreaView from "../components/common/HSafeAreaView";
@@ -19,15 +16,23 @@ import HText from "../components/common/HText";
 import HButton from "../components/common/HButton";
 import { moderateScale } from "../constants/constants";
 import { Colors } from "@/constants/Colors";
-import { isValidEmail } from "../utils/validator";
+import { isTruthyString, isValidEmail } from "../utils/validator";
 import { router } from "expo-router";
+import { useSelector } from "react-redux";
+import RegisterSuccess from "../components/modals/registerSuccess";
+import { USER_REGISTER } from "../components/apiConstants";
+import HKeyBoardAvoidWrapper from "../components/common/HKeyBoardAvoidWrapper";
+import apiRequest from "../components/api";
 
 const Register = () => {
+    const registerSuccessSheetRef = useRef(null)
+
     const colorScheme = useColorScheme();
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [companyName, setCompanyName] = useState("")
     const [isShowPassword, setIsShowPassword] = useState(true);
     const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(true);
     const [isNextDisabled, setIsNextDisabled] = useState(true);
@@ -36,13 +41,18 @@ const Register = () => {
     const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
     const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] =
         useState("");
+    const [companyNameErrorMessage, setCompanyNameErrorMessage] = useState("")
+
     const [termsConditionChecked, setTermsConditionChecked] =
         useState(false);
+
+    const currentUserType = useSelector(state => state.commonReducer.current_user_type)
+
 
     const onChangeFullName = (text) => {
         setFullName(text);
         if (!text.length > 0) {
-            setFullNameErrorMessage("*Please Enter a Password");
+            setFullNameErrorMessage("*Please Enter a Full Name");
         } else {
             setFullNameErrorMessage("");
         }
@@ -76,14 +86,24 @@ const Register = () => {
             setConfirmPasswordErrorMessage("");
         }
     };
+    const onChangeCompanyName = (text) => {
+        setCompanyName(text);
+        if (!text.length > 0) {
+            setCompanyNameErrorMessage("*Please Enter a Company Name");
+        } else {
+            setCompanyNameErrorMessage("");
+        }
+    };
 
     useEffect(() => {
-        if (confirmPassword != password) {
-            setPasswordErrorMessage(`Password and Confirm Password dosen't match`)
-            setConfirmPasswordErrorMessage(`Password and Confirm Password dosen't match`)
-        } else {
-            setPasswordErrorMessage(``)
-            setConfirmPasswordErrorMessage(``)
+        if (confirmPassword?.length > 0 && password?.length > 0) {
+            if (confirmPassword && password && confirmPassword != password) {
+                setPasswordErrorMessage(`Password and Confirm Password dosen't match`)
+                setConfirmPasswordErrorMessage(`Password and Confirm Password dosen't match`)
+            } else {
+                setPasswordErrorMessage(``)
+                setConfirmPasswordErrorMessage(``)
+            }
         }
         if (fullName?.length > 0 && email?.length > 0 && password?.length > 0 && isValidEmail(email) && confirmPassword?.length > 0 && confirmPassword == password) {
             setIsNextDisabled(false);
@@ -109,8 +129,62 @@ const Register = () => {
         );
     };
 
-    const onPressNext = () => {
-        router.push('submitProfileDetail')
+    const onPressNext = async () => {
+        if (!isTruthyString(fullName)) {
+            setFullNameErrorMessage("*Please Enter a Full Name");
+
+        }
+        if (!isTruthyString(email)) {
+            setEmailErrorMessage("*Please Enter E-Mail Address.");
+
+        }
+        if (!isValidEmail(email)) {
+            setEmailErrorMessage("Please Enter a valid E-Mail.");
+        }
+        if (!isTruthyString(password)) {
+            setPasswordErrorMessage("*Please Enter a Password");
+
+        }
+        if (!isTruthyString(confirmPassword)) {
+            setConfirmPasswordErrorMessage("*Please Enter a Confirm Password");
+
+        }
+        if (currentUserType == 'recruiter' && !isTruthyString(companyName)) {
+            setCompanyNameErrorMessage("*Please Enter a Company Name");
+
+        }
+        if (!termsConditionChecked || !isTruthyString(fullName) || !isValidEmail(email) || !isTruthyString(email) || !isTruthyString(password) || !isTruthyString(confirmPassword) || (currentUserType === 'recruiter' && !isTruthyString(companyName))) {
+            return
+        }
+        else {
+            let userdetail = {
+                user_email: email,
+                user_password: password,
+                user_name: fullName,
+                user_type: currentUserType
+            }
+            if (currentUserType == 'job_seeker') {
+                // route to complete profile if usertype is job_seeker
+                router.push({
+                    pathname: "/submitProfileDetail",
+                    params: { userDetail: JSON.stringify(userdetail) }, // Pass parameters
+                })
+            }
+            if (currentUserType == 'recruiter') {
+
+                // APi call for user register with recruiter type
+                try {
+                    let response = await apiRequest("POST", USER_REGISTER, userdetail);
+                    if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                        registerSuccessSheetRef?.current?.show()
+
+                    }
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                }
+            }
+        }
+
     };
     const onPressLogin = () => { router.back() };
 
@@ -119,109 +193,119 @@ const Register = () => {
         <HSafeAreaView style={localStyles.main}>
             <AuthHeader
                 title="Registration"
-                description={"Let’s Register. Apply to jobs!"}
+                description={currentUserType == 'job_seeker' ? "Let’s Register. Apply to jobs!" : "Let’s Register. Start hiring top talent today!"}
             />
-            <View style={localStyles.innerContainer}>
-                <ScrollView style={localStyles.inputContainer}>
+            <HKeyBoardAvoidWrapper containerStyle={[localStyles.inputContainer, styles.flexGrow1]} >
+                <HInput
+                    _value={fullName}
+                    label="Full Name"
+                    placeHolder="Full Name"
+                    toGetTextFieldValue={onChangeFullName}
+                    _errorText={fullNameErrorMessage}
+                    required={true}
+                />
+                <HInput
+                    _value={email}
+                    label="Email Address"
+                    placeHolder="E-Mail"
+                    toGetTextFieldValue={onChangeEmail}
+                    _errorText={emailErrorMessage}
+                    required={true}
+                />
+                {currentUserType == 'recruiter' &&
                     <HInput
-                        _value={fullName}
-                        label="Full Name"
-                        placeHolder="Full Name"
-                        toGetTextFieldValue={onChangeFullName}
-                        _errorText={fullNameErrorMessage}
+                        _value={companyName}
+                        label="Company Name"
+                        placeHolder="Company Name"
+                        toGetTextFieldValue={onChangeCompanyName}
+                        _errorText={companyNameErrorMessage}
                         required={true}
-                    />
-                    <HInput
-                        _value={email}
-                        label="Email Address"
-                        placeHolder="E-Mail"
-                        toGetTextFieldValue={onChangeEmail}
-                        _errorText={emailErrorMessage}
-                        required={true}
-                    />
+                    />}
 
-                    <HInput
-                        _value={password}
-                        label="Password"
-                        placeHolder="Password"
-                        _isSecure={isShowPassword}
-                        toGetTextFieldValue={onChangePassword}
-                        rightAccessory={passwordHideIcon}
-                        _errorText={passwordErrorMessage}
-                        required={true}
-                    />
-                    <HInput
-                        _value={confirmPassword}
-                        label="Confirm Password"
-                        placeHolder="Confirm Password"
-                        _isSecure={isShowConfirmPassword}
-                        toGetTextFieldValue={onChangeConfirmPassword}
-                        rightAccessory={confirmPasswordHideIcon}
-                        _errorText={confirmPasswordErrorMessage}
-                        required={true}
-                    />
+                <HInput
+                    _value={password}
+                    label="Password"
+                    placeHolder="Password"
+                    _isSecure={isShowPassword}
+                    toGetTextFieldValue={onChangePassword}
+                    rightAccessory={passwordHideIcon}
+                    _errorText={passwordErrorMessage}
+                    required={true}
+                />
+                <HInput
+                    _value={confirmPassword}
+                    label="Confirm Password"
+                    placeHolder="Confirm Password"
+                    _isSecure={isShowConfirmPassword}
+                    toGetTextFieldValue={onChangeConfirmPassword}
+                    rightAccessory={confirmPasswordHideIcon}
+                    _errorText={confirmPasswordErrorMessage}
+                    required={true}
+                />
 
-                    <TouchableOpacity onPress={() => setTermsConditionChecked(!termsConditionChecked)} style={localStyles.termsConditionBtnStyle}>
-                        {termsConditionChecked ? <TickSquareChecked /> : <TickSquare />}
+
+                <TouchableOpacity onPress={() => setTermsConditionChecked(!termsConditionChecked)} style={localStyles.termsConditionBtnStyle}>
+                    {termsConditionChecked ? <TickSquareChecked /> : <TickSquare />}
+                    <HText
+                        color={Colors[colorScheme]?.grayScale4}
+                        type="R12"
+                        style={styles.flex}
+                    >
+                        By creating an account, you agree to our
                         <HText
-                            color={Colors[colorScheme]?.grayScale4}
-                            type="R12"
-                            style={styles.flex}
+                            color={Colors[colorScheme]?.primary}
+                            type="M12"
                         >
-                            By creating an account, you agree to our
-                            <HText
-                                color={Colors[colorScheme]?.primary}
-                                type="M12"
-                            >
-                                {' Terms '}
-                            </HText> and
-                            <HText
-                                color={Colors[colorScheme]?.primary}
-                                type="M12"
-                            >
-                                {' Conditions '}
-                            </HText>
+                            {' Terms '}
+                        </HText> and
+                        <HText
+                            color={Colors[colorScheme]?.primary}
+                            type="M12"
+                        >
+                            {' Conditions '}
                         </HText>
-                    </TouchableOpacity>
+                    </HText>
+                </TouchableOpacity>
 
-                    <HButton
-                        // disabled={isNextDisabled}
-                        onPress={onPressNext}
-                        textType={"S16"}
-                        color={
-                            isNextDisabled
-                                ? Colors[colorScheme]?.grayScale6
-                                : Colors[colorScheme]?.white
-                        }
-                        title={"Next"}
-                        containerStyle={[localStyles.btnStyle]}
-                        bgColor={
-                            isNextDisabled
-                                ? Colors[colorScheme]?.grayScale5
-                                : Colors[colorScheme]?.primary
-                        }
-                    ></HButton>
-                </ScrollView>
-                <View style={localStyles.haventAccountContainer}>
+                <HButton
+                    // disabled={isNextDisabled}
+                    onPress={onPressNext}
+                    textType={"S16"}
+                    color={
+                        isNextDisabled
+                            ? Colors[colorScheme]?.grayScale6
+                            : Colors[colorScheme]?.white
+                    }
+                    title={currentUserType == 'job_seeker' ? "Next" : "Register"}
+                    containerStyle={[localStyles.btnStyle]}
+                    bgColor={
+                        isNextDisabled
+                            ? Colors[colorScheme]?.grayScale5
+                            : Colors[colorScheme]?.primary
+                    }
+                ></HButton>
+            </HKeyBoardAvoidWrapper>
+            <View style={localStyles.haventAccountContainer}>
+                <HText
+                    align={"center"}
+                    color={Colors[colorScheme]?.grayScale6}
+                    type="M14"
+                >
+                    Haven’t an account?
+                </HText>
+                <TouchableOpacity onPress={onPressLogin} >
                     <HText
                         align={"center"}
-                        color={Colors[colorScheme]?.grayScale6}
+                        style={styles.ml5}
+                        color={Colors[colorScheme]?.primary}
                         type="M14"
                     >
-                        Haven’t an account?
+                        Login
                     </HText>
-                    <TouchableOpacity onPress={onPressLogin} style={localStyles.registerBtnStyle}>
-                        <HText
-                            align={"center"}
-                            style={styles.ml5}
-                            color={Colors[colorScheme]?.primary}
-                            type="M14"
-                        >
-                            Login
-                        </HText>
-                    </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
             </View>
+            <RegisterSuccess SheetRef={registerSuccessSheetRef} />
+
         </HSafeAreaView>
     );
 };
@@ -232,12 +316,8 @@ const localStyles = StyleSheet.create({
     main: {
         ...styles.ph20,
     },
-    innerContainer: {
-        ...styles.justifyBetween,
-        ...styles.flex,
-    },
     inputContainer: {
-        ...styles.mt30,
+        ...styles.mt10,
     },
     termsConditionBtnStyle: {
         marginTop: moderateScale(26),
@@ -252,5 +332,4 @@ const localStyles = StyleSheet.create({
         ...styles.rowCenter,
         ...styles.mb20,
     },
-    registerBtnStyle: {},
 });

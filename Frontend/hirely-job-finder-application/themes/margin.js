@@ -141,6 +141,9 @@ export default StyleSheet.create({
   mt40: {
     marginTop: getHeight(40),
   },
+  mt45: {
+    marginTop: getHeight(45),
+  },
   mt5: {
     marginTop: getHeight(5),
   },

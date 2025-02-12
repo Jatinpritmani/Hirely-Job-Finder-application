@@ -38,6 +38,15 @@ export function moderateScale(size, factor = 0.5) {
   return size + (scale(size) - size) * factor;
 }
 
+// Check App Platform
+export const checkPlatform = () => {
+  if (Platform.OS === 'android') {
+    return 'android';
+  } else {
+    return 'ios';
+  }
+};
+
 export const isUserJobSeeker = (userType) => {
   if (userType == 'job_seeker') {
     return true

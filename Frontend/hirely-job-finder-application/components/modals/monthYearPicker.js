@@ -23,8 +23,6 @@ const MonthYearPicker = ({ modalVisible, setModalVisible, setDate, minMonthYear,
     const [currentMonth, setCurrentMonth] = useState('');
     const [currentYear, setCurrentYear] = useState('');
 
-    const [isMonthListReady, setIsMonthListReady] = useState(false);
-    const [isYearListReady, setIsYearListReady] = useState(false);
 
     const monthListRef = useRef(null);
     const yearListRef = useRef(null);
@@ -74,25 +72,7 @@ const MonthYearPicker = ({ modalVisible, setModalVisible, setDate, minMonthYear,
         closeModal();
     };
 
-    // This useEffect will scroll the lists to the provided minMonthYear (if available)
-    useEffect(() => {
 
-        if (minMonthYear && isMonthListReady && isYearListReady) {
-            const [month, year] = minMonthYear.split(", ").map((item, index) =>
-                index === 1 ? Number(item) : item
-            );
-            const monthIndex = months.indexOf(month);
-            const yearIndex = years.indexOf(year);
-
-            if (monthIndex !== -1 && monthListRef.current) {
-                monthListRef.current.scrollToIndex({ index: monthIndex, animated: true });
-            }
-
-            if (yearIndex !== -1 && yearListRef.current) {
-                yearListRef.current.scrollToIndex({ index: yearIndex, animated: true });
-            }
-        }
-    }, [minMonthYear, isMonthListReady, isYearListReady, keyss]);
 
     return (
         <Modal
@@ -113,7 +93,6 @@ const MonthYearPicker = ({ modalVisible, setModalVisible, setDate, minMonthYear,
                             pagingEnabled
                             onViewableItemsChanged={onMonthViewableItemsChanged}
                             viewabilityConfig={viewabilityConfig}
-                            onContentSizeChange={() => setIsMonthListReady(true)}
                         />
                         <FlatList
                             ref={yearListRef}
@@ -124,7 +103,6 @@ const MonthYearPicker = ({ modalVisible, setModalVisible, setDate, minMonthYear,
                             pagingEnabled
                             onViewableItemsChanged={onYearViewableItemsChanged}
                             viewabilityConfig={viewabilityConfig}
-                            onContentSizeChange={() => setIsYearListReady(true)}
                         />
                     </View>
 

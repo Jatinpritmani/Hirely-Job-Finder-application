@@ -1,6 +1,6 @@
 //Library Imports
 import React from 'react';
-import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
+import { ActivityIndicator, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 
 //Local Imports
 import { styles } from '../../themes';
@@ -21,6 +21,7 @@ export default function HButton({
   frontIcon = null,
   children,
   bgColor = null,
+  isLoading = false,
   ...props
 }) {
   const colorScheme = useColorScheme();
@@ -35,10 +36,18 @@ export default function HButton({
           ? { backgroundColor: bgColor }
           : { backgroundColor: Colors[colorScheme]?.primary },
       ]}
+      disabled={isLoading}
       onPress={onPress}
       {...props}>
       {/* If Icon Added In Button Front Side */}
       {frontIcon}
+      {isLoading && (
+        <ActivityIndicator
+          size="large"
+          color={Colors[colorScheme]?.white}
+          style={{ marginRight: moderateScale(20), }}
+        />
+      )}
       {/* Text In Button */}
       <HText type={textType ? textType : 'S16'} style={style} color={color ? color : Colors[colorScheme]?.white}>
         {title}
