@@ -22,7 +22,9 @@ module.exports={
     applyJob:applyJob,
     getSavedJobs:getSavedJobs,
     getAppliedJobs:getAppliedJobs,
-    unsaveJob:unsaveJob
+    unsaveJob:unsaveJob,
+    recruiterDetails:recruiterDetails,
+    updateAppliedJobStatus:updateAppliedJobStatus
 }
 
 async function encryptPassword(password){
@@ -34,9 +36,6 @@ async function validatePassword(password,encrypted_password){
 }
 async function userFindByEmail(user_email){
     return await User.findOne({user_email:user_email })
-}
-async function userFindByID(user_id){
-    return await User.findOne({_id:user_id })
 }
 
 async function userRegistration(req) {
@@ -255,10 +254,10 @@ async function createJobPost(req) {
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
     try {
-        let { recruiter_id ,position ,location ,salary ,job_type ,summary ,requirenment } = req.body;
+        let { recruiter_id ,position ,location ,salary ,job_type ,summary ,requirenment,number_of_opening } = req.body;
         
         
-        const jobDetails = await Job.create( { recruiter_id ,position ,location ,salary ,job_type ,summary ,requirenment } );
+        const jobDetails = await Job.create( { recruiter_id ,position ,location ,salary ,job_type ,summary ,requirenment,number_of_opening} );
         
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
 
@@ -465,7 +464,6 @@ async function getAppliedJobs(req) {
                     foreignField:"_id",
                     as:"recruiterDetails"
                 }
-
             },
             {$unwind:"$recruiterDetails"},
             {
@@ -516,6 +514,180 @@ async function unsaveJob(req) {
         await SavedJob.findByIdAndDelete(saved_job_id);
         
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
+
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false
+        )
+
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+async function recruiterDetails(req) {
+    let func_name = "recruiterDetails"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let user_id=req.body.user_id
+        
+        let jobDetails= await User.aggregate([
+                {
+                    $match: { _id: new mongoose.Types.ObjectId(user_id) }
+                },
+                {
+                    $lookup: {
+                        from: "jobs",  
+                        localField: "_id",
+                        foreignField: "recruiter_id",
+                        as: "jobDetails"
+                    }
+                },
+                {
+                    $lookup:{
+                        from :"applications",
+                        localField:"_id",
+                        foreignField:"recruiter_id",
+                        as:"applicationDetails"
+                    }
+                },
+                {
+                    $lookup:{
+                        from :"jobs",
+                        localField:"applicationDetails.job_id",
+                        foreignField:"_id",
+                        as:"applicationJobDetails"
+                    }
+                },
+                {
+                    $lookup:{
+                        from :"users",
+                        localField:"applicationDetails.job_seeker_id",
+                        foreignField:"_id",
+                        as:"userDetails"
+                    }
+                },
+                {
+                    $project: {
+                        user_name:"$user_name",
+                        user_email:"$user_email",
+                        company_name:"$company_name",
+                        jobDetails:{
+                            $map: {
+                                input: "$jobDetails",
+                                as: "job",
+                                in: {
+                                    job_id: "$$job._id",
+                                    recruiter_id: "$$job.recruiter_id",
+                                    position: "$$job.position",
+                                    location: "$$job.location",
+                                    salary: "$$job.salary",
+                                    job_type: "$$job.job_type",
+                                    summary: "$$job.summary",
+                                    requirenment: "$$job.requirenment",
+                                    number_of_opening:"$$job.number_of_opening"
+                                }
+                            }
+                        },
+                        appliedJobDetails:{
+                            $map: {
+                                input: "$applicationDetails",
+                                as: "application",
+                                in: {
+                                    applied_job_id: "$$application._id",
+                                    job_id: "$$application.job_id",
+                                    job_seeker_id: "$$application.job_seeker_id",
+                                    recruiter_id: "$$application.recruiter_id",
+                                    status: "$$application.status",
+                                    cover_letter: "$$application.cover_letter",
+                                    job: {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: "$applicationJobDetails",
+                                                    as: "job",
+                                                    cond: { $eq: ["$$job._id", "$$application.job_id"] }
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    },
+                                    job_seeker: {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: "$userDetails",
+                                                    as: "user",
+                                                    cond: { $eq: ["$$user._id", "$$application.job_seeker_id"] }
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        
+                    }
+                
+                }
+            
+        ]);
+        if(jobDetails && jobDetails[0] && jobDetails[0]["appliedJobDetails"] &&  jobDetails[0]["appliedJobDetails"].length != 0){
+            jobDetails[0]["appliedJobDetails"]=jobDetails[0]["appliedJobDetails"].map((appliedJob)=>{
+                let {job, job_seeker ,...rest}=appliedJob
+                delete job_seeker["user_password"]
+                delete job_seeker["resume"]
+                delete job_seeker["fcm_token"]
+                delete job_seeker["user_password"]
+
+                return {...rest,...job,...job_seeker}
+            })
+        }    
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false,
+            jobDetails
+        )
+
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+
+async function updateAppliedJobStatus(req) {
+    let func_name = "updateAppliedJobStatus"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        
+        let { applied_job_id,status } = req.body 
+        await Application.findOneAndUpdate({_id : applied_job_id},
+            {$set:{status:status}}
+        )
+        
 
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,

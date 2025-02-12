@@ -8,6 +8,7 @@ const jobSchema = new mongoose.Schema({
     location:{type:String},
     salary:{type:Number},
     job_type:{type:String},
+    number_of_opening:{type:Number},
     summary:{type:String},
     requirenment:{type:String},
   },

@@ -14,7 +14,9 @@ module.exports={
     applyJob:applyJob,
     getSavedJobs:getSavedJobs,
     getAppliedJobs:getAppliedJobs,
-    unsaveJob:unsaveJob
+    unsaveJob:unsaveJob,
+    recruiterDetails:recruiterDetails,
+    updateAppliedJobStatus:updateAppliedJobStatus
 }
 
 async function userRegistration(req,res) {
@@ -205,6 +207,38 @@ async function unsaveJob(req,res) {
 
     try {
         const response = await userService.unsaveJob(req);
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+        res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(response);
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
+        res.status(parseInt(error[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(error);
+    } 
+}
+
+async function recruiterDetails(req,res) {
+    const func_name = 'recruiterDetails';
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+
+    try {
+        const response = await userService.recruiterDetails(req);
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+        res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(response);
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
+        res.status(parseInt(error[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(error);
+    } 
+}
+
+async function updateAppliedJobStatus(req,res) {
+    const func_name = 'updateAppliedJobStatus';
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+
+    try {
+        const response = await userService.updateAppliedJobStatus(req);
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
         res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
         res.send(response);

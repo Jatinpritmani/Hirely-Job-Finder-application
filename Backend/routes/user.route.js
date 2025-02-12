@@ -21,5 +21,7 @@ router.post('/get/appliedJobs/v1',userController.getAppliedJobs)
 router.post('/apply/job/v1',userController.applyJob)
 router.post('/unsave/job/v1',userController.unsaveJob)
 
+router.post('/recruiterDetails/v1',userController.recruiterDetails)
+router.post('/updateAppliedJobStatus/v1',userController.updateAppliedJobStatus)
 
 module.exports=router
