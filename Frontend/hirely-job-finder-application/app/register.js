@@ -78,7 +78,6 @@ const Register = () => {
     };
 
     useEffect(() => {
-        console.log(fullName?.length > 0 && email?.length > 0 && password?.length > 0 && isValidEmail(email) && confirmPassword?.length > 0 && confirmPassword != password);
         if (confirmPassword != password) {
             setPasswordErrorMessage(`Password and Confirm Password dosen't match`)
             setConfirmPasswordErrorMessage(`Password and Confirm Password dosen't match`)

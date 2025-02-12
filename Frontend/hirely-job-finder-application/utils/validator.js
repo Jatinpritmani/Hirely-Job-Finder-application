@@ -13,12 +13,12 @@ export function isValidEmail(email) {
 }
 
 // Example usage
-console.log(isValidEmail("test@example.com")); // true ✅
-console.log(isValidEmail("user.name+123@sub.example.co.uk")); // true ✅
-console.log(isValidEmail(".invalid@email.com")); // false ❌ (Cannot start with a dot)
-console.log(isValidEmail("invalid..email@example.com")); // false ❌ (No consecutive dots allowed)
-console.log(isValidEmail("user@invalid_domain.com")); // false ❌ (Invalid character in domain)
-console.log(isValidEmail("valid-email@longtld.technology")); // true ✅
+// console.log(isValidEmail("test@example.com"),); // true ✅
+// console.log(isValidEmail("user.name+123@sub.example.co.uk")); // true ✅
+// console.log(isValidEmail(".invalid@email.com")); // false ❌ (Cannot start with a dot)
+// console.log(isValidEmail("invalid..email@example.com")); // false ❌ (No consecutive dots allowed)
+// console.log(isValidEmail("user@invalid_domain.com")); // false ❌ (Invalid character in domain)
+// console.log(isValidEmail("valid-email@longtld.technology")); // true ✅
 
 
 /**
@@ -33,12 +33,12 @@ export function isTruthyString(str) {
 }
 
 // Example Usage:
-console.log(isTruthyString("Hello"));  // true (Truthy)
-console.log(isTruthyString(""));       // false (Falsy)
-console.log(isTruthyString("0"));      // true (Truthy, because it's a non-empty string)
-console.log(isTruthyString("false"));  // true (Truthy, because it's a non-empty string)
-console.log(isTruthyString(null));     // false (Falsy)
-console.log(isTruthyString(undefined)); // false (Falsy)
-console.log(isTruthyString(" "));      // true (Truthy, because it's a non-empty space)
+// console.log(isTruthyString("Hello"));  // true (Truthy)
+// console.log(isTruthyString(""));       // false (Falsy)
+// console.log(isTruthyString("0"));      // true (Truthy, because it's a non-empty string)
+// console.log(isTruthyString("false"));  // true (Truthy, because it's a non-empty string)
+// console.log(isTruthyString(null));     // false (Falsy)
+// console.log(isTruthyString(undefined)); // false (Falsy)
+// console.log(isTruthyString(" "));      // true (Truthy, because it's a non-empty space)
 
 

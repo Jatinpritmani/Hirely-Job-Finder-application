@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
+import { router } from "expo-router";
 
 
 // local imports
@@ -20,7 +21,6 @@ import HText from "../components/common/HText";
 import HButton from "../components/common/HButton";
 import { moderateScale } from "../constants/constants";
 import { Colors } from "@/constants/Colors";
-import { router } from "expo-router";
 import MonthYearPicker from "../components/modals/monthYearPicker";
 import { isTruthyString } from "../utils/validator";
 import { CrossIcon, TrashIcon } from "../assets/svgs";
@@ -117,7 +117,7 @@ const SubmitPforileDetail = () => {
 
 
     const onPressNext = () => {
-        router.push('submitProfileDetail')
+        router.push('uploadCV')
     };
     const onPressAddExperince = () => {
         setIsShowExperienceFields(true)
@@ -322,8 +322,8 @@ const SubmitPforileDetail = () => {
                                     : Colors[colorScheme]?.primary
                             }
                         ></HButton>
-                        <MonthYearPicker modalVisible={startfromModal} setModalVisible={setStartfromModal} setDate={setStartFromDate} />
-                        <MonthYearPicker modalVisible={endToModal} setModalVisible={setendToModal} setDate={setEndToDate} minMonthYear={startFromDate} />
+                        <MonthYearPicker keyss='startdate' modalVisible={startfromModal} setModalVisible={setStartfromModal} setDate={setStartFromDate} />
+                        <MonthYearPicker key='enddate' modalVisible={endToModal} setModalVisible={setendToModal} setDate={setEndToDate} minMonthYear={startFromDate} />
                     </View>
                 </ScrollView>
 

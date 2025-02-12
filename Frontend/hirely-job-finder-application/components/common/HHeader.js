@@ -11,6 +11,8 @@ import { ArrowLeft } from '../../assets/svgs';
 import { Colors } from '@/constants/Colors'
 
 
+
+
 export default function HHeader(props) {
   const { title, onPressBack, rightIcon, isHideBack, isLeftIcon } = props;
 
@@ -35,7 +37,13 @@ export default function HHeader(props) {
           {title}
         </HText>
 
+        <View style={localStyles.rightContainer}>
+          {!!rightIcon && rightIcon}
+
+        </View>
+
       </View>
+
 
       {!!rightIcon && rightIcon}
     </View>
@@ -45,17 +53,22 @@ export default function HHeader(props) {
 const localStyles = StyleSheet.create({
   container: {
     ...styles.mt25,
-    ...styles.rowSpaceBetween,
 
   },
   backBtnStyle: {
+    position: 'absolute',
     width: moderateScale(42),
     height: moderateScale(42),
     ...styles.center,
     borderWidth: moderateScale(1),
     borderRadius: moderateScale(21),
+    left: 0
+  },
+  rightContainer: {
+    position: 'absolute',
+    right: 0
   },
   titleText: {
-    marginLeft: moderateScale(54)
+    // marginLeft: moderateScale(54)
   },
 });

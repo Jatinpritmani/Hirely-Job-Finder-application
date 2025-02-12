@@ -57,13 +57,14 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Provider store={store}>
 
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack initialRouteName='uploadCV' screenOptions={{ headerShown: false }}>
           {/* <Stack.Screen name="index" /> */}
           <Stack.Screen name="start" />
           <Stack.Screen name="login" />
           <Stack.Screen name="register" />
           <Stack.Screen name="submitProfileDetail" />
           <Stack.Screen name="forgotPassword" />
+          <Stack.Screen name="uploadCV" />
         </Stack>
         <StatusBar style="auto" />
         <Toast />
