@@ -20,12 +20,17 @@ import images from "../assets/images";
 import { getHeight, moderateScale, screenWidth } from "@/constants/constants";
 import { Colors } from "@/constants/Colors";
 import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
-export default function Onboarding() {
+export default function onBoarding() {
+    const currentUserDetail = useSelector(state => state.userReducer)
     const colorScheme = useColorScheme();
     const swiperRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
 
+    console.log('====================================');
+    console.log(currentUserDetail);
+    console.log('====================================');
     const OnBoardingData = {
         onBoardingItem1: {
             id: 1,

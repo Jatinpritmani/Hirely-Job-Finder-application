@@ -11,6 +11,12 @@ import CrossIcon from './crossIcon.svg'
 import TrashIcon from './trash.svg'
 import DocumentIcon from './document.svg'
 import RegisterSuccessIcon from './registerSuccess.svg'
+import HomeIcon from './home.svg'
+import ProfileIcon from './profile.svg'
+import SaveIcon from './save.svg'
+import HomeBlueIcon from './homeBlue.svg'
+import ProfileBlueIcon from './profileBlue.svg'
+import SaveBlueIcon from './saveBlue.svg'
 
 
 export {
@@ -26,5 +32,11 @@ export {
     CrossIcon,
     TrashIcon,
     DocumentIcon,
-    RegisterSuccessIcon
+    RegisterSuccessIcon,
+    HomeIcon,
+    ProfileIcon,
+    SaveIcon,
+    HomeBlueIcon,
+    ProfileBlueIcon,
+    SaveBlueIcon
 }

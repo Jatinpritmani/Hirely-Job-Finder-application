@@ -12,7 +12,7 @@ import Toast, { BaseToast } from 'react-native-toast-message';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Provider } from 'react-redux';
-import store from '../context/store';
+import { store } from '../context/store';
 import typography from '@/themes/typography';
 import { Colors } from '@/constants/Colors';
 import { moderateScale } from '@/constants/constants';

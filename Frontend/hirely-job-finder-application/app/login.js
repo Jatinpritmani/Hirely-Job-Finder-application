@@ -36,6 +36,8 @@ const login = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     const currentUserType = useSelector(state => state.commonReducer.current_user_type)
+    const currentUserDetail = useSelector(state => state.userReducer)
+
     const isUserLoggedIn = useSelector(state => state.userReducer.isUserLoggedIn)
 
     useEffect(() => {
@@ -47,6 +49,8 @@ const login = () => {
     }, [email, password]);
 
     useEffect(() => {
+        console.log(currentUserDetail, "==-=-=-=-");
+
         if (isUserLoggedIn) {
             router.replace('(tabs)')
         }
