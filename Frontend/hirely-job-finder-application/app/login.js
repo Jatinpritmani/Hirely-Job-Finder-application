@@ -6,6 +6,8 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router } from 'expo-router'
+import { useDispatch, useSelector } from 'react-redux';
+
 
 // local imports
 import HSafeAreaView from "../components/common/HSafeAreaView";
@@ -17,16 +19,24 @@ import HText from "../components/common/HText";
 import HButton from "../components/common/HButton";
 import { moderateScale } from "../constants/constants";
 import { Colors } from "@/constants/Colors";
-import { isValidEmail } from "../utils/validator";
+import { isTruthyString, isValidEmail } from "../utils/validator";
+import { USER_LOGIN } from "../components/apiConstants";
+import apiRequest from "../components/api";
+import { getUserDetail } from "../context/actions/userActions";
 
 const login = () => {
     const colorScheme = useColorScheme();
+    const dispatch = useDispatch()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isShowPassword, setIsShowPassword] = useState(true);
     const [isLoginDisabled, setIsLoginDisabled] = useState(true);
     const [emailErrorMessage, setEmailErrorMessage] = useState("");
     const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false)
+
+    const currentUserType = useSelector(state => state.commonReducer.current_user_type)
+    const isUserLoggedIn = useSelector(state => state.userReducer.isUserLoggedIn)
 
     useEffect(() => {
         if (email?.length > 0 && password?.length > 0 && isValidEmail(email)) {
@@ -35,6 +45,14 @@ const login = () => {
             setIsLoginDisabled(true);
         }
     }, [email, password]);
+
+    useEffect(() => {
+        if (isUserLoggedIn) {
+            router.replace('(tabs)')
+        }
+    }, [isUserLoggedIn])
+
+
 
     const onChangeEmail = (text) => {
         setEmail(text);
@@ -70,7 +88,42 @@ const login = () => {
         );
     };
 
-    const onPressLogin = () => { };
+    const onPressLogin = async () => {
+        if (!isTruthyString(email)) {
+            setEmailErrorMessage("*Please Enter E-Mail Address.");
+
+        }
+        if (!isValidEmail(email)) {
+            setEmailErrorMessage("Please Enter a valid E-Mail.");
+        }
+        if (!isTruthyString(password)) {
+            setPasswordErrorMessage("*Please Enter a Password");
+
+        }
+        if (!isValidEmail(email) || !isTruthyString(email) || !isTruthyString(password)) {
+            return
+        }
+        else {
+            setIsLoading(true)
+
+            let login_cred = {
+                user_email: email,
+                user_password: password
+            }
+            // api call for login 
+            try {
+                let response = await apiRequest("POST", USER_LOGIN, login_cred);
+                if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                    console.log(response?.data);
+                    dispatch(getUserDetail(response?.data?.user_id))
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setIsLoading(false)
+            }
+        }
+    };
     const onPressForgotPassword = () => {
         if (email?.length > 0 && isValidEmail(email)) {
 
@@ -92,7 +145,7 @@ const login = () => {
         <HSafeAreaView style={localStyles.main}>
             <AuthHeader
                 title="Welcome Back"
-                description={"Let’s log in. Apply to jobs!"}
+                description={currentUserType == 'job_seeker' ? "Let’s Login. Apply to jobs!" : "Let’s Login. Start hiring top talent today!"}
             />
             <View style={localStyles.innerContainer}>
                 <View style={localStyles.inputContainer}>
@@ -126,7 +179,8 @@ const login = () => {
                     </TouchableOpacity>
 
                     <HButton
-                        disabled={isLoginDisabled}
+                        // disabled={isLoginDisabled}
+                        isLoading={isLoading}
                         onPress={onPressLogin}
                         textType={"S16"}
                         color={

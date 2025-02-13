@@ -68,6 +68,7 @@ export default function RootLayout() {
           <Stack.Screen name="submitProfileDetail" />
           <Stack.Screen name="forgotPassword" />
           <Stack.Screen name="uploadCV" />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
         <Toast position='top' topOffset={70}

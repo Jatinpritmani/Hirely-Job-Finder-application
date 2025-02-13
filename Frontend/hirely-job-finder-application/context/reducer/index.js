@@ -4,7 +4,7 @@ import commonReducer from './commonReducer';
 
 const rootReducer = combineReducers({
     commonReducer,
-    // userReducer,
+    userReducer,
 });
 
 export default rootReducer;
