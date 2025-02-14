@@ -212,8 +212,6 @@ async function uploadUserResume(req) {
         let userDetails = await User.findOne({_id : user_id},
             {resume:1}
         )
-        console.log("userDetails",userDetails);
-        
         userDetails = userDetails.toJSON(); 
         if(userDetails.resume){
             const filePath = path.join(__dirname, "../resumes", userDetails.resume.filename);
@@ -376,7 +374,6 @@ async function applyJob(req) {
         let { apply_type,job_id,job_seeker_id,recruiter_id,cover_letter,status} = req.body;
         
         const applicationExists = await Application.findOne({job_id:job_id,job_seeker_id:job_seeker_id})
-        console.log("applicationExists",applicationExists);
         
         if(applicationExists){
             return utility_func.responseGenerator(
