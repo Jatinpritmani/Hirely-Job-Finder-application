@@ -5,11 +5,12 @@ const { User }=require('../models/user.model')
 const {Job}=require("../models/job.model")
 const {Application}=require("../models/application.model")
 const {SavedJob}=require("../models/savedJobs.model")
+const {Notification} =require("../models/notification.model")
 const {generateToken}=require("../utilities/middlewares/jwt-service.middlewares")
 const bcrypt = require("bcrypt")
 const fs=require("fs")
 const path=require("path")
-const mongoose=require("mongoose")
+const mongoose=require("mongoose");
 
 module.exports={
     userRegistration:userRegistration,
@@ -152,9 +153,9 @@ async function getUserDetails(req) {
         let userDetails = await User.findOne({_id : user_id},
             {resume:0,user_password:0,__v:0,createdAt:0,updatedAt:0}
         )
-        
+        const total_job_applied = await Application.countDocuments({job_seeker_id:user_id})
         userDetails = userDetails.toJSON(); 
-        userDetails["total_job_applied"] = 12;
+        userDetails["total_job_applied"] = total_job_applied;
 
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,
@@ -259,6 +260,24 @@ async function createJobPost(req) {
         
         const jobDetails = await Job.create( { recruiter_id ,position ,location ,salary ,job_type ,summary ,requirenment,number_of_opening} );
         
+        if(jobDetails){
+            const users = await User.find({user_type:"job_seeker"},{user_id:1,company_name:1})
+            const companyDetails = await User.findOne({_id:jobDetails.recruiter_id},{company_name:1})
+            let notifications=[]
+            users.forEach((user)=>{
+                notifications.push({
+                    job_id : jobDetails._id, 
+                    job_seeker_id : user._id,
+                    recruiter_id : jobDetails.recruiter_id,
+                    title:"Job Posted",
+                    message:`${companyDetails.company_name} Posted the new job thay you might like click here to Apply now!`,
+                    type:'job_posted' 
+                })
+            })
+            await Notification.insertMany(notifications)
+           
+        }
+        
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
 
         return utility_func.responseGenerator(
@@ -287,6 +306,8 @@ async function getAllJobPosts(req) {
 
     try {
         const user_id =req.body.user_id
+        const job_id =req.body.job_id
+        
         let jobDetails=await Job.aggregate([
             {
                 $lookup: {
@@ -296,7 +317,7 @@ async function getAllJobPosts(req) {
                     as: "recruiterDetails"
                 }
             },
-            { $unwind: "$recruiterDetails" }, 
+            { $unwind: "$recruiterDetails" },
             {
                 $project: {
                     company_name: "$recruiterDetails.company_name",
@@ -311,7 +332,20 @@ async function getAllJobPosts(req) {
                 }
             }
         ])
+       
+        if(jobDetails && Array.isArray(jobDetails) && jobDetails.length > 0){
+            if(job_id){
+                jobDetails = jobDetails.filter((job)=> job._id == job_id)
+            }
+            const applicationDetails = await Application.find({job_seeker_id:user_id},{job_id:1})
 
+            jobDetails = jobDetails.map((job)=>{
+                const isApplied = applicationDetails.findIndex((app)=>app.job_id.toString() == job.job_id)
+                job["is_job_applied"] = isApplied >= 0 ? true : false
+                return job
+            })
+        }
+        
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,
             utility_func.statusGenerator(
@@ -341,11 +375,35 @@ async function applyJob(req) {
     try {
         let { apply_type,job_id,job_seeker_id,recruiter_id,cover_letter,status} = req.body;
         
+        const applicationExists = await Application.findOne({job_id:job_id,job_seeker_id:job_seeker_id})
+        console.log("applicationExists",applicationExists);
+        
+        if(applicationExists){
+            return utility_func.responseGenerator(
+                utility_func.responseCons.RESP_APPLICATION_APPLIED,
+                utility_func.statusGenerator(
+                    utility_func.httpStatus.ReasonPhrases.UNPROCESSABLE_ENTITY, utility_func.httpStatus.StatusCodes.UNPROCESSABLE_ENTITY
+                ), true
+            )
+        }
         if(apply_type == "save_job"){
             await SavedJob.create( { job_id,job_seeker_id } );
         }
         if(apply_type == "apply_job"){
-            await Application.create( { job_id,job_seeker_id,recruiter_id,cover_letter ,status} );
+           const applicationDetails = await Application.create( { job_id,job_seeker_id,recruiter_id,cover_letter ,status} );
+
+           if(applicationDetails){
+                let notification = {
+                    job_id : applicationDetails.job_id, 
+                    job_seeker_id : applicationDetails.job_seeker_id,
+                    recruiter_id : applicationDetails.recruiter_id,
+                    applied_job_id: applicationDetails._id,
+                    title:"Application status update",
+                    message:`Your application's status is updated. Click here to check the status`,
+                    type:'status_update' 
+                }
+                await Notification.create(notification);
+            }
         }
         
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);

@@ -15,6 +15,7 @@ module.exports = {
     RESP_EMPTY_LIST_FOUND: 'Empty List Found.',
     RESP_LOGIN_SUCCESS_MSG: 'Login Successfully!!',
     RESP_INVALID_CREDENTIALS: 'Invalid Credentials!!',
+    RESP_APPLICATION_APPLIED:'Already application applied',
 
     RESP_EMAIL_EXISTS:"Email already registered",
     RESP_FILE_SIZE_EXCEEDS:"File size should be less then 16MB"
