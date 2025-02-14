@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import {
+    ActivityIndicator,
     Image,
     StyleSheet,
     Text,
@@ -19,7 +20,7 @@ import { styles } from "@/themes";
 import images from "../assets/images";
 import { getHeight, moderateScale, screenWidth } from "@/constants/constants";
 import { Colors } from "@/constants/Colors";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function onBoarding() {
@@ -27,10 +28,30 @@ export default function onBoarding() {
     const colorScheme = useColorScheme();
     const swiperRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [loading, setLoading] = useState(true);
+
 
     console.log('====================================');
     console.log(currentUserDetail);
     console.log('====================================');
+
+    useEffect(() => {
+        if (currentUserDetail) {
+            if (currentUserDetail?.isUserLoggedIn) {
+                setLoading(false);
+                setTimeout(() => {
+                    router.replace("(tabs)");
+                }, 100);
+                // router?.replace("(tabs)"); // Redirect to tabs if user is logged in
+            }
+            else {
+                setLoading(false)
+            }
+        }
+    }, [])
+
+
+
     const OnBoardingData = {
         onBoardingItem1: {
             id: 1,
@@ -65,6 +86,14 @@ export default function onBoarding() {
     const onPressNext = () => {
         swiperRef?.current?.scrollTo(currentIndex + 1);
     };
+
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <ActivityIndicator size="large" color={Colors[colorScheme]?.primary} />
+            </View>
+        );
+    }
 
     return (
         <HSafeAreaView style={localStyles.main} containerStyle={styles.ph0}>

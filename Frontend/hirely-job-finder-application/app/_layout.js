@@ -11,7 +11,7 @@ import Toast, { BaseToast } from 'react-native-toast-message';
 // local imports 
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { store } from '../context/store';
 import typography from '@/themes/typography';
 import { Colors } from '@/constants/Colors';
@@ -19,6 +19,8 @@ import { moderateScale } from '@/constants/constants';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
