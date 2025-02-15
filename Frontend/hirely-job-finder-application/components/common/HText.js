@@ -16,6 +16,8 @@ const HText = ({ type, style, align, color, children, ...props }) => {
         return Typography.fontWeights.SemiBold;
       case 'B':
         return Typography.fontWeights.Bold;
+      case 'L':
+        return Typography.fontWeights.Light
       default:
         return Typography.fontWeights.Regular;
     }
@@ -23,6 +25,10 @@ const HText = ({ type, style, align, color, children, ...props }) => {
 
   const fontSize = () => {
     switch (type.slice(1)) {
+      case '8':
+        return Typography.fontSizes.f8;
+      case '10':
+        return Typography.fontSizes.f10;
       case '12':
         return Typography.fontSizes.f12;
       case '14':

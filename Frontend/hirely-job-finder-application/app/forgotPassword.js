@@ -31,7 +31,7 @@ const forgotPassword = ({ params }) => {
                 Please choose where we can contact you.
             </HText>
             <View style={[localStyles.mailContainer, { borderColor: Colors[colorScheme]?.grayScale5 }]}>
-                <Mail />
+                <Mail width={moderateScale(24)} height={moderateScale(24)} />
                 <View style={{ marginLeft: moderateScale(24) }}>
                     <HText type='R12' color={Colors[colorScheme]?.grayScale7} >
                         Via E-mail

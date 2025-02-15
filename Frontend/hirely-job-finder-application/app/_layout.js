@@ -6,6 +6,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import Toast, { BaseToast } from 'react-native-toast-message';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
 
 
 // local imports 
@@ -59,75 +61,78 @@ export default function RootLayout() {
 
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Provider store={store}>
+    <SafeAreaProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Provider store={store}>
 
-        <Stack initialRouteName='uploadCV' screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen name="index" /> */}
-          <Stack.Screen name="start" />
-          <Stack.Screen name="login" />
-          <Stack.Screen name="register" />
-          <Stack.Screen name="submitProfileDetail" />
-          <Stack.Screen name="forgotPassword" />
-          <Stack.Screen name="uploadCV" />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-        <StatusBar style="auto" />
-        <Toast position='top' topOffset={70}
-          config={{
-            success: (props) => (
-              <BaseToast
-                {...props}
-                style={{ borderLeftColor: Colors[colorScheme]?.success, backgroundColor: '#f0f8f5' }}
-                contentContainerStyle={{ paddingHorizontal: moderateScale(15) }}
-                text1Style={{
-                  ...typography.fontSizes.f14,
-                  ...typography.fontWeights.Medium,
-                  color: Colors[colorScheme]?.success
-                }}
-                text2Style={{
-                  ...typography.fontSizes.f12,
-                  ...typography.fontWeights.Medium,
-                  color: Colors[colorScheme]?.text
-                }}
-              />
-            ),
-            error: (props) => (
-              <BaseToast
-                {...props}
-                style={{ borderLeftColor: Colors[colorScheme]?.danger, backgroundColor: '#fdecea' }}
-                contentContainerStyle={{ paddingHorizontal: moderateScale(15) }}
-                text1Style={{
-                  ...typography.fontSizes.f14,
-                  ...typography.fontWeights.Medium,
-                  color: Colors[colorScheme]?.danger
-                }}
-                text2Style={{
-                  ...typography.fontSizes.f12,
-                  ...typography.fontWeights.Medium,
-                  color: Colors[colorScheme]?.text
-                }}
-              />
-            ),
-            info: (props) => (
-              <BaseToast
-                {...props}
-                style={{ borderLeftColor: Colors[colorScheme]?.info, backgroundColor: '#e8f4ff' }}
-                contentContainerStyle={{ paddingHorizontal: moderateScale(15) }}
-                text1Style={{
-                  ...typography.fontSizes.f14,
-                  ...typography.fontWeights.Medium,
-                  color: Colors[colorScheme]?.info
-                }}
-                text2Style={{
-                  ...typography.fontSizes.f12,
-                  ...typography.fontWeights.Medium,
-                  color: Colors[colorScheme]?.text
-                }}
-              />
-            )
-          }} />
-      </Provider>
-    </ThemeProvider>
+          <Stack initialRouteName='uploadCV' screenOptions={{ headerShown: false }}>
+            {/* <Stack.Screen name="index" /> */}
+            <Stack.Screen name="start" />
+            <Stack.Screen name="login" />
+            <Stack.Screen name="register" />
+            <Stack.Screen name="submitProfileDetail" />
+            <Stack.Screen name="forgotPassword" />
+            <Stack.Screen name="uploadCV" />
+            <Stack.Screen name="allExperience" />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack>
+          <StatusBar style="auto" />
+          <Toast position='top' topOffset={70}
+            config={{
+              success: (props) => (
+                <BaseToast
+                  {...props}
+                  style={{ borderLeftColor: Colors[colorScheme]?.success, backgroundColor: '#f0f8f5' }}
+                  contentContainerStyle={{ paddingHorizontal: moderateScale(15) }}
+                  text1Style={{
+                    ...typography.fontSizes.f14,
+                    ...typography.fontWeights.Medium,
+                    color: Colors[colorScheme]?.success
+                  }}
+                  text2Style={{
+                    ...typography.fontSizes.f12,
+                    ...typography.fontWeights.Medium,
+                    color: Colors[colorScheme]?.text
+                  }}
+                />
+              ),
+              error: (props) => (
+                <BaseToast
+                  {...props}
+                  style={{ borderLeftColor: Colors[colorScheme]?.danger, backgroundColor: '#fdecea' }}
+                  contentContainerStyle={{ paddingHorizontal: moderateScale(15) }}
+                  text1Style={{
+                    ...typography.fontSizes.f14,
+                    ...typography.fontWeights.Medium,
+                    color: Colors[colorScheme]?.danger
+                  }}
+                  text2Style={{
+                    ...typography.fontSizes.f12,
+                    ...typography.fontWeights.Medium,
+                    color: Colors[colorScheme]?.text
+                  }}
+                />
+              ),
+              info: (props) => (
+                <BaseToast
+                  {...props}
+                  style={{ borderLeftColor: Colors[colorScheme]?.info, backgroundColor: '#e8f4ff' }}
+                  contentContainerStyle={{ paddingHorizontal: moderateScale(15) }}
+                  text1Style={{
+                    ...typography.fontSizes.f14,
+                    ...typography.fontWeights.Medium,
+                    color: Colors[colorScheme]?.info
+                  }}
+                  text2Style={{
+                    ...typography.fontSizes.f12,
+                    ...typography.fontWeights.Medium,
+                    color: Colors[colorScheme]?.text
+                  }}
+                />
+              )
+            }} />
+        </Provider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }

@@ -14,10 +14,19 @@ const fontWeights = {
   Bold: {
     fontFamily: 'Poppins-Bold',
   },
+  Light: {
+    fontFamily: 'Poppins-Light'
+  }
 };
 
 // App font sizes:
 const fontSizes = {
+  f8: {
+    fontSize: moderateScale(8),
+  },
+  f10: {
+    fontSize: moderateScale(10),
+  },
   f12: {
     fontSize: moderateScale(12),
   },

@@ -14,13 +14,18 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, loading: true, error: null };
 
     case types.GET_USER_DETAIL_SUCCESS:
-      console.log(action.payload);
 
       return { ...state, loading: false, currentUserDetail: action.payload, isUserLoggedIn: true };
 
     case types.GET_USER_DETAIL_ERROR:
       return { ...state, loading: false, error: action.payload };
-
+    case types.LOG_OUT:
+      return {
+        loading: false,
+        currentUserDetail: null,
+        error: null,
+        isUserLoggedIn: false
+      };
     default:
       return state;
   }

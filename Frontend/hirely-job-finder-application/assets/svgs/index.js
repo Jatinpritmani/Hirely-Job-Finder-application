@@ -17,6 +17,11 @@ import SaveIcon from './save.svg'
 import HomeBlueIcon from './homeBlue.svg'
 import ProfileBlueIcon from './profileBlue.svg'
 import SaveBlueIcon from './saveBlue.svg'
+import CreateJobIcon from './createJob.svg'
+import CreateJobBlueIcon from './createJobBlue.svg'
+import NotificationIcon from './notification.svg'
+import NotificationUnreadIcon from './notificationUnread.svg'
+import LogoutIcon from './logout.svg'
 
 
 export {
@@ -38,5 +43,10 @@ export {
     SaveIcon,
     HomeBlueIcon,
     ProfileBlueIcon,
-    SaveBlueIcon
+    SaveBlueIcon,
+    CreateJobIcon,
+    CreateJobBlueIcon,
+    NotificationIcon,
+    NotificationUnreadIcon,
+    LogoutIcon
 }

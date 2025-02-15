@@ -1,4 +1,4 @@
-import { SET_CURRENT_USER_TYPE } from "../types/type";
+import { LOG_OUT, SET_CURRENT_USER_TYPE } from "../types/type";
 
 
 const INITIAL_STATE = {
@@ -12,6 +12,10 @@ export default function (state = INITIAL_STATE, action) {
                 ...state,
                 current_user_type: action.payload,
             };
+        case LOG_OUT:
+            return {
+                current_user_type: ''
+            }
         default:
             return state;
     }

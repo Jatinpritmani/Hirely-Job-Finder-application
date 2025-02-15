@@ -31,16 +31,12 @@ export default function onBoarding() {
     const [loading, setLoading] = useState(true);
 
 
-    console.log('====================================');
-    console.log(currentUserDetail);
-    console.log('====================================');
-
     useEffect(() => {
         if (currentUserDetail) {
             if (currentUserDetail?.isUserLoggedIn) {
-                setLoading(false);
                 setTimeout(() => {
                     router.replace("(tabs)");
+                    setLoading(false);
                 }, 100);
                 // router?.replace("(tabs)"); // Redirect to tabs if user is logged in
             }
@@ -90,7 +86,17 @@ export default function onBoarding() {
     if (loading) {
         return (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                <ActivityIndicator size="large" color={Colors[colorScheme]?.primary} />
+                <Image
+                    source={images.gradientStart}
+                    style={{ width: '100%', height: '100%' }}
+                />
+                <View style={{ position: 'absolute', }}>
+                    <HText type="S40" color={Colors[colorScheme]?.white} >
+                        Hirely
+                    </HText>
+
+                    {/* <ActivityIndicator size="large" color={Colors[colorScheme]?.primary} /> */}
+                </View>
             </View>
         );
     }

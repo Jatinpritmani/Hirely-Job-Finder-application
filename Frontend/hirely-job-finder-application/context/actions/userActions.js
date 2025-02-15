@@ -3,6 +3,7 @@ import { store } from '../store';
 import * as types from '../types/type'
 import apiRequest from "../../components/api";
 import { USER_DETAIL } from "../../components/apiConstants";
+import { setCurrentUserType } from "./commonActioin";
 
 
 
@@ -17,11 +18,11 @@ export const getUserDetail = userId => {
         try {
             let response = await apiRequest("POST", USER_DETAIL, data);
             if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
-                console.log(response?.data);
                 dispatch(({
                     type: types.GET_USER_DETAIL_SUCCESS,
                     payload: response?.data
                 }))
+                dispatch(setCurrentUserType(response?.data?.user_type))
 
             }
             else {
@@ -39,5 +40,13 @@ export const getUserDetail = userId => {
         }
     };
 };
+
+export const doLogout = () => {
+    return dispatch => {
+        dispatch(({
+            type: types.LOG_OUT,
+        }))
+    }
+}
 
 

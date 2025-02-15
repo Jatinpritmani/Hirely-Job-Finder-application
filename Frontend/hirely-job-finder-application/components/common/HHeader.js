@@ -7,14 +7,14 @@ import { router } from 'expo-router'
 import { styles } from '../../themes';
 import HText from './HText';
 import { moderateScale } from '../../constants/constants';
-import { ArrowLeft } from '../../assets/svgs';
+import { ArrowLeft, NotificationIcon } from '../../assets/svgs';
 import { Colors } from '@/constants/Colors'
 
 
 
 
 export default function HHeader(props) {
-  const { title, onPressBack, rightIcon, isHideBack, isLeftIcon, containerStyle } = props;
+  const { title, onPressBack, rightIcon, isHideBack, isLeftIcon, containerStyle, titleType = 'B16', titleColor = Colors[colorsScheme]?.headerColor } = props;
 
   const goBack = () => { router.back() };
   const colorsScheme = useColorScheme()
@@ -26,14 +26,20 @@ export default function HHeader(props) {
             <ArrowLeft />
           </TouchableOpacity>
         )}
-        {!!isLeftIcon && isLeftIcon}
+
+        {!!isLeftIcon &&
+          <View style={localStyles.leftIconStyle}>
+
+            {isLeftIcon}
+          </View>
+        }
 
         <HText
-          color={Colors[colorsScheme]?.headerColor}
+          color={titleColor}
           numberOfLines={1}
           align={'center'}
           style={[localStyles.titleText]}
-          type={'B16'}>
+          type={titleType}>
           {title}
         </HText>
 
@@ -45,7 +51,6 @@ export default function HHeader(props) {
       </View>
 
 
-      {!!rightIcon && rightIcon}
     </View>
   );
 }
@@ -63,6 +68,10 @@ const localStyles = StyleSheet.create({
     borderWidth: moderateScale(1),
     borderRadius: moderateScale(21),
     left: 0
+  },
+  leftIconStyle: {
+    left: 0,
+    position: 'absolute',
   },
   rightContainer: {
     position: 'absolute',

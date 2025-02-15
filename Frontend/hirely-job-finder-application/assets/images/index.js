@@ -4,6 +4,7 @@ export default {
     onBoarding3: require('./onBoarding3.png'),
     gradientStart: require('./gradientStart.png'),
     forgotPassword: require('./forgotPassword.png'),
-    createNewPassword: require('./createNewPassword.png')
+    createNewPassword: require('./createNewPassword.png'),
+    profileImage: require('./profilePic.png')
 };
 

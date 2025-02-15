@@ -1,21 +1,19 @@
-import {useIsFocused} from '@react-navigation/native';
+// library import
 import React from 'react';
-import {View, StyleSheet, ActivityIndicator, Modal} from 'react-native';
-import {colors, styles} from '../../themes';
+import { View, StyleSheet, ActivityIndicator, useColorScheme } from 'react-native';
 
-const ZLoader = () => {
-  const isFocused = useIsFocused();
+// local imports
+import { styles } from '../../themes';
+import { Colors } from '@/constants/Colors';
 
-  if (!isFocused) {
-    return <View />;
-  }
+
+const HLoader = () => {
+  const colorScheme = useColorScheme();
 
   return (
-    <Modal transparent>
-      <View style={localStyles.vwMainStyle}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
-    </Modal>
+    <View style={localStyles.vwMainStyle}>
+      <ActivityIndicator size="large" color={Colors[colorScheme]?.primary} />
+    </View>
   );
 };
 
@@ -23,8 +21,7 @@ const localStyles = StyleSheet.create({
   vwMainStyle: {
     ...styles.flex,
     ...styles.center,
-    backgroundColor: colors.modalBg,
   },
 });
 
-export default React.memo(ZLoader);
+export default React.memo(HLoader);

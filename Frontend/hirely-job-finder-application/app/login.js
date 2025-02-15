@@ -49,7 +49,6 @@ const login = () => {
     }, [email, password]);
 
     useEffect(() => {
-        console.log(currentUserDetail, "==-=-=-=-");
 
         if (isUserLoggedIn) {
             router.replace('(tabs)')
@@ -118,7 +117,6 @@ const login = () => {
             try {
                 let response = await apiRequest("POST", USER_LOGIN, login_cred);
                 if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
-                    console.log(response?.data);
                     dispatch(getUserDetail(response?.data?.user_id))
                 }
             } catch (error) {
@@ -229,7 +227,7 @@ export default login;
 
 const localStyles = StyleSheet.create({
     main: {
-        ...styles.ph20,
+        // ...styles.ph20,
     },
     innerContainer: {
         ...styles.justifyBetween,
