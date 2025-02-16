@@ -1,6 +1,7 @@
 import { Alert, StyleSheet, Text, useColorScheme, View } from "react-native";
 import React, { useRef, useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
+import Toast from "react-native-toast-message";
 
 // local imports
 import { Colors } from "@/constants/Colors";
@@ -11,18 +12,19 @@ import HText from "../components/common/HText";
 import { moderateScale } from "../constants/constants";
 import HButton from "../components/common/HButton";
 import { CrossIcon, DocumentIcon } from "../assets/svgs";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import apiRequest, { uploadFile } from "../components/api";
 import { UPLOAD_RESUME, USER_REGISTER } from "../components/apiConstants";
-import Toast from "react-native-toast-message";
 import RegisterSuccess from "../components/modals/registerSuccess";
+import { useSelector } from "react-redux";
 
 const uploadCV = () => {
     const colorScheme = useColorScheme();
     const [isRegisterDisabled, setIsRegisterDisabled] = useState(true);
     const [selectedFile, setSelectedFile] = useState();
-    const { userDetail } = useLocalSearchParams();
+    const { userDetail, fromProfile } = useLocalSearchParams();
     const registerSuccessSheetRef = useRef(null)
+    const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
 
     // function to Register User 
     const onPressRegister = async () => {
@@ -35,14 +37,14 @@ const uploadCV = () => {
             if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
                 // api call for file upload of resume for jobseeker
                 try {
-                    const response = await uploadFile(
+                    const uploadResponse = await uploadFile(
                         UPLOAD_RESUME,
                         selectedFile?.uri,
                         selectedFile?.mimeType,
                         selectedFile?.name,
                         { user_id: response?.data?.user_id }
                     );
-                    if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                    if (uploadResponse?.code == 'HJFA_MS_OK_200' && !uploadResponse?.error_status) {
 
                         Toast.show({
                             type: 'success',
@@ -73,6 +75,42 @@ const uploadCV = () => {
             console.error("Error fetching data:", error);
         }
     };
+    const onPressSave = async () => {
+        if (!selectedFile) {
+            return
+        }
+        // api call for file upload of resume for jobseeker
+        try {
+            const response = await uploadFile(
+                UPLOAD_RESUME,
+                selectedFile?.uri,
+                selectedFile?.mimeType,
+                selectedFile?.name,
+                { user_id: currentUserDetail.user_id }
+            );
+            if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+
+                Toast.show({
+                    type: 'success',
+                    text1: 'Upload Successful',
+                    text2: 'Your Resume has been uploaded.',
+                });
+                router.back()
+
+            }
+            else {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Upload Failed',
+                    text2: 'Failed to Upload your Resume.',
+                });
+            }
+        } catch (error) {
+            console.error('Upload Error:', error);
+        }
+    };
+
+
 
     // Function to pick pdf from files (mobile storage)
     const pickPDF = async () => {
@@ -163,14 +201,14 @@ const uploadCV = () => {
             </View>
             <HButton
                 // disabled={isRegisterDisabled}
-                onPress={onPressRegister}
+                onPress={fromProfile == 'true' ? onPressSave : onPressRegister}
                 textType={"S16"}
                 color={
                     isRegisterDisabled
                         ? Colors[colorScheme]?.grayScale6
                         : Colors[colorScheme]?.white
                 }
-                title={"Next"}
+                title={fromProfile == 'true' ? 'Save' : "Next"}
                 containerStyle={[localStyles.registerBTnstyle]}
                 bgColor={
                     isRegisterDisabled

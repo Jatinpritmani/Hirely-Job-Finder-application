@@ -53,6 +53,13 @@ const Profile = () => {
         // router.push("viewPdf")
     }
 
+    const onPressReupload = () => {
+        router.push({
+            pathname: "/uploadCV",
+            params: { fromProfile: 'true' }, // Pass parameters
+        })
+    }
+
     if (isLoading) {
         return <HLoader />
     }
@@ -109,10 +116,12 @@ const Profile = () => {
                                 {'Resume'}
 
                             </HText>
-                            <HText type="R12" color={Colors[colorScheme]?.grayScale4} style={styles.mt10}>
-                                {'Re-upload'}
+                            <TouchableOpacity onPress={onPressReupload}>
+                                <HText type="R12" color={Colors[colorScheme]?.grayScale4} style={styles.mt10}>
+                                    {'Re-upload'}
 
-                            </HText>
+                                </HText>
+                            </TouchableOpacity>
 
                         </View>
                         <TouchableOpacity onPress={onPressResume} style={[localStyles.cvContainer, { backgroundColor: Colors[colorScheme]?.white }]}>

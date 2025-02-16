@@ -1,22 +1,25 @@
-import { Tabs } from 'expo-router';
+import { router, Tabs, useSegments } from 'expo-router';
 import { useSelector } from 'react-redux';
 
 
 // local imports
 import { CreateJobBlueIcon, CreateJobIcon, HomeBlueIcon, HomeIcon, ProfileBlueIcon, ProfileIcon, SaveBlueIcon, SaveIcon } from '../../assets/svgs';
 import typography from '../../themes/typography';
-import { StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 import { Colors } from '@/constants/Colors'
 import { styles } from '../../themes';
 import { getHeight, isUserJobSeeker, isUserRecruiter } from '../../constants/constants';
 
 export default function TabLayout() {
+    const currentTab = useSegments()?.[1]; // Tabs are in "(tabs)", so index 1 is the active tab
     const colorScheme = useColorScheme()
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
 
     return (
         <Tabs screenOptions={{
-            tabBarStyle: localStyles.tabbarStyle,
+            tabBarStyle: [localStyles.tabbarStyle, {
+                display: currentTab == 'create' ? 'none' : 'flex'
+            }],
             headerShown: false,
             tabBarActiveTintColor: Colors[colorScheme]?.primary,
             tabBarLabelStyle: localStyles.labelStyle,
@@ -42,8 +45,7 @@ export default function TabLayout() {
                 options={{
                     title: 'Create',
                     tabBarIcon: ({ color, focused }) => (focused ? <CreateJobBlueIcon /> : <CreateJobIcon />),
-
-                    href: isUserRecruiter(currentUserDetail?.user_type) ? "/create" : null
+                    href: isUserRecruiter(currentUserDetail?.user_type) ? "/create" : null,
                 }}
             />
             <Tabs.Screen

@@ -1,5 +1,8 @@
+// library import
 import React from 'react';
 import { StyleSheet, View, TextInput, useColorScheme } from 'react-native';
+
+// local imports
 import { getHeight, moderateScale } from '../../constants/constants';
 import { styles } from '../../themes';
 import typography from '../../themes/typography';
@@ -28,7 +31,6 @@ export default HInput = props => {
     multiline,
     errorStyle,
     fieldRef,
-    insideLeftIcon,
     showError = true,
     rightAccessory,
   } = props;
@@ -58,13 +60,10 @@ export default HInput = props => {
           localStyle.inputContainer,
           {
             borderColor: _errorText ? Colors[colorScheme]?.danger : Colors[colorScheme]?.grayScale2,
-            height: multiline ? getHeight(75) : getHeight(52),
+            height: multiline ? getHeight(136) : getHeight(52),
           },
           inputContainerStyle,
         ]}>
-        {insideLeftIcon ? (
-          <View style={styles.pl10}>{insideLeftIcon()}</View>
-        ) : null}
         <TextInput
           ref={fieldRef}
           secureTextEntry={_isSecure}
@@ -85,7 +84,7 @@ export default HInput = props => {
           style={[
             localStyle.inputBox,
             { color: Colors[colorScheme]?.headerColor },
-            { height: multiline ? getHeight(75) : getHeight(50) },
+            { height: multiline ? getHeight(136) : getHeight(50) },
             inputBoxStyle,
             _editable == false && { color: Colors[colorScheme]?.grayScale2 },
           ]}

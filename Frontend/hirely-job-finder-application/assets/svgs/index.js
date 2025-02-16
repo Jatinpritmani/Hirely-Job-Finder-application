@@ -22,6 +22,8 @@ import CreateJobBlueIcon from './createJobBlue.svg'
 import NotificationIcon from './notification.svg'
 import NotificationUnreadIcon from './notificationUnread.svg'
 import LogoutIcon from './logout.svg'
+import DownArrow from './downArrow.svg'
+import UpArrow from './upArrow.svg'
 
 
 export {
@@ -48,5 +50,7 @@ export {
     CreateJobBlueIcon,
     NotificationIcon,
     NotificationUnreadIcon,
-    LogoutIcon
+    LogoutIcon,
+    DownArrow,
+    UpArrow
 }
