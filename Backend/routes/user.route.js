@@ -10,7 +10,7 @@ router.post('/registration/v1',userController.userRegistration)
 router.post('/login/v1',userController.userLogin)
 router.post('/userDetails/v1',userController.getUserDetails)
 
-router.post('/get/resume/v1',userController.getUserResume)
+router.get('/get/resume/v1',userController.getUserResume)
 router.post('/upload/resume/v1',fileUploadMiddleware.uploadFile,fileUploadMiddleware.handleFileUploadError,userController.uploadUserResume)
 
 router.post('/createJobPost/v1',userController.createJobPost)
@@ -23,5 +23,8 @@ router.post('/unsave/job/v1',userController.unsaveJob)
 
 router.post('/recruiterDetails/v1',userController.recruiterDetails)
 router.post('/updateAppliedJobStatus/v1',userController.updateAppliedJobStatus)
+
+router.post('/notificationList/v1',userController.notificationList)
+router.post('/update/notification/read/v1',userController.updateNotificationRead)
 
 module.exports=router

@@ -6,7 +6,6 @@ const {Job}=require("../models/job.model")
 const {Application}=require("../models/application.model")
 const {SavedJob}=require("../models/savedJobs.model")
 const {Notification} =require("../models/notification.model")
-const {generateToken}=require("../utilities/middlewares/jwt-service.middlewares")
 const bcrypt = require("bcrypt")
 const fs=require("fs")
 const path=require("path")
@@ -25,7 +24,9 @@ module.exports={
     getAppliedJobs:getAppliedJobs,
     unsaveJob:unsaveJob,
     recruiterDetails:recruiterDetails,
-    updateAppliedJobStatus:updateAppliedJobStatus
+    updateAppliedJobStatus:updateAppliedJobStatus,
+    notificationList:notificationList,
+    updateNotificationRead:updateNotificationRead
 }
 
 async function encryptPassword(password){
@@ -497,11 +498,24 @@ async function getAppliedJobs(req) {
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
     try {
-        let user_id=req.body.user_id
+        let user_id = req.body.user_id
+        let applied_job_id = req.body.applied_job_id
         
+        let matchCondition = {}; 
+
+        if (user_id && applied_job_id) {
+            matchCondition.$and = [
+                { job_seeker_id: new mongoose.Types.ObjectId(user_id) },
+                { _id: new mongoose.Types.ObjectId(applied_job_id) }
+            ];
+        } else if (user_id) {
+            matchCondition.job_seeker_id = new mongoose.Types.ObjectId(user_id);
+        } else if (applied_job_id) {
+            matchCondition._id = new mongoose.Types.ObjectId(applied_job_id);
+}
         let jobDetails= await Application.aggregate([
             {
-                $match: { job_seeker_id: new mongoose.Types.ObjectId(user_id) }
+                $match: matchCondition
             },
             {
                 $lookup: {
@@ -524,15 +538,16 @@ async function getAppliedJobs(req) {
             {
                 $project: {
                     applied_job_id: "$_id",
+                    job_id: "$jobDetails._id",
                     status:"$status",
                     recruiter_id: "$jobDetails.recruiter_id",
+                    job_seeker_id: "$job_seeker_id",
                     position: "$jobDetails.position",
                     location: "$jobDetails.location",
                     salary: "$jobDetails.salary",
                     job_type: "$jobDetails.job_type",
                     summary: "$jobDetails.summary",
                     requirenment: "$jobDetails.requirenment",
-                    job_id: "$jobDetails._id",
                     company_name:"$recruiterDetails.company_name"
                 }
             }
@@ -739,11 +754,23 @@ async function updateAppliedJobStatus(req) {
     try {
         
         let { applied_job_id,status } = req.body 
-        await Application.findOneAndUpdate({_id : applied_job_id},
-            {$set:{status:status}}
-        )
+        let applicationDetails=await Application.findOneAndUpdate({_id : applied_job_id},
+            {$set:{status:status}},{new:true}
+        )   
         
-
+        // let notification = {
+        //     job_id : applicationDetails.job_id, 
+        //     job_seeker_id : applicationDetails.job_seeker_id,
+        //     recruiter_id : applicationDetails.recruiter_id,
+        //     applied_job_id: applicationDetails._id,
+        //     title:"Application status update",
+        //     message:`Your application's status is updated. Click here to check the status`,
+        //     type:'status_update' 
+        // }
+        // await Notification.create(notification);
+        await Notification.findOneAndUpdate({applied_job_id : applied_job_id},
+            {$set:{is_read:false}}
+        )   
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,
             utility_func.statusGenerator(
@@ -752,6 +779,63 @@ async function updateAppliedJobStatus(req) {
             false
         )
 
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+async function notificationList(req) {
+    let func_name = "notificationList"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        const user_id =req.body.user_id
+        let notificationList= await Notification.find({job_seeker_id:user_id,is_read:false},{})  
+        console.log("notificationList",notificationList);
+         
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false,
+            notificationList
+        )
+
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+async function updateNotificationRead(req) {
+    let func_name = "updateNotificationRead"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        const notification_id =req.body.notification_id
+        await Notification.findByIdAndUpdate({_id:notification_id},{$set:{is_read:true}})  
+        
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false
+        )
     } catch (error) {
         logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
         return utility_func.responseGenerator(
