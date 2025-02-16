@@ -10,7 +10,7 @@ const bcrypt = require("bcrypt")
 const fs=require("fs")
 const path=require("path")
 const mongoose=require("mongoose");
-
+const {sendNotification} = require("./firebase.notification")
 module.exports={
     userRegistration:userRegistration,
     userLogin:userLogin,
@@ -260,21 +260,33 @@ async function createJobPost(req) {
         const jobDetails = await Job.create( { recruiter_id ,position ,location ,salary ,job_type ,summary ,requirenment,number_of_opening} );
         
         if(jobDetails){
-            const users = await User.find({user_type:"job_seeker"},{user_id:1,company_name:1})
-            const companyDetails = await User.findOne({_id:jobDetails.recruiter_id},{company_name:1})
-            let notifications=[]
-            users.forEach((user)=>{
-                notifications.push({
-                    job_id : jobDetails._id, 
-                    job_seeker_id : user._id,
-                    recruiter_id : jobDetails.recruiter_id,
-                    title:"Job Posted",
-                    message:`${companyDetails.company_name} Posted the new job thay you might like click here to Apply now!`,
-                    type:'job_posted' 
+            const users = await User.find({user_type:"job_seeker"},{user_id:1,company_name:1,fcm_token:1})
+            if(users && users.length!==0){
+                const companyDetails = await User.findOne({_id:jobDetails.recruiter_id},{company_name:1})
+                let notifications=[]
+                users.forEach((user)=>{
+                    notifications.push({
+                        job_id : jobDetails._id, 
+                        job_seeker_id : user._id,
+                        recruiter_id : jobDetails.recruiter_id,
+                        title:"Job Posted",
+                        message:`${companyDetails.company_name} Posted the new job thay you might like click here to Apply now!`,
+                        type:'job_posted' 
+                    })
                 })
-            })
-            await Notification.insertMany(notifications)
-           
+                await Notification.insertMany(notifications)
+                let notification={
+                    title:"Job Posted",
+                    body:`${companyDetails.company_name} Posted the new job thay you might like click here to Apply now!`
+                }
+                let notificationPayload=users.map((user)=>({
+                    token:user.fcm_token,
+                    notification:notification
+                }))
+                
+                await sendNotification(notificationPayload)
+                
+            }
         }
         
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
@@ -410,7 +422,8 @@ async function applyJob(req) {
             await SavedJob.create( { job_id,job_seeker_id } );
         }
         if(apply_type == "apply_job"){
-           const applicationDetails = await Application.create( { job_id,job_seeker_id,recruiter_id,cover_letter ,status} );
+           let status_history = [{status:status,updated_At:Date.now}] 
+           const applicationDetails = await Application.create( { job_id,job_seeker_id,recruiter_id,cover_letter ,status, status_history} );
 
            if(applicationDetails){
                 let notification = {
@@ -562,6 +575,7 @@ async function getAppliedJobs(req) {
                     applied_job_id: "$_id",
                     job_id: "$jobDetails._id",
                     status:"$status",
+                    status:"$status_history",
                     recruiter_id: "$jobDetails.recruiter_id",
                     job_seeker_id: "$job_seeker_id",
                     position: "$jobDetails.position",
@@ -776,9 +790,11 @@ async function updateAppliedJobStatus(req) {
     try {
         
         let { applied_job_id,status } = req.body 
+        let status_history={status:status,update_At:Date.now}
         let applicationDetails=await Application.findOneAndUpdate({_id : applied_job_id},
-            {$set:{status:status}},{new:true}
+            {$set:{status:status},$push:{status_history:status_history}},{new:true}
         )   
+        let userDetails = await User.findOne({_id:applicationDetails.job_seeker_id},{fcm_token:1})
         
         // let notification = {
         //     job_id : applicationDetails.job_id, 
@@ -798,6 +814,16 @@ async function updateAppliedJobStatus(req) {
                     message:`Your application's status is updated. Click here to check the status`,
             }}
         )   
+        
+        let notificationPayload=[{
+            token:userDetails.fcm_token,
+            notification:{
+                title:"Application status update",
+                body:`Your application's status is updated. Click here to check the status`,
+            }   
+        }]
+
+        await sendNotification(notificationPayload)
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,
             utility_func.statusGenerator(
@@ -825,7 +851,6 @@ async function notificationList(req) {
     try {
         const user_id =req.body.user_id
         let notificationList= await Notification.find({job_seeker_id:user_id,is_read:false},{})  
-        console.log("notificationList",notificationList);
          
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,

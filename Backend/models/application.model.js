@@ -7,6 +7,11 @@ const applicationSchema = new mongoose.Schema({
     job_seeker_id:{type: mongoose.Schema.Types.ObjectId, ref:'User'},
     recruiter_id:{type: mongoose.Schema.Types.ObjectId, ref:'User'},
     status: { type: String },
+    status_history: [
+      {
+        status: { type: String, required: true },
+        updated_at: { type: Date, default: Date.now },
+      }],
     cover_letter:{type:String}
   },
   {
