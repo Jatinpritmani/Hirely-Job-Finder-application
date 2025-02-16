@@ -307,7 +307,29 @@ async function getAllJobPosts(req) {
         const user_id =req.body.user_id
         const job_id =req.body.job_id
         
+        const filters = {
+            $and: []
+        };
+        
+        if (req.body.filter_by_location && req.body.filter_by_location.length > 0) {
+            filters.$and.push({ location: { $in: req.body.filter_by_location } });
+        }
+        if (req.body.filter_by_salary && req.body.filter_by_salary !== '') {
+            const [minSalary, maxSalary] = req.body.filter_by_salary.split("-").map(Number);
+            filters.$and.push({ salary: { $gte: minSalary, $lte: maxSalary } });
+        }
+        if (req.body.filter_by_job_type && req.body.filter_by_job_type.length > 0) {
+            filters.$and.push({ job_type: { $in: req.body.filter_by_job_type } });
+        }
+        if (req.body.search && req.body.serach !== '') {
+            filters.$and.push({ position: { $regex: req.body.search, $options: "i" } });
+        }
+        if (filters.$and.length === 0) {
+            delete filters.$and;
+        }
+        
         let jobDetails=await Job.aggregate([
+            { $match: filters },
             {
                 $lookup: {
                     from: "users",  
@@ -396,8 +418,8 @@ async function applyJob(req) {
                     job_seeker_id : applicationDetails.job_seeker_id,
                     recruiter_id : applicationDetails.recruiter_id,
                     applied_job_id: applicationDetails._id,
-                    title:"Application status update",
-                    message:`Your application's status is updated. Click here to check the status`,
+                    title:"Application submit",
+                    message:`Your application is submitted successfully. Click here to check the status`,
                     type:'status_update' 
                 }
                 await Notification.create(notification);
@@ -769,7 +791,12 @@ async function updateAppliedJobStatus(req) {
         // }
         // await Notification.create(notification);
         await Notification.findOneAndUpdate({applied_job_id : applied_job_id},
-            {$set:{is_read:false}}
+            {
+                $set:{
+                    is_read:false, 
+                    title:"Application status update",
+                    message:`Your application's status is updated. Click here to check the status`,
+            }}
         )   
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,
