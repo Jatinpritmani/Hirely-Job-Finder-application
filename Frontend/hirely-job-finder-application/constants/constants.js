@@ -116,3 +116,7 @@ export const locations = [
   { id: 25, label: "São Paulo, Brazil", value: "sao_paulo_brazil" },
 ];
 
+export const getLocationLabel = (value) => {
+  const location = locations.find((loc) => loc.value === value);
+  return location ? location.label : "-";
+};

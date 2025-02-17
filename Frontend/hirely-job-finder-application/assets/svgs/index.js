@@ -24,7 +24,8 @@ import NotificationUnreadIcon from './notificationUnread.svg'
 import LogoutIcon from './logout.svg'
 import DownArrow from './downArrow.svg'
 import UpArrow from './upArrow.svg'
-
+import Search from './search.svg'
+import Filter from './filter.svg'
 
 export {
     CheckMark,
@@ -52,5 +53,7 @@ export {
     NotificationUnreadIcon,
     LogoutIcon,
     DownArrow,
-    UpArrow
+    UpArrow,
+    Search,
+    Filter
 }
