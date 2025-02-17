@@ -120,3 +120,8 @@ export const getLocationLabel = (value) => {
   const location = locations.find((loc) => loc.value === value);
   return location ? location.label : "-";
 };
+
+export const getJobTypeLabel = (value) => {
+  const jobType = jobTypes.find((job) => job.value === value);
+  return jobType ? jobType.label : "-";
+};

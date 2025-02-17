@@ -1,17 +1,24 @@
-import { StyleSheet, useColorScheme, View } from "react-native";
+import { StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native";
 
 // local imports
 import { styles } from "../../themes";
 import HText from "../common/HText";
 import { Colors } from '@/constants/Colors';
 import { getLocationLabel, moderateScale } from "../../constants/constants";
+import { router } from "expo-router";
 
 
 const JobCard = ({ item, index, cardStyle }) => {
     const colorScheme = useColorScheme();
 
+    const onPressJob = () => {
+        router.push({
+            pathname: "/jobDetail",
+            params: { jobDetail: JSON.stringify(item) }, // Pass parameters
+        })
+    }
     return (
-        <View style={[localStyles.card, { backgroundColor: Colors[colorScheme]?.white }, cardStyle]}>
+        <TouchableOpacity onPress={onPressJob} style={[localStyles.card, { backgroundColor: Colors[colorScheme]?.white }, cardStyle]}>
             <View style={[localStyles.emptyView, { bordeColor: Colors[colorScheme]?.grayScale4, opacity: 0.3 }]}></View>
             <View style={[styles.flex, styles.ml15]}>
                 <View style={styles.rowSpaceBetween}>
@@ -31,7 +38,7 @@ const JobCard = ({ item, index, cardStyle }) => {
                     </HText>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

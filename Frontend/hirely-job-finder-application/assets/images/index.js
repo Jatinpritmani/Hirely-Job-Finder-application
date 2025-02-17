@@ -5,6 +5,7 @@ export default {
     gradientStart: require('./gradientStart.png'),
     forgotPassword: require('./forgotPassword.png'),
     createNewPassword: require('./createNewPassword.png'),
-    profileImage: require('./profilePic.png')
+    profileImage: require('./profilePic.png'),
+    jobBackground: require('./jobBackground.png')
 };
 

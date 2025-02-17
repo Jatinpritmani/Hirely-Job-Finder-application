@@ -26,6 +26,12 @@ import DownArrow from './downArrow.svg'
 import UpArrow from './upArrow.svg'
 import Search from './search.svg'
 import Filter from './filter.svg'
+import SavedJob from './savedJob.svg'
+import SavedJobBlue from './savedJobBlue.svg'
+import BulletIcon from './bullet.svg'
+import ApplySuccessIcon from './applySuccess.svg'
+import LeftWhiteArrowIcon from './leftWhiteArrow.svg'
+
 
 export {
     CheckMark,
@@ -55,5 +61,10 @@ export {
     DownArrow,
     UpArrow,
     Search,
-    Filter
+    Filter,
+    SavedJob,
+    SavedJobBlue,
+    BulletIcon,
+    ApplySuccessIcon,
+    LeftWhiteArrowIcon
 }

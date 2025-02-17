@@ -75,6 +75,9 @@ export default function RootLayout() {
             <Stack.Screen name="uploadCV" />
             <Stack.Screen name="allExperience" />
             <Stack.Screen name="createPost" />
+            <Stack.Screen name="jobDetail" />
+            <Stack.Screen name="applyJob" />
+            <Stack.Screen name="trackJob" />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           </Stack>
           <StatusBar style="auto" />

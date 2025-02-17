@@ -10,13 +10,13 @@ import { Colors } from '@/constants/Colors'
 import HSafeAreaView from '../../components/common/HSafeAreaView'
 import { styles } from '../../themes'
 import HHeader from '../../components/common/HHeader'
-import { LogoutIcon, NotificationIcon } from '../../assets/svgs'
+import { Filter, LogoutIcon, NotificationIcon, Search } from '../../assets/svgs'
 import { isUserRecruiter, moderateScale } from '../../constants/constants'
 import { doLogout } from '../../context/actions/userActions';
-import HInput from '../../components/common/HInput';
 import HText from '../../components/common/HText';
 import { getAllJobList } from '../../context/actions/jobAction';
 import JobCard from '../../components/screenComponents/JobCard';
+import FeaturedJob from '../../components/screenComponents/FeaturedJob';
 
 const Home = () => {
     const colorsScheme = useColorScheme()
@@ -59,6 +59,11 @@ const Home = () => {
             <JobCard item={item} index={index} />
         )
     }
+    const renderFeaturedJobItem = ({ item, index }) => {
+        return (
+            <FeaturedJob item={item} index={index} />
+        )
+    }
     return (
         <HSafeAreaView style={localStyles.main} containerStyle={styles.flex0}>
             <HHeader
@@ -69,6 +74,17 @@ const Home = () => {
                 titleColor={Colors[colorsScheme]?.primary}
                 titleType='B24'
             />
+            <View style={[styles.mt50, styles.flexRow]}>
+                <View style={[localStyles.searchBar, styles.itemsCenter, { width: '80%', backgroundColor: Colors[colorsScheme]?.grayScale8 }]}>
+                    <Search />
+                    <HText type="R14" style={styles.ml10} color={Colors[colorsScheme]?.subText}>
+                        Search here
+                    </HText>
+                </View>
+                <View style={[localStyles.searchBar, styles.ml10, styles.center, { width: '15%', backgroundColor: Colors[colorsScheme]?.grayScale8 }]}>
+                    <Filter />
+                </View>
+            </View>
             {/* <HInput
                 _value={jobDescription}
                 label="Job Description"
@@ -87,7 +103,13 @@ const Home = () => {
                 style={[styles.mt25]}
             />
             <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'Recent People Applied' : 'Featured Jobs'} onPressSeeAll={() => { }} />
-
+            <FlatList
+                data={allJobList}
+                renderItem={renderFeaturedJobItem}
+                style={[styles.mt25]}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+            />
         </HSafeAreaView>
     )
 }
@@ -116,5 +138,11 @@ export default Home
 const localStyles = StyleSheet.create({
     main: {
         ...styles.flex
+    },
+    searchBar: {
+        borderRadius: moderateScale(12),
+        ...styles.pv15,
+        ...styles.ph25,
+        ...styles.flexRow
     }
 })
