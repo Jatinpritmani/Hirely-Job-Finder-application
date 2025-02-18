@@ -371,10 +371,13 @@ async function getAllJobPosts(req) {
                 jobDetails = jobDetails.filter((job)=> job._id == job_id)
             }
             const applicationDetails = await Application.find({job_seeker_id:user_id},{job_id:1})
-
+            const savedJobDetails = await SavedJob.find({job_seeker_id: user_id})
+            
             jobDetails = jobDetails.map((job)=>{
                 const isApplied = applicationDetails.findIndex((app)=>app.job_id.toString() == job.job_id)
+                const isSavedJobs = savedJobDetails.findIndex((savedJob)=> savedJob.job_id.toString() == job.job_id)
                 job["is_job_applied"] = isApplied >= 0 ? true : false
+                job["is_job_saved"] = isSavedJobs >=0 ? true : false
                 return job
             })
         }
@@ -410,18 +413,18 @@ async function applyJob(req) {
         
         const applicationExists = await Application.findOne({job_id:job_id,job_seeker_id:job_seeker_id})
         
-        if(applicationExists){
-            return utility_func.responseGenerator(
-                utility_func.responseCons.RESP_APPLICATION_APPLIED,
-                utility_func.statusGenerator(
-                    utility_func.httpStatus.ReasonPhrases.UNPROCESSABLE_ENTITY, utility_func.httpStatus.StatusCodes.UNPROCESSABLE_ENTITY
-                ), true
-            )
-        }
         if(apply_type == "save_job"){
             await SavedJob.create( { job_id,job_seeker_id } );
         }
         if(apply_type == "apply_job"){
+            if(applicationExists){
+                return utility_func.responseGenerator(
+                    utility_func.responseCons.RESP_APPLICATION_APPLIED,
+                    utility_func.statusGenerator(
+                        utility_func.httpStatus.ReasonPhrases.UNPROCESSABLE_ENTITY, utility_func.httpStatus.StatusCodes.UNPROCESSABLE_ENTITY
+                    ), true
+                )
+            }
            let status_history = [{status:status,updated_At:Date.now}] 
            const applicationDetails = await Application.create( { job_id,job_seeker_id,recruiter_id,cover_letter ,status, status_history} );
 

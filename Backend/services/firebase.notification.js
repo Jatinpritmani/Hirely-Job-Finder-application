@@ -19,8 +19,10 @@ async function sendNotification(notifications){
     try{
         
         const response = await admin.messaging().sendEach(notifications);
+        logger.info('Firebase Notification Response => ' + response["responses"])
+        
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
-        console.log("response",response["responses"]);
+        
         return response
     }catch(error){
         logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' +JSON.stringify(error) +' '+ func_name)
