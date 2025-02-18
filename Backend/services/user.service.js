@@ -412,8 +412,17 @@ async function applyJob(req) {
         let { apply_type,job_id,job_seeker_id,recruiter_id,cover_letter,status} = req.body;
         
         const applicationExists = await Application.findOne({job_id:job_id,job_seeker_id:job_seeker_id})
+        const savedJobExists = await SavedJob.findOne({job_id:job_id,job_seeker_id:job_seeker_id})
         
         if(apply_type == "save_job"){
+            if(savedJobExists){
+                return utility_func.responseGenerator(
+                    utility_func.responseCons.RESP_APPLICATION_SAVED,
+                    utility_func.statusGenerator(
+                        utility_func.httpStatus.ReasonPhrases.UNPROCESSABLE_ENTITY, utility_func.httpStatus.StatusCodes.UNPROCESSABLE_ENTITY
+                    ), true
+                )
+            }
             await SavedJob.create( { job_id,job_seeker_id } );
         }
         if(apply_type == "apply_job"){
