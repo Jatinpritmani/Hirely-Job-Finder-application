@@ -378,6 +378,7 @@ async function getAllJobPosts(req) {
                 const isSavedJobs = savedJobDetails.findIndex((savedJob)=> savedJob.job_id.toString() == job.job_id)
                 job["is_job_applied"] = isApplied >= 0 ? true : false
                 job["is_job_saved"] = isSavedJobs >=0 ? true : false
+                job["saved_job_id"] = isSavedJobs >=0 ? savedJobDetails[isSavedJobs]["_id"] : null
                 return job
             })
         }
