@@ -1,21 +1,32 @@
 import { StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native";
+import { useSelector } from "react-redux";
+import { router } from "expo-router";
 
 // local imports
 import { styles } from "../../themes";
 import HText from "../common/HText";
 import { Colors } from '@/constants/Colors';
-import { getJobTypeLabel, getLocationLabel, moderateScale } from "../../constants/constants";
-import { router } from "expo-router";
+import { getJobTypeLabel, getLocationLabel, isUserRecruiter, moderateScale } from "../../constants/constants";
 
 
 const JobCard = ({ item, index, cardStyle, isSavedCard = false }) => {
     const colorScheme = useColorScheme();
 
+    const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
+
     const onPressJob = () => {
-        router.push({
-            pathname: "/jobDetail",
-            params: { jobDetail: JSON.stringify(item) }, // Pass parameters
-        })
+        if (isUserRecruiter(currentUserDetail?.user_type)) {
+            router.push({
+                pathname: "/recruiterJobDetail",
+                params: { jobDetail: JSON.stringify(item) }, // Pass parameters
+            })
+        } else {
+            router.push({
+                pathname: "/jobDetail",
+                params: { jobDetail: JSON.stringify(item) }, // Pass parameters
+            })
+        }
+
     }
     return (
         <TouchableOpacity onPress={onPressJob} style={[localStyles.card, { backgroundColor: Colors[colorScheme]?.white }, cardStyle]}>
@@ -31,8 +42,8 @@ const JobCard = ({ item, index, cardStyle, isSavedCard = false }) => {
                         </HText>
                     </View>
                     <View style={styles.rowSpaceBetween}>
-                        <HText type="R12" style={{ opacity: 0.5 }}>
-                            {item?.company_name || ''}
+                        <HText type="R12" style={{ opacity: 0.5, ...styles.mt5 }}>
+                            {isUserRecruiter(currentUserDetail?.user_type) ? item?.number_of_opening + ' positions' : item?.company_name || ''}
                         </HText>
                         <HText type="R12" color={Colors[colorScheme]?.grayScale7}>
                             {getLocationLabel(item?.location) || ''}

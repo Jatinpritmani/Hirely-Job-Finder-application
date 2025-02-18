@@ -63,7 +63,8 @@ const appliedJobs = () => {
                 refreshing={refreshing}
                 style={[styles.mt25]}
                 ListEmptyComponent={<EmptyListComponent title={`You Don't have any applied Jobs.`} />}
-                contentContainerStyle={styles.flex}
+                showsVerticalScrollIndicator={false}
+
             />
         </HSafeAreaView>
     )

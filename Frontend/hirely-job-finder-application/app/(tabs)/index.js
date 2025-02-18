@@ -1,6 +1,6 @@
 // library imports
 import { FlatList, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { router, useFocusEffect } from 'expo-router';
 import { Colors } from '@/constants/Colors'
@@ -12,7 +12,7 @@ import { styles } from '../../themes'
 import HHeader from '../../components/common/HHeader'
 import { Filter, LogoutIcon, NotificationIcon, Search } from '../../assets/svgs'
 import { isUserRecruiter, moderateScale } from '../../constants/constants'
-import { doLogout } from '../../context/actions/userActions';
+import { doLogout, getRecruiterDetail } from '../../context/actions/userActions';
 import HText from '../../components/common/HText';
 import { getAllJobList } from '../../context/actions/jobAction';
 import JobCard from '../../components/screenComponents/JobCard';
@@ -23,12 +23,29 @@ const Home = () => {
     const dispatch = useDispatch()
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
     const allJobList = useSelector(state => state.jobReducer.allJobList)
-    const loading = useSelector(state => state.jobReducer.loading)
+    const loadingRecruiterDetai = useSelector(state => state.userReducer.loadingRecruiterDetai)
+    const recruiterDetails = useSelector(state => state.userReducer.recruiterDetails)
+    const [recruiterDetailsData, setRecruiterDetailsData] = useState(null)
 
+    useEffect(() => {
+        if (recruiterDetails) {
+            setRecruiterDetailsData(recruiterDetails)
+        }
+        console.log(recruiterDetails);
+
+    }, [recruiterDetails])
 
     useFocusEffect(
         useCallback(() => {
-            dispatch(getAllJobList(currentUserDetail?.user_id))
+            console.log(currentUserDetail?.user_type);
+            if (isUserRecruiter(currentUserDetail?.user_type)) {
+
+                dispatch(getRecruiterDetail(currentUserDetail?.user_id))
+
+            } else {
+
+                dispatch(getAllJobList(currentUserDetail?.user_id))
+            }
             return () => { }
         }, [])
     );
@@ -98,13 +115,13 @@ const Home = () => {
 
             <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'your job posting' : 'Recommended Jobs'} onPressSeeAll={() => { }} style={styles.mt30} />
             <FlatList
-                data={allJobList.slice(0, 2)}
+                data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.jobDetails?.slice(0, 2) : allJobList.slice(0, 2)}
                 renderItem={renderRecomendedJobItem}
                 style={[styles.mt25]}
             />
             <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'Recent People Applied' : 'Featured Jobs'} onPressSeeAll={() => { }} />
             <FlatList
-                data={allJobList}
+                data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails : allJobList}
                 renderItem={renderFeaturedJobItem}
                 style={[styles.mt25]}
                 horizontal

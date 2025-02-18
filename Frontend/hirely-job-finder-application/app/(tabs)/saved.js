@@ -62,7 +62,7 @@ const Saved = () => {
                 refreshing={refreshing}
                 style={[styles.mt25]}
                 ListEmptyComponent={<EmptyListComponent title={`You Don't have any saved Jobs.`} />}
-                contentContainerStyle={styles.flex}
+                showsVerticalScrollIndicator={false}
             />
         </HSafeAreaView>
     )

@@ -13,7 +13,7 @@ const AppliedJobCard = ({ item, index, cardStyle, }) => {
 
     const onPressJob = () => {
         router.push({
-            pathname: "/jobDetail",
+            pathname: "/trackJob",
             params: { jobDetail: JSON.stringify(item) }, // Pass parameters
         })
     }

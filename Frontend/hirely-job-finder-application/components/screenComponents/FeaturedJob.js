@@ -4,19 +4,29 @@ import React from 'react'
 // local import
 import { Colors } from '@/constants/Colors';
 import images from '../../assets/images';
-import { getJobTypeLabel, getLocationLabel, moderateScale } from '../../constants/constants';
+import { getJobTypeLabel, getLocationLabel, isUserRecruiter, moderateScale } from '../../constants/constants';
 import { styles } from '../../themes';
 import HText from '../common/HText';
 import { router } from 'expo-router';
+import { useSelector } from 'react-redux';
 
 
 const FeaturedJob = ({ item, index }) => {
     const colorScheme = useColorScheme();
+    const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
+
     const onPressJob = () => {
-        router.push({
-            pathname: "/jobDetail",
-            params: { jobDetail: JSON.stringify(item) }, // Pass parameters
-        })
+        if (isUserRecruiter(currentUserDetail?.user_type)) {
+            router.push({
+                pathname: "/recruiterJobDetail",
+                params: { jobDetail: JSON.stringify(item) }, // Pass parameters
+            })
+        } else {
+            router.push({
+                pathname: "/jobDetail",
+                params: { jobDetail: JSON.stringify(item) }, // Pass parameters
+            })
+        }
     }
     return (
         <TouchableOpacity onPress={onPressJob} style={[localstyles.main, { backgroundColor: index % 2 == 0 ? Colors[colorScheme]?.grayScale4 : Colors[colorScheme]?.grayScale9, opacity: index % 2 == 0 ? 0.8 : 1 }]}>
@@ -29,28 +39,49 @@ const FeaturedJob = ({ item, index }) => {
                     <View style={[localstyles.logo, { backgroundColor: Colors[colorScheme]?.white }]} />
                     <View style={styles.justifyCenter}>
                         <HText type="S16" color={Colors[colorScheme]?.white}>
-                            {item?.position}
+                            {isUserRecruiter(currentUserDetail?.user_type) ? item?.user_name : item?.position}
                         </HText>
-                        <HText type="M14" color={Colors[colorScheme]?.white}>
-                            {item?.company_name}
+                        {console.log(item?.designation)
+                        }
+                        <HText type="M14" color={Colors[colorScheme]?.white} style={isUserRecruiter(currentUserDetail?.user_type) && { opacity: 0.75 }}>
+                            {isUserRecruiter(currentUserDetail?.user_type) ? item?.designation : item?.company_name}
                         </HText>
                     </View>
 
                 </View>
-                <View style={[localstyles.labelStyle, { backgroundColor: Colors[colorScheme]?.grayScale9 }]}>
+                {isUserRecruiter(currentUserDetail?.user_type) ?
+                    <View style={styles.rowSpaceBetween}>
 
-                    <HText type="R12" color={Colors[colorScheme]?.white}>
-                        {getJobTypeLabel(item?.job_type)}
-                    </HText>
-                </View>
-                <View style={[styles.mt25, styles.rowSpaceBetween]}>
-                    <HText type="M14" color={Colors[colorScheme]?.white}>
-                        {item?.job_type ? `$${item?.salary}/year` : null}
-                    </HText>
-                    <HText type="M14" color={Colors[colorScheme]?.white}>
-                        {getLocationLabel(item?.location) || ''}
-                    </HText>
-                </View>
+                        <View style={[localstyles.labelStyle, { backgroundColor: Colors[colorScheme]?.grayScale9 }]}>
+
+                            <HText type="R12" color={Colors[colorScheme]?.white}>
+                                {'See Resume'}
+                            </HText>
+                        </View>
+                        <View style={[localstyles.labelStyle, { borderWidth: moderateScale(1), borderColor: Colors[colorScheme]?.grayScale7 }]}>
+
+                            <HText type="R12" color={Colors[colorScheme]?.white}>
+                                {'See Profile'}
+                            </HText>
+                        </View>
+                    </View>
+                    :
+                    <>
+                        <View style={[localstyles.labelStyle, { backgroundColor: index % 2 != 0 ? Colors[colorScheme]?.grayScale4 : Colors[colorScheme]?.grayScale9, }]}>
+
+                            <HText type="R12" color={Colors[colorScheme]?.white}>
+                                {getJobTypeLabel(item?.job_type)}
+                            </HText>
+                        </View>
+                        <View style={[styles.mt25, styles.rowSpaceBetween]}>
+                            <HText type="M14" color={Colors[colorScheme]?.white}>
+                                {item?.job_type ? `$${item?.salary}/year` : null}
+                            </HText>
+                            <HText type="M14" color={Colors[colorScheme]?.white}>
+                                {getLocationLabel(item?.location) || ''}
+                            </HText>
+                        </View>
+                    </>}
             </ImageBackground>
 
         </TouchableOpacity>

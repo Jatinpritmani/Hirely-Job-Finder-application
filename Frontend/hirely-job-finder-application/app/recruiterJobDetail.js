@@ -16,7 +16,7 @@ import { APPLY_JOB, GET_ALL_JOBS, UNSAVE_JOB } from '../components/apiConstants'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllJobList } from '../context/actions/jobAction';
 
-const jobDetail = () => {
+const recruiterJobDetail = () => {
     const colorScheme = useColorScheme();
     const { jobDetail } = useLocalSearchParams()
     const dispatch = useDispatch()
@@ -31,20 +31,22 @@ const jobDetail = () => {
 
     useEffect(() => {
 
-        const job = allJobList.find(job => job.job_id === jobDetails?.job_id);
+        const job = allJobList?.find(job => job.job_id === jobDetails?.job_id);
         setJobDetails(job)
-        const sentencesArray = job?.requirenment.split("\n");
+        const sentencesArray = job?.requirenment?.split("\n");
 
         setResponsibilities(sentencesArray)
     }, [loading])
 
+    console.log('====================================');
+    console.log(jobDetails);
+    console.log('====================================');
+
 
     const onPressSave = async () => {
-        console.log(jobDetails?.is_job_saved);
-
         if (jobDetails?.is_job_saved) {
             let payload = {
-                saved_job_id: jobDetails?.saved_job_id
+                saved_job_id: jobDetails?._id
             }
             try {
                 let response = await apiRequest("POST", UNSAVE_JOB, payload);
@@ -102,8 +104,9 @@ const jobDetail = () => {
     }
     useFocusEffect(
         useCallback(() => {
+            console.log("====", '____', jobDetails?.requirenment);
 
-            const sentencesArray = jobDetails?.requirenment.split("\n");
+            const sentencesArray = jobDetails?.requirenment?.split("\n");
 
             setResponsibilities(sentencesArray)
             return () => { };
@@ -121,7 +124,7 @@ const jobDetail = () => {
         <HSafeAreaView containerStyle={styles.ph0} style={localStyles.main}>
             <ScrollView showsVerticalScrollIndicator={false} >
                 <View style={[localStyles.upperContainer, { backgroundColor: Colors[colorScheme]?.grayScale4 }]}>
-                    <HHeader title="" isLeftIcon={<LeftIcon />} isHideBack={true} rightIcon={<RightIcon />} containerStyle={styles.ph20}
+                    <HHeader title="" isLeftIcon={<LeftIcon />} isHideBack={true} containerStyle={styles.ph20}
                     />
                     <View style={[localStyles.imgStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
 
@@ -177,14 +180,14 @@ const jobDetail = () => {
                         )
                     })}
                 </View>
-                {!jobDetails?.is_job_applied && <HButton
+                {/* {!jobDetails?.is_job_applied && <HButton
                     onPress={onPressApplyNow}
                     textType={"S16"}
                     color={Colors[colorScheme]?.white}
                     title={"Apply Now"}
                     containerStyle={[styles.mv30, styles.mh25]}
                     bgColor={Colors[colorScheme]?.primary}
-                ></HButton>}
+                ></HButton>} */}
 
             </ScrollView>
 
@@ -192,7 +195,7 @@ const jobDetail = () => {
     )
 }
 
-export default jobDetail
+export default recruiterJobDetail
 
 const localStyles = StyleSheet.create({
     main: {

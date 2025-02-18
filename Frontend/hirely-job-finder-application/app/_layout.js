@@ -78,6 +78,7 @@ export default function RootLayout() {
             <Stack.Screen name="jobDetail" />
             <Stack.Screen name="applyJob" />
             <Stack.Screen name="trackJob" />
+            <Stack.Screen name="recruiterJobDetail" />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           </Stack>
           <StatusBar style="auto" />
