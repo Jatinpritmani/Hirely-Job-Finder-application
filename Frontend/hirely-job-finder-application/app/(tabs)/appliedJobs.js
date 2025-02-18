@@ -8,13 +8,14 @@ import HSafeAreaView from '../../components/common/HSafeAreaView'
 import HText from '../../components/common/HText'
 import { styles } from '../../themes'
 import apiRequest from '../../components/api'
-import { GET_APPLIED_JOBS, GET_SAVED_JOBS } from '../../components/apiConstants'
+import { GET_APPLIED_JOBS } from '../../components/apiConstants'
 import JobCard from '../../components/screenComponents/JobCard'
 import EmptyListComponent from '../../components/common/EmptyListComponent'
+import AppliedJobCard from '../../components/screenComponents/appliedJobCard'
 
-const Saved = () => {
+const appliedJobs = () => {
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
-    const [savedJobs, setSavedJobs] = useState([])
+    const [appliedJobsdata, setAppliedJobsdata] = useState([])
     const [refreshing, setRefreshing] = useState(false);
 
     useFocusEffect(
@@ -29,9 +30,9 @@ const Saved = () => {
             user_id: currentUserDetail?.user_id
         }
         try {
-            let response = await apiRequest("POST", GET_SAVED_JOBS, payload);
+            let response = await apiRequest("POST", GET_APPLIED_JOBS, payload);
             if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
-                setSavedJobs(response?.data || [])
+                setAppliedJobsdata(response?.data || [])
             }
             else {
             }
@@ -41,7 +42,7 @@ const Saved = () => {
     }
     const renderSavedJob = ({ item, index }) => {
         return (
-            <JobCard item={item} index={index} isSavedCard={true} />
+            <AppliedJobCard item={item} index={index} isSavedCard={true} />
         )
     }
     const onRefresh = async () => {
@@ -53,21 +54,21 @@ const Saved = () => {
     return (
         <HSafeAreaView>
             <HText type="S24" style={styles.mt30}>
-                You saved {savedJobs?.length || 0} Jobs
+                You applied in {appliedJobsdata?.length || 0} Jobs
             </HText>
             <FlatList
-                data={savedJobs}
+                data={appliedJobsdata}
                 renderItem={renderSavedJob}
                 onRefresh={onRefresh}
                 refreshing={refreshing}
                 style={[styles.mt25]}
-                ListEmptyComponent={<EmptyListComponent title={`You Don't have any saved Jobs.`} />}
+                ListEmptyComponent={<EmptyListComponent title={`You Don't have any applied Jobs.`} />}
                 contentContainerStyle={styles.flex}
             />
         </HSafeAreaView>
     )
 }
 
-export default Saved
+export default appliedJobs
 
 const localStyles = StyleSheet.create({})

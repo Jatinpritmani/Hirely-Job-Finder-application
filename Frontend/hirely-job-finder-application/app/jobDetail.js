@@ -11,6 +11,9 @@ import { BulletIcon, LeftWhiteArrowIcon, SavedJob } from '../assets/svgs';
 import { getJobTypeLabel, getLocationLabel, moderateScale } from '../constants/constants';
 import HText from '../components/common/HText';
 import HButton from '../components/common/HButton';
+import apiRequest from '../components/api';
+import { APPLY_JOB } from '../components/apiConstants';
+import { useSelector } from 'react-redux';
 
 const jobDetail = () => {
     const colorScheme = useColorScheme();
@@ -18,7 +21,50 @@ const jobDetail = () => {
     const [jobDetails, setJobDetails] = useState(JSON.parse(jobDetail))
     const [responsibilities, setResponsibilities] = useState()
 
-    const onPressSave = () => { }
+    const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
+
+
+    const onPressSave = async () => {
+        let payload = {
+            recruiter_id: jobDetails?.recruiter_id,
+            job_id: jobDetails?._id,
+            job_seeker_id: currentUserDetail?.user_id,
+            apply_type: "save_job",
+        }
+        console.log(payload);
+
+        try {
+            let response = await apiRequest("POST", APPLY_JOB, payload);
+            if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                try {
+                    let response = await apiRequest("POST", GET_ALL_JOBS, data);
+                    if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                        dispatch(({
+                            type: types.GET_ALL_JOB_LIST_SUCCESS,
+                            payload: response?.data
+                        }))
+
+                    }
+                    else {
+                        dispatch(({
+                            type: types.GET_ALL_JOB_LIST_ERROR,
+                            payload: response
+                        }))
+                    }
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                    dispatch(({
+                        type: types.GET_ALL_JOB_LIST_ERROR,
+                        payload: error
+                    }))
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setIsLoading(false)
+        }
+    }
     const RightIcon = () => {
         return (
 

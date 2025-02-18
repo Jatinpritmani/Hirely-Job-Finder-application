@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 
 // local imports
-import { CreateJobBlueIcon, CreateJobIcon, HomeBlueIcon, HomeIcon, ProfileBlueIcon, ProfileIcon, SaveBlueIcon, SaveIcon } from '../../assets/svgs';
+import { AppliedJob, AppliedJObBlue, CreateJobBlueIcon, CreateJobIcon, HomeBlueIcon, HomeIcon, ProfileBlueIcon, ProfileIcon, SaveBlueIcon, SaveIcon } from '../../assets/svgs';
 import typography from '../../themes/typography';
 import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 import { Colors } from '@/constants/Colors'
@@ -46,6 +46,14 @@ export default function TabLayout() {
                     title: 'Create',
                     tabBarIcon: ({ color, focused }) => (focused ? <CreateJobBlueIcon /> : <CreateJobIcon />),
                     href: isUserRecruiter(currentUserDetail?.user_type) ? "/create" : null,
+                }}
+            />
+            <Tabs.Screen
+                name="appliedJobs"
+                options={{
+                    title: 'Applied',
+                    tabBarIcon: ({ color, focused }) => (focused ? <AppliedJObBlue /> : <AppliedJob />),
+                    href: isUserJobSeeker(currentUserDetail?.user_type) ? "/appliedJobs" : null,
                 }}
             />
             <Tabs.Screen

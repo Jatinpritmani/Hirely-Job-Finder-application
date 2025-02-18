@@ -31,6 +31,8 @@ import SavedJobBlue from './savedJobBlue.svg'
 import BulletIcon from './bullet.svg'
 import ApplySuccessIcon from './applySuccess.svg'
 import LeftWhiteArrowIcon from './leftWhiteArrow.svg'
+import AppliedJob from './appliedJob.svg'
+import AppliedJObBlue from './appliedJobBlue.svg'
 
 
 export {
@@ -66,5 +68,7 @@ export {
     SavedJobBlue,
     BulletIcon,
     ApplySuccessIcon,
-    LeftWhiteArrowIcon
+    LeftWhiteArrowIcon,
+    AppliedJObBlue,
+    AppliedJob
 }
