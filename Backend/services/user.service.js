@@ -277,14 +277,16 @@ async function createJobPost(req) {
                 await Notification.insertMany(notifications)
                 let notification={
                     title:"Job Posted",
-                    body:`${companyDetails.company_name} Posted the new job thay you might like click here to Apply now!`
+                    body:`${companyDetails.company_name} Posted the new job thay you might like click here to Apply now!`,
+                    data : {job_id:jobDetails._id}
                 }
                 let notificationPayload=users.map((user)=>({
                     token:user.fcm_token,
                     notification:notification
                 }))
+                let tokens=users.map((user)=> user.fcm_token)
                 
-                await sendNotification(notificationPayload)
+                await sendNotification(tokens,notification)
                 
             }
         }
@@ -588,7 +590,7 @@ async function getAppliedJobs(req) {
                     applied_job_id: "$_id",
                     job_id: "$jobDetails._id",
                     status:"$status",
-                    status:"$status_history",
+                    status_history:"$status_history",
                     recruiter_id: "$jobDetails.recruiter_id",
                     job_seeker_id: "$job_seeker_id",
                     position: "$jobDetails.position",
@@ -827,16 +829,17 @@ async function updateAppliedJobStatus(req) {
                     message:`Your application's status is updated. Click here to check the status`,
             }}
         )   
-        
+        let notification={
+            title:"Application status update",
+            body:`Your application's status is updated. Click here to check the status`,
+            data : {applied_job_id}
+        }
         let notificationPayload=[{
             token:userDetails.fcm_token,
-            notification:{
-                title:"Application status update",
-                body:`Your application's status is updated. Click here to check the status`,
-            }   
+            notification:notification
         }]
-
-        await sendNotification(notificationPayload)
+        
+        await sendNotification(userDetails.fcm_token,notification)
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,
             utility_func.statusGenerator(

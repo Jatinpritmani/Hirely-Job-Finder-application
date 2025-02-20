@@ -1,14 +1,13 @@
 {
-    "type": "service_account",
-    "project_id": "hirely-job-finder-application",
-    "private_key_id": "4145211b806e41ecf2534a11c64b0ba6f2aa3b78",
-    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDta1UfbGN3uV+S\nVweRlHqqk8ZS7XAraJN3RXLnMYJg5kG/vvC57BXhZLbhfu78l1kxgkOZqynBtLIJ\nTFY/ukTGyGlpDDd55FLMAQOTzBWtlAx/+SaA1KnwGeieO1bkGv5Z+Zm+rdW5BNOh\nlGHzKCldBJDPnqLvj4sDnILvDNY06XsXgOzp6lbpXKAn8gCVgf7z2qHfMqFxToIM\ngCi2s0oBwUX6GyK4cCCOwC4eCswCvtgRUa5QqnfiDohG1wvrlu8hp+1Fg2+K7dlE\n/9cEyAiRxMfYwjqv1EWifckG2lTS8DOZPVUKhHjxGD8HXR0FaXYG1TXQQWrOTbtL\nGSpKEytvAgMBAAECggEAVvR/ucGV8KyZP1zWrdAm2UDEW20RLyTfFcj+24Q7j0fl\n/tdtDXtVTDb58D7wQt0f0s01+xtAcOzAZD1sPWz4caHHUa0iyGcCmCsq5z/RFMDr\njxdurbK2BvVGSGXNXkAwtj1/vOGoLFqDNGPHOCqWc7YPX6tnW7xEGu+A2RLnhXrl\nZZzUaskB0SlPBO5vyuFRH1XlIBSS2fa+u2vSIhLfeqhc7p0sxOvf43Tcv2bd0h9o\n34ncXoSJH8IWH1cHoLhy8ezwG8nz70i7fuT7ePJTq1PpjGsUQWENt5mdw4uoF8hb\nkTuhJNYemGRHqSh6DAYwVmlvDRVfMSOkN5oLQT/9+QKBgQD+vM3P2eISVYL+YYzY\nTJ51SBuIgrKzEzeaG37T6i5DmQv2D5MW98znWDwd7pNnNTMvSgBfbt2YM0LWLN9k\nX5Tjdpx/StCqIJH9NxgvwvZHYYsPl4Fd2EgJ4iKIhiWCr3x0X+tnNhIEBS3HmCdn\nXXyAb/WA/vpr7yF+iLBdbHgbEwKBgQDumI5hvaYTjtCTPE5jyz1GnyPOkMuJ1JMx\nQM7Yp9H1d4C0V1aIiS6BDRVt9n8MkZffAynj2fOdM+AfACfZ+asKlkJYVOI8Hju0\nuXvSqnAQdPJZQVe40fzj6leh7clw2DmIJwmdMepPI7UjqgnPE6dVCaVcrHTB8iir\n24t20Im9tQKBgQCtF7Xx6meHdbuRBtAhmc6CewDafZTXwdMiUFSZwqK1JCXQiTy1\neqQs/vO6kwZuNuQU2f/u2PKSHSLpTYxuM9SDy3EDvd6T+5W3rdwteBjI4CsR6Szq\ni7BHpvU4N479gijbGuJmO4N6X9p/qY/82LVkwK7dfGTFOrRTuqW8lZv3KQKBgFuR\nsRNR9asL5ICdZHhoR9wSt2tPps3/B36foMMFpU7PzlVoL423GGHu44qQT7JDLkYo\nsKsBur1aa2l6ZdECQOKPSGceLLVl5QQ3K45uWxP1zgzzRvdnn+bYyUkcOXNViL74\nPHhX79Tvn1VQrPMMV+wLB6vJhAXrKjDK0XuIDVUBAoGBAI1PcJlEmnXBJO8s7GYO\nYRV/RzLg53U3UA/VtxoyWen1ZIZqn7VLvyuTG8G50oyzFy2iBE8tmYaTex6PXaFt\nKk5SGhGbNp7tnu2X7VswInd8lm1lWisCmqUsUQ0E+DSPAEq2BrG3DtvBZcqll+tu\ndq3UT2Ed2nwcvhy1aZ4awOyE\n-----END PRIVATE KEY-----\n",
-    "client_email": "firebase-adminsdk-fbsvc@hirely-job-finder-application.iam.gserviceaccount.com",
-    "client_id": "103640430661524432626",
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40hirely-job-finder-application.iam.gserviceaccount.com",
-    "universe_domain": "googleapis.com"
-  }
-  
+  "type": "service_account",
+  "project_id": "hirely-job-finder-applic-8cbe1",
+  "private_key_id": "6e137c60863aa84e8bd1698fa426c7048f068ff4",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCgitMhthis9mbt\nwmIpehU7F5ELW78ZTtsdsNJ6oYBU3UN6ESO/IllYDjq6Q9lhgAB6Vz3+52JtgLBV\nTuhaHpsVY5Iby4enFEJjfwbDOEft6GUB44LIhiK+dqWscV+6cyfaZsdt5XxGp1J0\nEde7wpW1msnhEcGeMKgzKcFOuVnTvJytcv//BRhHX/Q41W7T3t7IsZs3AQvQXFWH\nTG9Lstd7b0j5lWkr5ItwqV8/W113VZcQquqy7zmJ6v7HjCtBW4eL50ttqHFXyHIj\n+G9rkhnhNwzMTtVg+4BhSuQqvZURKcgzYJhc9ZTtaaJVgn2IGNrOf/eAAcHjPmny\nqPuy8FqrAgMBAAECggEAHjhTqv5cob5WPL5A/R7CfVef0XwJOmnaHDorPLNG9XKb\nH5C3YmTEXat8CZD5C/3s2RqwDFog8IzvZHeQjFpDhiCyobHLzLsnDhScwMXI4HNF\nBDh/52A8jQ7He/DxfKbtoxKCyuCOZrxbbIbpTapAxSkohEnz4OO23b6n6TpBuvXy\n9ZvW+R7u9qFrT8ZHsZBA7zJ8dbHzlH9TDqctQIWZhFHBYcYfyFtNPN6FioS5zskt\nNyJhwQjX3sdCENk5OD183Q+iT8rDU/yfhZ3dbQNFWsSLAnV17+BtOIVDdNDfymsR\nTRmLg7fOOtE2M9lPQ4r4ZBwOefvVvNu9R6L5bzCfWQKBgQDfmhvtwkpM5ZxnmA3X\n8ZXwSfj5XzQwp4ishXy0+OQkHRXqLSdVWTnXa7/qJa9pvC0J2P+Tt04+lXY9Wp+v\nmJDF9shPMYTBxa89HxC2H14vEBkVSFnNA7NmzuV/406Bml3f0sPJ5A0hecqYl9rQ\nxaF89wu9SR+s+kTGOyr/BPvk2QKBgQC3zbEuwCEwzZyJsA0A6qYYX1YZ5Yd1JYIw\nXn4qkv6iukMMR6bfd6uIAyHfPjWcO4Gd4oDf0dAL6ANPjMAddYAka6jkPMf47qP2\nGzHON7eRK33dI+43zja38qbiOmp3jXBznbKSiWYUypzJPoAW0sBUeH8ev8DKsu20\nX1MNBJH5IwKBgQCgV863TKAjTHRABVXICMHQsfsMOC0gxsLHlGG9FM3k58aTSxXt\nqjJEPEw/CA8l738MlMORld1SG7PSg24HaYxHqZQy1fuxSKVFW0WMlCnh7dVO4bcj\nwQehLbR9ZO8jGSNAIc+ssxCHdOLHUf3jwBTxm+abMhi43i77R+qpPVW04QKBgGz+\nhdZSSpxVIUGo610iyJHlXvqGWPhH4NbsAecfOe6ng4DxsGwN2+MQ8HIgwsu9odRN\nb9zJ35Rf5i6zKW2Oswll6kZGINNmOEaFw9gkxC9K2h1b5DSljV8xfnLi7yWr8wYs\neqtY3PbxW14fOPfPzAuLVN6YGSxaRIlUibxLfIB/AoGAb/2e33XScNRcTKX638Sc\ngBB5E9KcOoM4uL/hTGkNeHfh/Akk1TVm8nsCLcF0SBsYGw3an8wa3RrxMumg0tdJ\nWEF5KGKcJMoOCcgC20AWUjsCQaqQrREXTbQlPsP6j8uJPn6yCeHVz6eXQVbzBCQK\n4CDikjeG4iEhCuJMWFEn1oI=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@hirely-job-finder-applic-8cbe1.iam.gserviceaccount.com",
+  "client_id": "118020433918111098321",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40hirely-job-finder-applic-8cbe1.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
