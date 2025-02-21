@@ -184,7 +184,7 @@ async function getUserResume(req) {
     logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
 
     try {
-        let user_id = req.body.user_id 
+        let user_id = req.query.user_id 
 
         let userDetails = await User.findOne({_id : user_id},
             {resume:1}
@@ -439,7 +439,8 @@ async function applyJob(req) {
             }
            let status_history = [{status:status,updated_At:Date.now}] 
            const applicationDetails = await Application.create( { job_id,job_seeker_id,recruiter_id,cover_letter ,status, status_history} );
-
+           const jobSeekerDetails = await User.findOne({_id:job_seeker_id},{user_name:1})
+           const recruiterDetails = await User.findOne({_id:recruiter_id},{fcm_token:1})
            if(applicationDetails){
                 let notification = {
                     job_id : applicationDetails.job_id, 
@@ -452,6 +453,12 @@ async function applyJob(req) {
                 }
                 await Notification.create(notification);
             }
+            let notification={
+                title:"Job Application",
+                body:`${jobSeekerDetails.user_name} has been applied for job. Click here to check`,
+                data : {applied_job_id:applicationDetails._id}
+            }
+            await sendNotification(recruiterDetails.fcm_token,notification)
         }
         
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
