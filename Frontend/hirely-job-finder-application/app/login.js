@@ -23,6 +23,7 @@ import { isTruthyString, isValidEmail } from "../utils/validator";
 import { USER_LOGIN } from "../components/apiConstants";
 import apiRequest from "../components/api";
 import { getUserDetail } from "../context/actions/userActions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const login = () => {
     const colorScheme = useColorScheme();
@@ -92,6 +93,7 @@ const login = () => {
     };
 
     const onPressLogin = async () => {
+        let pushToken = await AsyncStorage.getItem('pushToken');
         if (!isTruthyString(email)) {
             setEmailErrorMessage("*Please Enter E-Mail Address.");
 
@@ -111,7 +113,8 @@ const login = () => {
 
             let login_cred = {
                 user_email: email,
-                user_password: password
+                user_password: password,
+                fcm_token: pushToken
             }
             // api call for login 
             try {

@@ -7,9 +7,12 @@ import {
     TouchableOpacity,
     useColorScheme,
     View,
+Platform
 } from "react-native";
 import Swiper from "react-native-swiper";
-
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 
 
 // local imports
@@ -22,14 +25,102 @@ import { getHeight, moderateScale, screenWidth } from "@/constants/constants";
 import { Colors } from "@/constants/Colors";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
+
+
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+    }),
+});
+
+
+
+
+function handleRegistrationError(errorMessage) {
+    alert(errorMessage);
+    throw new Error(errorMessage);
+}
+
+async function registerForPushNotificationsAsync() {
+    if (Platform.OS === 'android') {
+        Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+        });
+    }
+
+    if (Device.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+            handleRegistrationError('Permission not granted to get push token for push notification!');
+            return;
+        }
+        const projectId = '10f8e89c-25bf-4e88-a644-fddb36d51502'
+        if (!projectId) {
+            handleRegistrationError('Project ID not found');
+        }
+        try {
+            const pushTokenString = (
+                await Notifications.getExpoPushTokenAsync({
+                    projectId,
+                })
+            ).data;
+            await AsyncStorage.setItem('pushToken', pushTokenString);
+
+            console.log(pushTokenString);
+            return pushTokenString;
+        } catch (e) {
+            handleRegistrationError(`${e}`);
+        }
+    } else {
+        handleRegistrationError('Must use physical device for push notifications');
+    }
+}
 export default function onBoarding() {
     const currentUserDetail = useSelector(state => state.userReducer)
     const colorScheme = useColorScheme();
     const swiperRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
+    const notificationListener = useRef();
+    const responseListener = useRef();
 
+useEffect(() => {
+    registerForPushNotificationsAsync()
+        .then(token => setExpoPushToken(token ?? ''))
+        .catch((error) => setExpoPushToken(`${error}`));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+        console.log('=================notification===================');
+        console.log(notification);
+        console.log('====================================');
+        // setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        console.log(response,"response");
+    });
+
+    return () => {
+        notificationListener.current &&
+            Notifications.removeNotificationSubscription(notificationListener.current);
+        responseListener.current &&
+            Notifications.removeNotificationSubscription(responseListener.current);
+    };
+}, []);
 
     useEffect(() => {
         if (currentUserDetail) {
@@ -216,4 +307,27 @@ const localStyles = StyleSheet.create({
         bottom: moderateScale(0),
     },
 });
+
+
+
+// export default function App() {
+//     const [expoPushToken, setExpoPushToken] = useState('');
+//     const [notification, setNotification] = useState(
+//         undefined
+//     );
+    
+
+    
+
+//     return (
+//         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around' }}>
+//             <Text>Your Expo push token: {expoPushToken}</Text>
+//             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+//                 <Text>Title: {notification && notification.request.content.title} </Text>
+//                 <Text>Body: {notification && notification.request.content.body}</Text>
+//                 <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
+//             </View>
+//         </View>
+//     );
+// }
 

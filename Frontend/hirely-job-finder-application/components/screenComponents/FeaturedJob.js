@@ -11,15 +11,15 @@ import { router } from 'expo-router';
 import { useSelector } from 'react-redux';
 
 
-const FeaturedJob = ({ item, index }) => {
+const FeaturedJob = ({ item, index, isVertical = false }) => {
     const colorScheme = useColorScheme();
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
 
     const onPressJob = () => {
         if (isUserRecruiter(currentUserDetail?.user_type)) {
             router.push({
-                pathname: "/recruiterJobDetail",
-                params: { jobDetail: JSON.stringify(item) }, // Pass parameters
+                pathname: "/jobSeekerDetail",
+                params: { jobseekerDetail: JSON.stringify(item) }, // Pass parameters
             })
         } else {
             router.push({
@@ -29,7 +29,7 @@ const FeaturedJob = ({ item, index }) => {
         }
     }
     return (
-        <TouchableOpacity onPress={onPressJob} style={[localstyles.main, { backgroundColor: index % 2 == 0 ? Colors[colorScheme]?.grayScale4 : Colors[colorScheme]?.grayScale9, opacity: index % 2 == 0 ? 0.8 : 1 }]}>
+        <TouchableOpacity onPress={onPressJob} style={[localstyles.main, { backgroundColor: index % 2 == 0 ? Colors[colorScheme]?.grayScale4 : Colors[colorScheme]?.grayScale9, opacity: index % 2 == 0 ? 0.8 : 1, }, isVertical && styles.mb15]}>
             <ImageBackground
                 source={images.jobBackground}
                 style={localstyles.imageStyle}
@@ -41,8 +41,6 @@ const FeaturedJob = ({ item, index }) => {
                         <HText type="S16" color={Colors[colorScheme]?.white}>
                             {isUserRecruiter(currentUserDetail?.user_type) ? item?.user_name : item?.position}
                         </HText>
-                        {console.log(item?.designation)
-                        }
                         <HText type="M14" color={Colors[colorScheme]?.white} style={isUserRecruiter(currentUserDetail?.user_type) && { opacity: 0.75 }}>
                             {isUserRecruiter(currentUserDetail?.user_type) ? item?.designation : item?.company_name}
                         </HText>

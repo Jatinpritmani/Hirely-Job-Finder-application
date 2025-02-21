@@ -38,9 +38,6 @@ const recruiterJobDetail = () => {
         setResponsibilities(sentencesArray)
     }, [loading])
 
-    console.log('====================================');
-    console.log(jobDetails);
-    console.log('====================================');
 
 
     const onPressSave = async () => {
@@ -68,7 +65,6 @@ const recruiterJobDetail = () => {
                 job_seeker_id: currentUserDetail?.user_id,
                 apply_type: "save_job",
             }
-            console.log(payload);
 
             try {
                 let response = await apiRequest("POST", APPLY_JOB, payload);
@@ -104,7 +100,6 @@ const recruiterJobDetail = () => {
     }
     useFocusEffect(
         useCallback(() => {
-            console.log("====", '____', jobDetails?.requirenment);
 
             const sentencesArray = jobDetails?.requirenment?.split("\n");
 

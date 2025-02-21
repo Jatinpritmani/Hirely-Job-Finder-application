@@ -10,6 +10,7 @@ import { styles } from '../themes'
 import { getUserDetail } from '../context/actions/userActions'
 import HLoader from '../components/common/HLoader'
 import HHeader from '../components/common/HHeader'
+import EmptyListComponent from '../components/common/EmptyListComponent'
 
 const allExperience = () => {
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
@@ -49,6 +50,7 @@ const allExperience = () => {
                 data={currentUserDetail?.experience}
                 renderItem={renderItem}
                 style={styles.mt10}
+                ListEmptyComponent={<EmptyListComponent title={`No Experience.`} />}
             />
         </HSafeAreaView>
     )

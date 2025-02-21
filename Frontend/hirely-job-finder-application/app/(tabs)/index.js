@@ -1,5 +1,5 @@
 // library imports
-import { FlatList, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { router, useFocusEffect } from 'expo-router';
@@ -17,27 +17,29 @@ import HText from '../../components/common/HText';
 import { getAllJobList } from '../../context/actions/jobAction';
 import JobCard from '../../components/screenComponents/JobCard';
 import FeaturedJob from '../../components/screenComponents/FeaturedJob';
+import HLoader from '../../components/common/HLoader';
 
 const Home = () => {
     const colorsScheme = useColorScheme()
     const dispatch = useDispatch()
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
     const allJobList = useSelector(state => state.jobReducer.allJobList)
-    const loadingRecruiterDetai = useSelector(state => state.userReducer.loadingRecruiterDetai)
     const recruiterDetails = useSelector(state => state.userReducer.recruiterDetails)
     const [recruiterDetailsData, setRecruiterDetailsData] = useState(null)
+    const allJobloading = useSelector(state => state.jobReducer.loading)
+    const loadingRecruiterDetai = useSelector(state => state.userReducer.loadingRecruiterDetai)
+
 
     useEffect(() => {
         if (recruiterDetails) {
             setRecruiterDetailsData(recruiterDetails)
         }
-        console.log(recruiterDetails);
 
     }, [recruiterDetails])
 
     useFocusEffect(
         useCallback(() => {
-            console.log(currentUserDetail?.user_type);
+
             if (isUserRecruiter(currentUserDetail?.user_type)) {
 
                 dispatch(getRecruiterDetail(currentUserDetail?.user_id))
@@ -81,8 +83,23 @@ const Home = () => {
             <FeaturedJob item={item} index={index} />
         )
     }
+
+    const onPressSeeAllJobs = () => {
+        router.push('allJobList')
+    }
+
+    const onPressSeeAllFeaturedJobs = () => {
+        router.push('allFeaturedJobs')
+
+    }
+
+
+    if (allJobloading || loadingRecruiterDetai) {
+        return <HLoader />;
+    }
+
     return (
-        <HSafeAreaView style={localStyles.main} containerStyle={styles.flex0}>
+        <HSafeAreaView style={localStyles.main} >
             <HHeader
                 isHideBack
                 title="Hirely"
@@ -91,18 +108,19 @@ const Home = () => {
                 titleColor={Colors[colorsScheme]?.primary}
                 titleType='B24'
             />
-            <View style={[styles.mt50, styles.flexRow]}>
-                <View style={[localStyles.searchBar, styles.itemsCenter, { width: '80%', backgroundColor: Colors[colorsScheme]?.grayScale8 }]}>
-                    <Search />
-                    <HText type="R14" style={styles.ml10} color={Colors[colorsScheme]?.subText}>
-                        Search here
-                    </HText>
+            <ScrollView contentContainerStyle={[styles.flexGrow1, styles.pv15]} showsVerticalScrollIndicator={false}>
+                <View style={[styles.mt30, styles.flexRow]}>
+                    <View style={[localStyles.searchBar, styles.itemsCenter, { width: '80%', backgroundColor: Colors[colorsScheme]?.grayScale8 }]}>
+                        <Search />
+                        <HText type="R14" style={styles.ml10} color={Colors[colorsScheme]?.subText}>
+                            Search here
+                        </HText>
+                    </View>
+                    <View style={[localStyles.searchBar, styles.ml10, styles.center, { width: '15%', backgroundColor: Colors[colorsScheme]?.grayScale8 }]}>
+                        <Filter />
+                    </View>
                 </View>
-                <View style={[localStyles.searchBar, styles.ml10, styles.center, { width: '15%', backgroundColor: Colors[colorsScheme]?.grayScale8 }]}>
-                    <Filter />
-                </View>
-            </View>
-            {/* <HInput
+                {/* <HInput
                 _value={jobDescription}
                 label="Job Description"
                 placeHolder="Job Description"
@@ -112,21 +130,25 @@ const Home = () => {
                 multiline
                 inputBoxStyle={[styles.pv15, styles.ml15]}
             />      */}
-
-            <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'your job posting' : 'Recommended Jobs'} onPressSeeAll={() => { }} style={styles.mt30} />
-            <FlatList
-                data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.jobDetails?.slice(0, 2) : allJobList.slice(0, 2)}
-                renderItem={renderRecomendedJobItem}
-                style={[styles.mt25]}
-            />
-            <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'Recent People Applied' : 'Featured Jobs'} onPressSeeAll={() => { }} />
-            <FlatList
-                data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails : allJobList}
-                renderItem={renderFeaturedJobItem}
-                style={[styles.mt25]}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-            />
+                <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'your job posting' : 'Recommended Jobs'} onPressSeeAll={onPressSeeAllJobs} style={styles.mt30} />
+                <FlatList
+                    data={isUserRecruiter(currentUserDetail?.user_type) ? (recruiterDetailsData && recruiterDetailsData?.jobDetails?.slice(0, 2)) : (allJobList && allJobList.slice(0, 2))}
+                    renderItem={renderRecomendedJobItem}
+                    style={[styles.mt25]}
+                    scrollEnabled={false}
+                    showsHorizontalScrollIndicator={false}
+                    nestedScrollEnabled={true}
+                />
+                <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'Recent People Applied' : 'Featured Jobs'} onPressSeeAll={onPressSeeAllFeaturedJobs} />
+                <FlatList
+                    data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails : allJobList}
+                    renderItem={renderFeaturedJobItem}
+                    style={[styles.mt25]}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    nestedScrollEnabled={true}
+                />
+            </ScrollView>
         </HSafeAreaView>
     )
 }

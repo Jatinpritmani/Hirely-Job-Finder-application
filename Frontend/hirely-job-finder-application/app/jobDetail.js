@@ -15,6 +15,7 @@ import apiRequest from '../components/api';
 import { APPLY_JOB, GET_ALL_JOBS, UNSAVE_JOB } from '../components/apiConstants';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllJobList } from '../context/actions/jobAction';
+import Toast from 'react-native-toast-message';
 
 const jobDetail = () => {
     const colorScheme = useColorScheme();
@@ -40,7 +41,6 @@ const jobDetail = () => {
 
 
     const onPressSave = async () => {
-        console.log(jobDetails?.is_job_saved);
 
         if (jobDetails?.is_job_saved) {
             let payload = {
@@ -49,6 +49,10 @@ const jobDetail = () => {
             try {
                 let response = await apiRequest("POST", UNSAVE_JOB, payload);
                 if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Job UnSaved Successfully',
+                    });
                     dispatch(getAllJobList(currentUserDetail?.user_id))
 
                 }
@@ -66,11 +70,14 @@ const jobDetail = () => {
                 job_seeker_id: currentUserDetail?.user_id,
                 apply_type: "save_job",
             }
-            console.log(payload);
 
             try {
                 let response = await apiRequest("POST", APPLY_JOB, payload);
                 if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Job Saved Successfully',
+                    });
                     dispatch(getAllJobList(currentUserDetail?.user_id))
 
                 }
