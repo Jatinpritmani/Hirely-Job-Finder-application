@@ -1,7 +1,9 @@
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import Toast from "react-native-toast-message";
+import * as ImagePicker from "expo-image-picker";
+
 
 // local import
 import { Colors } from "@/constants/Colors";
@@ -14,6 +16,8 @@ import { isTruthyString } from "../utils/validator";
 import apiRequest from "../components/api";
 import { CREATE_JOB_POST } from "../components/apiConstants";
 import HKeyBoardAvoidWrapper from "../components/common/HKeyBoardAvoidWrapper";
+import HText from "../components/common/HText";
+import { moderateScale } from "../constants/constants";
 
 const createPost = () => {
     const { new_post } = useLocalSearchParams();
@@ -29,6 +33,8 @@ const createPost = () => {
         useState("");
     const [isNextDisabled, setIsNextDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+
 
     useEffect(() => {
         if (jobDescription?.length > 0) {
@@ -105,6 +111,29 @@ const createPost = () => {
         }
     };
 
+
+    const onPressImagePicker = async () => {
+        // Ask for permissions
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+            Alert.alert("Permission Required", "Please grant camera roll permissions.");
+            return;
+        }
+
+        // Open image picker
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const file = result.assets[0];
+            setSelectedImage(file.uri);
+        }
+    };
+
     return (
         <HSafeAreaView>
             <HHeader title="Create Post" />
@@ -131,6 +160,21 @@ const createPost = () => {
                         multiline
                         inputBoxStyle={[styles.pv15, styles.ml15]}
                     />
+                </View>
+
+                <View>
+                    <HText style={[styles.mt15, styles.mb5]} type={'S14'} >
+                        {'Choose Image'}
+                    </HText>
+                    <TouchableOpacity onPress={onPressImagePicker} style={[localStyles.imagePicker, { borderColor: Colors[colorScheme]?.borderColor }]}>
+                        <HText type={'S14'}  >
+                            {selectedImage ? "Selected Image" : 'Select Image'}
+                        </HText>
+                        {selectedImage && <Image
+                            source={{ uri: selectedImage }}
+                            style={localStyles.imageView}
+                        />}
+                    </TouchableOpacity>
                 </View>
                 <HButton
                     // disabled={isNextDisabled}
@@ -161,5 +205,15 @@ const localStyles = StyleSheet.create({
     btnStyle: {
         ...styles.mt50,
         ...styles.mb30,
+    },
+    imagePicker: {
+        ...styles.p20,
+        borderWidth: moderateScale(1),
+        borderRadius: moderateScale(12)
+    },
+    imageView: {
+        width: moderateScale(46),
+        height: moderateScale(46),
+        borderRadius: moderateScale(12),
     },
 });

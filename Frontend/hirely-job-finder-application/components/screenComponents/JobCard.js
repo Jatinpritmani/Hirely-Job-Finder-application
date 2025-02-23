@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native";
 import { useSelector } from "react-redux";
 import { router } from "expo-router";
 
@@ -7,6 +7,7 @@ import { styles } from "../../themes";
 import HText from "../common/HText";
 import { Colors } from '@/constants/Colors';
 import { getJobTypeLabel, getLocationLabel, isUserRecruiter, moderateScale } from "../../constants/constants";
+import images from "../../assets/images";
 
 
 const JobCard = ({ item, index, cardStyle, isSavedCard = false }) => {
@@ -31,7 +32,13 @@ const JobCard = ({ item, index, cardStyle, isSavedCard = false }) => {
     return (
         <TouchableOpacity onPress={onPressJob} style={[localStyles.card, { backgroundColor: Colors[colorScheme]?.white }, cardStyle]}>
             <View style={styles.rowCenter} >
-                <View style={[localStyles.emptyView, { bordeColor: Colors[colorScheme]?.grayScale4, opacity: 0.3 }]}></View>
+                <View style={[localStyles.emptyView, { bordeColor: Colors[colorScheme]?.grayScale1, }]}>
+                    <Image
+                        source={index % 2 == 0 ? images.fb : images.google}
+                        style={localStyles.emptyView}
+                    />
+
+                </View>
                 <View style={[styles.flex, styles.ml15]}>
                     <View style={styles.rowSpaceBetween}>
                         <HText type="S14">
@@ -75,7 +82,6 @@ const localStyles = StyleSheet.create({
     emptyView: {
         width: moderateScale(46),
         height: moderateScale(46),
-        borderWidth: moderateScale(1),
         borderRadius: moderateScale(12),
     },
     card: {

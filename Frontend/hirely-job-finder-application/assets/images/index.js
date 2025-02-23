@@ -6,6 +6,8 @@ export default {
     forgotPassword: require('./forgotPassword.png'),
     createNewPassword: require('./createNewPassword.png'),
     profileImage: require('./profilePic.png'),
-    jobBackground: require('./jobBackground.png')
+    jobBackground: require('./jobBackground.png'),
+    google: require('./google.png'),
+    fb: require('./fb.png')
 };
 
