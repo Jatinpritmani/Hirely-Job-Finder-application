@@ -141,12 +141,16 @@ const Home = () => {
         }, [])
     );
 
+    const onPressNotificationIcon = () => {
+        router.push('/notification')
+    }
+
     const LeftIcon = () => {
         return (
 
-            <View>
+            <TouchableOpacity onPress={onPressNotificationIcon}>
                 <NotificationIcon width={moderateScale(32)} height={moderateScale(32)} />
-            </View>
+            </TouchableOpacity>
         )
     }
 

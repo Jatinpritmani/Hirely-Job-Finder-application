@@ -83,6 +83,7 @@ export default function RootLayout() {
             <Stack.Screen name="jobSeekerDetail" />
             <Stack.Screen name="allJobList" />
             <Stack.Screen name="allFeaturedJobs" />
+            <Stack.Screen name="notification" />
             <Stack.Screen name="(tabs)" options={{ headerShown: false, gestureEnabled: false }} />
           </Stack>
           <Toast position='top' topOffset={70}

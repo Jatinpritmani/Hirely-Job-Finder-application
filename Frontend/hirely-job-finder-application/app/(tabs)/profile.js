@@ -126,7 +126,7 @@ const Profile = () => {
                         </View>
                         <TouchableOpacity onPress={onPressResume} style={[localStyles.cvContainer, { backgroundColor: Colors[colorScheme]?.white }]}>
                             <View style={styles.rowSpaceBetween}>
-                                <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.grayScale4 }]}>
+                                <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.primary1 }]}>
                                     <HText type="M10" color={Colors[colorScheme]?.white} >
                                         {'CV'}
 
@@ -143,7 +143,7 @@ const Profile = () => {
 
                                     </HText>
                                 </View>
-                                <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.grayScale4 }]}>
+                                <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.red80 }]}>
                                     <HText type="M10" color={Colors[colorScheme]?.white} >
                                         {'PDF'}
 

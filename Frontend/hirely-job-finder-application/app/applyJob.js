@@ -16,6 +16,7 @@ import apiRequest from '../components/api';
 import { APPLY_JOB } from '../components/apiConstants';
 import ApplySuccess from '../components/modals/applySuccess';
 import { useSelector } from 'react-redux';
+import { CheckMark } from '../assets/svgs';
 
 const applyJob = () => {
     const colorScheme = useColorScheme();
@@ -92,12 +93,23 @@ const applyJob = () => {
 
             </View>
             <View style={[styles.mv30, styles.mh25]}>
-                {/* <HText type="S16">
+                <HText type="S16">
                     {'Select a resume'}
                 </HText>
-                <View>
+                <View style={[localstyles.resumeSelectStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
+                    <CheckMark />
 
-                </View> */}
+                    <View>
+
+                        <HText type="M10" align='center' color={Colors[colorScheme]?.white} style={[localstyles.desStyle, { backgroundColor: Colors[colorScheme]?.yellow }]}>
+                            {currentUserDetail?.designation}
+                        </HText>
+                        <HText type="B12" align='center' >
+                            {currentUserDetail?.user_name}
+                        </HText>
+                    </View>
+
+                </View>
                 <HText type="S16">
                     {'Cover Later / Resume '}
 
@@ -105,6 +117,7 @@ const applyJob = () => {
                         (Optional)
                     </HText>
                 </HText>
+
                 <HInput
                     _value={coverLetter}
                     // label="Job Description"
@@ -144,6 +157,22 @@ const localstyles = StyleSheet.create({
         ...styles.mh30,
         ...styles.mv25,
         ...styles.flexRow
+    },
+    resumeSelectStyle: {
+        ...styles.mv15,
+        ...styles.ph15,
+        ...styles.pv10,
+        ...styles.selfStart,
+        ...styles.rowCenter,
+        gap: moderateScale(16),
+        borderRadius: moderateScale(12),
+
+    },
+    desStyle: {
+        ...styles.ph10,
+        ...styles.pv5,
+        borderRadius: moderateScale(6),
+        ...styles.selfCenter
     }
 
 })

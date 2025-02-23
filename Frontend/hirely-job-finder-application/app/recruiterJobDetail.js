@@ -118,7 +118,7 @@ const recruiterJobDetail = () => {
 
         <HSafeAreaView containerStyle={styles.ph0} style={localStyles.main}>
             <ScrollView showsVerticalScrollIndicator={false} >
-                <View style={[localStyles.upperContainer, { backgroundColor: Colors[colorScheme]?.grayScale4 }]}>
+                <View style={[localStyles.upperContainer, { backgroundColor: Colors[colorScheme]?.primary }]}>
                     <HHeader title="" isLeftIcon={<LeftIcon />} isHideBack={true} containerStyle={styles.ph20}
                     />
                     <View style={[localStyles.imgStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
@@ -138,7 +138,7 @@ const recruiterJobDetail = () => {
                             {getLocationLabel(jobDetails?.location) || ''}
                         </HText>
                     </View>
-                    <View style={[localStyles.labelStyle, { backgroundColor: Colors[colorScheme]?.grayScale9 }]}>
+                    <View style={[localStyles.labelStyle, { backgroundColor: Colors[colorScheme]?.white15 }]}>
 
                         <HText type="R12" color={Colors[colorScheme]?.white}>
                             {getJobTypeLabel(jobDetails?.job_type)}

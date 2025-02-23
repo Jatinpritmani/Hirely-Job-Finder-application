@@ -8,6 +8,7 @@ const tintColorDark = "#fff";
 
 export const Colors = {
   light: {
+    primary1: "#1A4780",
     primary: "#1A4780CC",
     text: "#0D0D26",
     subText: "#95969D",
@@ -33,8 +34,15 @@ export const Colors = {
     grayScale9: "#BBBBBB",
     borderColor2: "#F3F3F3",
     transparent: "rgba(0,0,0,0.1)",
+    yellow: "#FFAA00",
+    yellow2: "#FFBC42",
+    white15: "#FFFFFF26",
+    lightGreen: "#E8FDF2",
+    green: "#0E9D57",
+    red80: "#F57474CC",
   },
   dark: {
+    primary1: "#1A4780",
     primary: "#1A4780CC",
     text: "#0D0D26",
     subText: "#95969D",
@@ -60,6 +68,13 @@ export const Colors = {
     grayScale9: "#BBBBBB",
     borderColor2: "#F3F3F3",
     transparent: "rgba(0,0,0,0.1)",
+    yellow: "#FFAA00",
+    yellow2: "#FFBC42",
+    white15: "#FFFFFF26",
+    lightGreen: "#E8FDF2",
+    green: "#0E9D57",
+    red80: "#F57474CC",
+
     // primary: "#1A4780CC",
     // text: "#ECEDEE",
     // subtext: "#95969D",

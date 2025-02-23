@@ -61,9 +61,9 @@ const JobCard = ({ item, index, cardStyle, isSavedCard = false }) => {
             </View>
             {isSavedCard &&
                 <View style={[styles.rowSpaceBetween, styles.mt30]}>
-                    <View style={[styles.ph30, styles.pv5, { backgroundColor: Colors[colorScheme]?.grayScale9, borderRadius: moderateScale(52) }]}>
+                    <View style={[styles.ph30, styles.pv5, { backgroundColor: Colors[colorScheme]?.lightGreen, borderRadius: moderateScale(52) }]}>
 
-                        <HText type="M14" color={Colors[colorScheme]?.grayScale4}>
+                        <HText type="M14" color={Colors[colorScheme]?.green}>
                             Open
                         </HText>
                     </View>

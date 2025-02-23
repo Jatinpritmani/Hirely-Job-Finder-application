@@ -30,9 +30,9 @@ const AppliedJobCard = ({ item, index, cardStyle, }) => {
                         {item?.company_name || '-'}
                     </HText>
                 </View>
-                <View style={[styles.ph30, styles.pv5, { backgroundColor: Colors[colorScheme]?.grayScale9, borderRadius: moderateScale(52) }]}>
+                <View style={[styles.ph30, styles.pv5, { backgroundColor: Colors[colorScheme]?.yellow2, borderRadius: moderateScale(52) }]}>
 
-                    <HText type="M14" color={Colors[colorScheme]?.grayScale4}>
+                    <HText type="M14" color={Colors[colorScheme]?.white}>
                         Track
                     </HText>
                 </View>

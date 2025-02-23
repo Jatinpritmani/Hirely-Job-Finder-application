@@ -57,7 +57,7 @@ const jobSeekerDetail = () => {
 
         <HSafeAreaView containerStyle={styles.ph0} style={localStyles.main}>
             <ScrollView showsVerticalScrollIndicator={false} >
-                <View style={[localStyles.upperContainer, { backgroundColor: Colors[colorScheme]?.grayScale4 }]}>
+                <View style={[localStyles.upperContainer, { backgroundColor: Colors[colorScheme]?.primary }]}>
                     <HHeader title="" isLeftIcon={<LeftIcon />} isHideBack={true} containerStyle={styles.ph20}
                     />
                     <View style={[localStyles.imgStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
@@ -84,7 +84,7 @@ const jobSeekerDetail = () => {
 
                     <TouchableOpacity onPress={onPressResume} style={[localStyles.cvContainer, { backgroundColor: Colors[colorScheme]?.white }]}>
                         <View style={styles.rowSpaceBetween}>
-                            <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.grayScale4 }]}>
+                            <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.primary1 }]}>
                                 <HText type="M10" color={Colors[colorScheme]?.white} >
                                     {'CV'}
 
@@ -101,7 +101,7 @@ const jobSeekerDetail = () => {
 
                                 </HText>
                             </View>
-                            <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.grayScale4 }]}>
+                            <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.red80 }]}>
                                 <HText type="M10" color={Colors[colorScheme]?.white} >
                                     {'PDF'}
 

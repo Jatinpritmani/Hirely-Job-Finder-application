@@ -54,7 +54,7 @@ export default function FilterSheet({ SheetRef, filter, setFilter, setIsSearch }
         let isSelected = filter.filter_by_job_type.includes(item.value)
 
         return (
-            <TouchableOpacity onPress={onPressJobType} style={[localStyles.jobTypeView, { backgroundColor: isSelected ? Colors[colorScheme]?.grayScale3 : Colors[colorScheme]?.grayScale1, }, isSelected && { borderWidth: 1, borderColor: Colors[colorScheme]?.grayScale4 }]}>
+            <TouchableOpacity onPress={onPressJobType} style={[localStyles.jobTypeView, { backgroundColor: isSelected ? Colors[colorScheme]?.yellow2 : Colors[colorScheme]?.grayScale1, }, isSelected && { borderWidth: 1, borderColor: Colors[colorScheme]?.yellow }]}>
                 <HText type="M14" color={isSelected ? Colors[colorScheme]?.white : Colors[colorScheme]?.grayScale4}>
                     {item?.label}
                 </HText>
@@ -79,7 +79,7 @@ export default function FilterSheet({ SheetRef, filter, setFilter, setIsSearch }
         let isSelected = filter.filter_by_location.includes(item.value)
 
         return (
-            <TouchableOpacity onPress={onPressLocation} style={[localStyles.jobTypeView, { backgroundColor: isSelected ? Colors[colorScheme]?.grayScale3 : Colors[colorScheme]?.grayScale1, }, isSelected && { borderWidth: 1, borderColor: Colors[colorScheme]?.grayScale4 }]}>
+            <TouchableOpacity onPress={onPressLocation} style={[localStyles.jobTypeView, { backgroundColor: isSelected ? Colors[colorScheme]?.yellow2 : Colors[colorScheme]?.grayScale1, }, isSelected && { borderWidth: 1, borderColor: Colors[colorScheme]?.yellow }]}>
                 <HText type="M14" color={isSelected ? Colors[colorScheme]?.white : Colors[colorScheme]?.grayScale4}>
                     {item?.label}
                 </HText>
@@ -141,7 +141,7 @@ export default function FilterSheet({ SheetRef, filter, setFilter, setIsSearch }
                     values={[multiSliderValue[0], multiSliderValue[1]]}
                     isMarkersSeparated={true}
                     min={0}
-                    max={1000000}
+                    max={300000}
                     sliderLength={screenWidth - moderateScale(40)}
                     enableLabel={true}
                     valuePrefix='$'

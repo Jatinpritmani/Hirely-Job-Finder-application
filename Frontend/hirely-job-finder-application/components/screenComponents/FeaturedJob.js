@@ -29,7 +29,7 @@ const FeaturedJob = ({ item, index, isVertical = false }) => {
         }
     }
     return (
-        <TouchableOpacity onPress={onPressJob} style={[localstyles.main, { backgroundColor: index % 2 == 0 ? Colors[colorScheme]?.grayScale4 : Colors[colorScheme]?.grayScale9, opacity: index % 2 == 0 ? 0.8 : 1, }, isVertical && styles.mb15]}>
+        <TouchableOpacity onPress={onPressJob} style={[localstyles.main, { backgroundColor: index % 2 == 0 ? Colors[colorScheme]?.primary : Colors[colorScheme]?.primary1, }, isVertical && styles.mb15]}>
             <ImageBackground
                 source={images.jobBackground}
                 style={localstyles.imageStyle}
@@ -50,7 +50,7 @@ const FeaturedJob = ({ item, index, isVertical = false }) => {
                 {isUserRecruiter(currentUserDetail?.user_type) ?
                     <View style={styles.rowSpaceBetween}>
 
-                        <View style={[localstyles.labelStyle, { backgroundColor: Colors[colorScheme]?.grayScale9 }]}>
+                        <View style={[localstyles.labelStyle, { backgroundColor: Colors[colorScheme]?.white15 }]}>
 
                             <HText type="R12" color={Colors[colorScheme]?.white}>
                                 {'See Resume'}
@@ -65,7 +65,7 @@ const FeaturedJob = ({ item, index, isVertical = false }) => {
                     </View>
                     :
                     <>
-                        <View style={[localstyles.labelStyle, { backgroundColor: index % 2 != 0 ? Colors[colorScheme]?.grayScale4 : Colors[colorScheme]?.grayScale9, }]}>
+                        <View style={[localstyles.labelStyle, { backgroundColor: Colors[colorScheme]?.white15, }]}>
 
                             <HText type="R12" color={Colors[colorScheme]?.white}>
                                 {getJobTypeLabel(item?.job_type)}
