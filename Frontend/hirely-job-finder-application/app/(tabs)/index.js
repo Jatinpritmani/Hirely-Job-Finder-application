@@ -69,7 +69,7 @@ const Home = () => {
 
     const onPressLogout = () => {
         dispatch(doLogout())
-        router.replace('/login')
+        router.replace('start')
     }
     const RightIcon = () => {
         return (
