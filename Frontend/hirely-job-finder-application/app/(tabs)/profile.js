@@ -102,7 +102,7 @@ const Profile = () => {
                 {isUserRecruiter(currentUserDetail?.user_type) &&
                     <>
                         <HText type="B16" align='center' style={styles.mt30}>
-                            {currentUserDetail.company_name}
+                            {currentUserDetail.company_name || 'Google'}
 
                         </HText>
                         <HText type="R12" align='center' color={Colors[colorScheme]?.subText} style={styles.mt10}>

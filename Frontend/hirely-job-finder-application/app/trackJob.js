@@ -39,7 +39,7 @@ const trackJob = () => {
                         </View>
                         <View style={styles.rowSpaceBetween}>
                             <HText type="R12" style={{ opacity: 0.5 }}>
-                                {jodDetails?.company_name || ''}
+                                {jodDetails?.company_name || 'Google'}
                             </HText>
                             <HText type="R12" color={Colors[colorScheme]?.grayScale7}>
                                 {getLocationLabel(jodDetails?.location) || ''}

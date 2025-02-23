@@ -28,7 +28,7 @@ const ExperienceCard = ({ item, index, experience, setExperience, isShowDelete =
             </View>
             <View style={styles.rowSpaceBetween}>
                 <HText type="R12" style={{ opacity: 0.5 }}>
-                    {item?.company_name}
+                    {item?.company_name || 'Google'}
                 </HText>
                 <HText type="R12" color={Colors[colorScheme]?.grayScale7}>
                     {item?.experience_from} - {item?.experience_to}

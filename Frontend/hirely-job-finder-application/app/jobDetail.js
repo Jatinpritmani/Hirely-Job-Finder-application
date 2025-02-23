@@ -137,7 +137,7 @@ const jobDetail = () => {
                         {jobDetails?.position}
                     </HText>
                     <HText type="M16" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
-                        {jobDetails?.company_name}
+                        {jobDetails?.company_name || 'Google'}
                     </HText>
                     <View style={[styles.flexRow, styles.center, { gap: moderateScale(30) }]}>
                         <HText type="S16" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
