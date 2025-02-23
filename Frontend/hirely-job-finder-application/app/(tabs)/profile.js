@@ -50,7 +50,7 @@ const Profile = () => {
         router.push("allExperience")
     }
     const onPressResume = () => {
-        // router.push("viewPdf")
+        router.push("viewPdf")
     }
 
     const onPressReupload = () => {

@@ -18,7 +18,8 @@ export default function TabLayout() {
     return (
         <Tabs screenOptions={{
             tabBarStyle: [localStyles.tabbarStyle, {
-                display: currentTab == 'create' ? 'none' : 'flex'
+                display: currentTab == 'create' ? 'none' : 'flex',
+                backgroundColor: Colors[colorScheme]?.white
             }],
             headerShown: false,
             tabBarActiveTintColor: Colors[colorScheme]?.primary,
@@ -27,6 +28,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
+                    gestureEnabled: false,
                     title: 'Home',
                     tabBarIcon: ({ color, focused }) => (focused ? <HomeBlueIcon /> : <HomeIcon />),
                 }}

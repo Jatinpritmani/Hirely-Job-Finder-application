@@ -1,5 +1,5 @@
 import { ImageBackground, StyleSheet, Text, useColorScheme, View } from 'react-native'
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -12,11 +12,14 @@ import { styles } from '../themes'
 import HButton from '../components/common/HButton'
 import { CheckMark, UnCheckedMark } from '../assets/svgs'
 import { setCurrentUserType } from '../context/actions/commonActioin';
+import HSafeAreaView from '../components/common/HSafeAreaView';
 
 const start = () => {
     const colorScheme = useColorScheme()
     const [userType, setUserType] = useState('')
     const dispatch = useDispatch()
+    const router = useRouter();
+
     const currentUserType = useSelector(state => state.commonReducer.current_user_type)
 
     useEffect(() => {
@@ -31,7 +34,7 @@ const start = () => {
     }
 
     return (
-        <View style={styles.flex}>
+        <View >
 
             <ImageBackground source={images.gradientStart} style={localStyles.imageStyle}>
                 <View style={localStyles.titleStyle}>
@@ -61,7 +64,7 @@ export default start
 const localStyles = StyleSheet.create({
     imageStyle: {
         width: screenWidth,
-        height: screenHeight,
+        height: '100%',
     },
     titleStyle: {
         // ...styles.justifyCenter,
@@ -74,8 +77,8 @@ const localStyles = StyleSheet.create({
         borderTopStartRadius: moderateScale(32),
         height: '30%',
         width: '100%',
-        bottom: 0,
-        position: 'absolute',
+        // bottom: 0,
+        // position: 'absolute',
         ...styles.center,
         ...styles.p20,
     },

@@ -96,15 +96,7 @@ const Register = () => {
     };
 
     useEffect(() => {
-        if (confirmPassword?.length > 0 && password?.length > 0) {
-            if (confirmPassword && password && confirmPassword != password) {
-                setPasswordErrorMessage(`Password and Confirm Password dosen't match`)
-                setConfirmPasswordErrorMessage(`Password and Confirm Password dosen't match`)
-            } else {
-                setPasswordErrorMessage(``)
-                setConfirmPasswordErrorMessage(``)
-            }
-        }
+
         if (fullName?.length > 0 && email?.length > 0 && password?.length > 0 && isValidEmail(email) && confirmPassword?.length > 0 && confirmPassword == password) {
             setIsNextDisabled(false);
         } else {
@@ -148,6 +140,15 @@ const Register = () => {
         if (!isTruthyString(confirmPassword)) {
             setConfirmPasswordErrorMessage("*Please Enter a Confirm Password");
 
+        }
+        if (confirmPassword?.length > 0 && password?.length > 0) {
+            if (confirmPassword && password && confirmPassword != password) {
+                setPasswordErrorMessage(`Password and Confirm Password dosen't match`)
+                setConfirmPasswordErrorMessage(`Password and Confirm Password dosen't match`)
+            } else {
+                setPasswordErrorMessage(``)
+                setConfirmPasswordErrorMessage(``)
+            }
         }
         if (currentUserType == 'recruiter' && !isTruthyString(companyName)) {
             setCompanyNameErrorMessage("*Please Enter a Company Name");

@@ -5,24 +5,19 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Colors } from '@/constants/Colors';
 import HSafeAreaView from '../components/common/HSafeAreaView';
 import HHeader from '../components/common/HHeader';
-import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { styles } from '../themes';
-import { BulletIcon, LeftWhiteArrowIcon, SavedJob, SavedJobBlue } from '../assets/svgs';
-import { getJobTypeLabel, getLocationLabel, moderateScale } from '../constants/constants';
+import { LeftWhiteArrowIcon, } from '../assets/svgs';
+import { moderateScale } from '../constants/constants';
 import HText from '../components/common/HText';
 import HButton from '../components/common/HButton';
-import apiRequest from '../components/api';
-import { APPLY_JOB, GET_ALL_JOBS, UNSAVE_JOB } from '../components/apiConstants';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllJobList } from '../context/actions/jobAction';
+import { useSelector } from 'react-redux';
 import ExperienceCard from '../components/screenComponents/ExperienceCard';
 
 const jobSeekerDetail = () => {
     const colorScheme = useColorScheme();
     const { jobseekerDetail } = useLocalSearchParams()
-    const dispatch = useDispatch()
     const [jobSeekerData, setJobSeekerData] = useState(JSON.parse(jobseekerDetail))
-    const [responsibilities, setResponsibilities] = useState()
     const allJobList = useSelector(state => state.jobReducer.allJobList)
 
 
@@ -32,27 +27,8 @@ const jobSeekerDetail = () => {
 
     useEffect(() => {
 
-        console.log('==============jobseekerDetail======================');
-        console.log(typeof jobseekerDetail, typeof JSON.parse(jobseekerDetail));
-        console.log('====================================');
-        // const job = allJobList?.find(job => job.job_id === jobSeekerData?.job_id);
         setJobSeekerData(JSON.parse(jobseekerDetail))
-        // const sentencesArray = job?.requirenment?.split("\n");
-
-        // setResponsibilities(sentencesArray)
     }, [])
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         console.log("====", '____', typeof jobSeekerData);
-    //         // setJobSeekerData(jobseekerDetail)
-    //         setJobSeekerData(JSON.parse(jobseekerDetail))
-
-    //         // const sentencesArray = jobSeekerData?.requirenment?.split("\n");
-
-    //         // setResponsibilities(sentencesArray)
-    //         return () => { };
-    //     }, [jobseekerDetail])
-    // );
 
 
 
@@ -60,7 +36,7 @@ const jobSeekerDetail = () => {
     const goBack = () => { router.back() };
 
     const onPressResume = () => {
-        // router.push("viewPdf")
+
     }
 
     const LeftIcon = () => {
@@ -93,20 +69,6 @@ const jobSeekerDetail = () => {
                     <HText type="M16" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
                         {jobSeekerData?.designation}
                     </HText>
-                    {/* <View style={[styles.flexRow, styles.selfCenter, { gap: moderateScale(30) }]}>
-                        <HText type="S16" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
-                            {jobSeekerData?.job_type ? `$${jobSeekerData?.salary}/year` : null}
-                        </HText>
-                        <HText type="B24" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
-                            {getLocationLabel(jobSeekerData?.location) || ''}
-                        </HText>
-                    </View> */}
-                    {/* <View style={[localStyles.labelStyle, { backgroundColor: Colors[colorScheme]?.grayScale9 }]}>
-
-                        <HText type="R12" color={Colors[colorScheme]?.white}>
-                            {getJobTypeLabel(jobSeekerData?.job_type)}
-                        </HText>
-                    </View> */}
                 </View>
 
                 <View style={localStyles.bottomContainer}>

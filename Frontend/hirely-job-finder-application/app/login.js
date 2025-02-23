@@ -28,8 +28,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const login = () => {
     const colorScheme = useColorScheme();
     const dispatch = useDispatch()
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("darsil.pansuriya@gmail.com");
+    const [password, setPassword] = useState("dp7685..");
     const [isShowPassword, setIsShowPassword] = useState(true);
     const [isLoginDisabled, setIsLoginDisabled] = useState(true);
     const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -50,9 +50,12 @@ const login = () => {
     }, [email, password]);
 
     useEffect(() => {
+        console.log("isUserLoggedIn state changed:", isUserLoggedIn);
 
         if (isUserLoggedIn) {
-            router.replace('(tabs)')
+            // router.replace('/(tabs)')
+            router.push('/(tabs)')
+            // router.setParams({ screen: "(tabs)" });
         }
     }, [isUserLoggedIn])
 
@@ -173,7 +176,7 @@ const login = () => {
                         required={true}
                     />
 
-                    <TouchableOpacity onPress={onPressForgotPassword} style={localStyles.forgotPasswordBtnStyle}>
+                    {/* <TouchableOpacity onPress={onPressForgotPassword} style={localStyles.forgotPasswordBtnStyle}>
                         <HText
                             align={"right"}
                             color={Colors[colorScheme]?.grayScale4}
@@ -181,7 +184,7 @@ const login = () => {
                         >
                             Forgot Password?
                         </HText>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     <HButton
                         // disabled={isLoginDisabled}

@@ -64,8 +64,9 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Provider store={store}>
+          <StatusBar style="dark" backgroundColor={'white'} />
 
-          <Stack initialRouteName='uploadCV' screenOptions={{ headerShown: false }}>
+          <Stack initialRouteName='uploadCV' screenOptions={{ headerShown: false, }}>
             {/* <Stack.Screen name="index" /> */}
             <Stack.Screen name="start" />
             <Stack.Screen name="login" />
@@ -82,9 +83,8 @@ export default function RootLayout() {
             <Stack.Screen name="jobSeekerDetail" />
             <Stack.Screen name="allJobList" />
             <Stack.Screen name="allFeaturedJobs" />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false, gestureEnabled: false }} />
           </Stack>
-          <StatusBar style="auto" />
           <Toast position='top' topOffset={70}
             config={{
               success: (props) => (

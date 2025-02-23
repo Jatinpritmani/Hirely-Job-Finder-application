@@ -130,11 +130,11 @@ const recruiterJobDetail = () => {
                     <HText type="M16" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
                         {jobDetails?.company_name}
                     </HText>
-                    <View style={[styles.flexRow, styles.selfCenter, { gap: moderateScale(30) }]}>
+                    <View style={[styles.flexRow, styles.center, { gap: moderateScale(30) }]}>
                         <HText type="S16" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
                             {jobDetails?.job_type ? `$${jobDetails?.salary}/year` : null}
                         </HText>
-                        <HText type="B24" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
+                        <HText type="S16" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
                             {getLocationLabel(jobDetails?.location) || ''}
                         </HText>
                     </View>

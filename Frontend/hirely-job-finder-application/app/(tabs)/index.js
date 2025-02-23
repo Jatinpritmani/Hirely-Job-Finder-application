@@ -1,8 +1,8 @@
 // library imports
-import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { BackHandler, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { router, useFocusEffect } from 'expo-router';
+import { router, useFocusEffect, useSegments } from 'expo-router';
 import { Colors } from '@/constants/Colors'
 
 
@@ -29,6 +29,12 @@ const Home = () => {
     const allJobloading = useSelector(state => state.jobReducer.loading)
     const loadingRecruiterDetai = useSelector(state => state.userReducer.loadingRecruiterDetai)
 
+
+    useEffect(() => {
+        const onBackPress = () => true; // Prevent back navigation
+        BackHandler.addEventListener("hardwareBackPress", onBackPress);
+        return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, []);
 
     useEffect(() => {
         if (recruiterDetails) {
@@ -63,7 +69,7 @@ const Home = () => {
 
     const onPressLogout = () => {
         dispatch(doLogout())
-        router.replace('start')
+        router.replace('/login')
     }
     const RightIcon = () => {
         return (
