@@ -17,6 +17,7 @@ import HButton from '../../components/common/HButton';
 import { isTruthyString } from '../../utils/validator';
 import { router } from 'expo-router';
 import { useSelector } from 'react-redux';
+import HKeyBoardAvoidWrapper from '../../components/common/HKeyBoardAvoidWrapper';
 
 
 const createJob = () => {
@@ -141,111 +142,113 @@ const createJob = () => {
         <HSafeAreaView>
 
             <HHeader title="Create Post" />
-            <View style={styles.mt50}>
+            <HKeyBoardAvoidWrapper containerStyle={[localStyles.inputContainer, styles.flexGrow1]} >
 
-                <HInput
-                    _value={position}
-                    label="Position"
-                    placeHolder="Position"
-                    toGetTextFieldValue={onChangePosition}
-                    _errorText={positionErrorMessage}
-                    required={true}
-                />
-                <View style={localStyles.dropdownContainerStyle}>
-                    <HText type={'S14'} style={localStyles.dropdownLabel}>
-                        {'Location'}
-                    </HText>
-                    <Dropdown
-                        style={[localStyles.dropdown, { borderColor: SelectedLocationErrorMessage ? Colors[colorScheme]?.danger : Colors[colorScheme]?.grayScale2 }]}
-                        placeholderStyle={[localStyles.placeholderStyle, { color: Colors[colorScheme]?.grayScale2 }]}
-                        itemTextStyle={[localStyles.itemTextStyle, { color: Colors[colorScheme]?.text }]}
-                        selectedTextStyle={[localStyles.selectedTextStyle, { color: Colors[colorScheme]?.text }]}
-                        data={locations}
-                        labelField="label"
-                        valueField="value"
-                        placeholder={'Select Location'}
-                        value={SelectedLoaction}
-                        onChange={item => {
-                            setSelectedLoaction(item.value);
-                        }}
-                        renderRightIcon={() => (
-                            <DownArrow
-                                width={moderateScale(12)}
-                                height={moderateScale(15)}
-                            />
-                        )}
+                <View style={styles.mt40}>
+
+                    <HInput
+                        _value={position}
+                        label="Position"
+                        placeHolder="Position"
+                        toGetTextFieldValue={onChangePosition}
+                        _errorText={positionErrorMessage}
+                        required={true}
                     />
-                    {SelectedLocationErrorMessage && <HText type={'R12'} style={[styles.mt5, styles.ml5]} color={Colors[colorScheme]?.danger}>
-                        {SelectedLocationErrorMessage}
-                    </HText>}
-                </View>
-                <HInput
-                    _value={salary}
-                    label="Salary"
-                    placeHolder="Salary"
-                    toGetTextFieldValue={onChangeSalary}
-                    _errorText={salaryErrorMessage}
-                    required={true}
-                    keyboardType="numeric"
-                />
-
-                <View style={localStyles.dropdownContainerStyle}>
-                    <HText type={'S14'} style={localStyles.dropdownLabel}>
-                        {'Job type'}
-                    </HText>
-                    <Dropdown
-                        style={[localStyles.dropdown, { borderColor: SelectedJobTypeErrorMessage ? Colors[colorScheme]?.danger : Colors[colorScheme]?.grayScale2 }]}
-                        placeholderStyle={[localStyles.placeholderStyle, { color: Colors[colorScheme]?.grayScale2 }]}
-                        itemTextStyle={[localStyles.itemTextStyle, { color: Colors[colorScheme]?.text }]}
-                        selectedTextStyle={[localStyles.selectedTextStyle, { color: Colors[colorScheme]?.text }]}
-                        data={jobTypes}
-                        labelField="label"
-                        valueField="value"
-                        placeholder={'Select job type'}
-                        value={SelectedJobType}
-                        onChange={item => {
-                            setSelectedJobType(item.value);
-                        }}
-                        renderRightIcon={() => (
-                            <DownArrow
-                                width={moderateScale(12)}
-                                height={moderateScale(15)}
-                            />
-                        )}
+                    <View style={localStyles.dropdownContainerStyle}>
+                        <HText type={'S14'} style={localStyles.dropdownLabel}>
+                            {'Location'}
+                        </HText>
+                        <Dropdown
+                            style={[localStyles.dropdown, { borderColor: SelectedLocationErrorMessage ? Colors[colorScheme]?.danger : Colors[colorScheme]?.grayScale2 }]}
+                            placeholderStyle={[localStyles.placeholderStyle, { color: Colors[colorScheme]?.grayScale2 }]}
+                            itemTextStyle={[localStyles.itemTextStyle, { color: Colors[colorScheme]?.text }]}
+                            selectedTextStyle={[localStyles.selectedTextStyle, { color: Colors[colorScheme]?.text }]}
+                            data={locations}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={'Select Location'}
+                            value={SelectedLoaction}
+                            onChange={item => {
+                                setSelectedLoaction(item.value);
+                            }}
+                            renderRightIcon={() => (
+                                <DownArrow
+                                    width={moderateScale(12)}
+                                    height={moderateScale(15)}
+                                />
+                            )}
+                        />
+                        {SelectedLocationErrorMessage && <HText type={'R12'} style={[styles.mt5, styles.ml5]} color={Colors[colorScheme]?.danger}>
+                            {SelectedLocationErrorMessage}
+                        </HText>}
+                    </View>
+                    <HInput
+                        _value={salary}
+                        label="Salary"
+                        placeHolder="Salary"
+                        toGetTextFieldValue={onChangeSalary}
+                        _errorText={salaryErrorMessage}
+                        required={true}
+                        keyboardType="numeric"
                     />
-                    {SelectedJobTypeErrorMessage && <HText type={'R12'} style={[styles.mt5, styles.ml5]} color={Colors[colorScheme]?.danger}>
-                        {SelectedJobTypeErrorMessage}
-                    </HText>}
+
+                    <View style={localStyles.dropdownContainerStyle}>
+                        <HText type={'S14'} style={localStyles.dropdownLabel}>
+                            {'Job type'}
+                        </HText>
+                        <Dropdown
+                            style={[localStyles.dropdown, { borderColor: SelectedJobTypeErrorMessage ? Colors[colorScheme]?.danger : Colors[colorScheme]?.grayScale2 }]}
+                            placeholderStyle={[localStyles.placeholderStyle, { color: Colors[colorScheme]?.grayScale2 }]}
+                            itemTextStyle={[localStyles.itemTextStyle, { color: Colors[colorScheme]?.text }]}
+                            selectedTextStyle={[localStyles.selectedTextStyle, { color: Colors[colorScheme]?.text }]}
+                            data={jobTypes}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={'Select job type'}
+                            value={SelectedJobType}
+                            onChange={item => {
+                                setSelectedJobType(item.value);
+                            }}
+                            renderRightIcon={() => (
+                                <DownArrow
+                                    width={moderateScale(12)}
+                                    height={moderateScale(15)}
+                                />
+                            )}
+                        />
+                        {SelectedJobTypeErrorMessage && <HText type={'R12'} style={[styles.mt5, styles.ml5]} color={Colors[colorScheme]?.danger}>
+                            {SelectedJobTypeErrorMessage}
+                        </HText>}
+                    </View>
+                    <HInput
+                        _value={numOfJobOpening}
+                        label="Number Of Job Openinng"
+                        placeHolder="Number Of Job Opening"
+                        toGetTextFieldValue={onChangeNumOfJobOpening}
+                        _errorText={numOfJobOpeningErrorMessage}
+                        required={true}
+                        keyboardType="numeric"
+                    />
+
+                    <HButton
+                        // disabled={isNextDisabled}
+                        onPress={onPressNext}
+                        textType={"S16"}
+                        color={
+                            isNextDisabled
+                                ? Colors[colorScheme]?.grayScale6
+                                : Colors[colorScheme]?.white
+                        }
+                        title={"Next"}
+                        containerStyle={[localStyles.btnStyle]}
+                        bgColor={
+                            isNextDisabled
+                                ? Colors[colorScheme]?.grayScale5
+                                : Colors[colorScheme]?.primary
+                        }
+                    ></HButton>
                 </View>
-                <HInput
-                    _value={numOfJobOpening}
-                    label="Number Of Job Openinng"
-                    placeHolder="Number Of Job Opening"
-                    toGetTextFieldValue={onChangeNumOfJobOpening}
-                    _errorText={numOfJobOpeningErrorMessage}
-                    required={true}
-                    keyboardType="numeric"
-                />
-
-                <HButton
-                    // disabled={isNextDisabled}
-                    onPress={onPressNext}
-                    textType={"S16"}
-                    color={
-                        isNextDisabled
-                            ? Colors[colorScheme]?.grayScale6
-                            : Colors[colorScheme]?.white
-                    }
-                    title={"Next"}
-                    containerStyle={[localStyles.btnStyle]}
-                    bgColor={
-                        isNextDisabled
-                            ? Colors[colorScheme]?.grayScale5
-                            : Colors[colorScheme]?.primary
-                    }
-                ></HButton>
-            </View>
-
+            </HKeyBoardAvoidWrapper>
 
         </HSafeAreaView>
     )
@@ -280,5 +283,6 @@ const localStyles = StyleSheet.create({
     },
     btnStyle: {
         ...styles.mt30,
+        ...styles.mb30,
     }
 })

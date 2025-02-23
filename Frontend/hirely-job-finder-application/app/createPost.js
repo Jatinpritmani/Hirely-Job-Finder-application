@@ -13,6 +13,7 @@ import HButton from "../components/common/HButton";
 import { isTruthyString } from "../utils/validator";
 import apiRequest from "../components/api";
 import { CREATE_JOB_POST } from "../components/apiConstants";
+import HKeyBoardAvoidWrapper from "../components/common/HKeyBoardAvoidWrapper";
 
 const createPost = () => {
     const { new_post } = useLocalSearchParams();
@@ -107,46 +108,49 @@ const createPost = () => {
     return (
         <HSafeAreaView>
             <HHeader title="Create Post" />
-            <View style={styles.mt50}>
-                <HInput
-                    _value={jobDescription}
-                    label="Job Description"
-                    placeHolder="Job Description"
-                    toGetTextFieldValue={onChangeJobDescription}
-                    _errorText={jobDescriptionErrorMessage}
-                    required={true}
-                    multiline
-                    inputBoxStyle={[styles.pv15, styles.ml15]}
-                />
-                <HInput
-                    _value={responsibilities}
-                    label="Responsibilities"
-                    placeHolder="Responsibilities"
-                    toGetTextFieldValue={onChangeResponsibilities}
-                    _errorText={responsibilitiesErrorMessage}
-                    required={true}
-                    multiline
-                    inputBoxStyle={[styles.pv15, styles.ml15]}
-                />
-            </View>
-            <HButton
-                // disabled={isNextDisabled}
-                onPress={onPressNext}
-                isLoading={isLoading}
-                textType={"S16"}
-                color={
-                    isNextDisabled
-                        ? Colors[colorScheme]?.grayScale6
-                        : Colors[colorScheme]?.white
-                }
-                title={"Next"}
-                containerStyle={[localStyles.btnStyle]}
-                bgColor={
-                    isNextDisabled
-                        ? Colors[colorScheme]?.grayScale5
-                        : Colors[colorScheme]?.primary
-                }
-            ></HButton>
+            <HKeyBoardAvoidWrapper containerStyle={[localStyles.inputContainer, styles.flexGrow1]} >
+
+                <View style={styles.mt50}>
+                    <HInput
+                        _value={jobDescription}
+                        label="Job Description"
+                        placeHolder="Job Description"
+                        toGetTextFieldValue={onChangeJobDescription}
+                        _errorText={jobDescriptionErrorMessage}
+                        required={true}
+                        multiline
+                        inputBoxStyle={[styles.pv15, styles.ml15]}
+                    />
+                    <HInput
+                        _value={responsibilities}
+                        label="Responsibilities"
+                        placeHolder="Responsibilities"
+                        toGetTextFieldValue={onChangeResponsibilities}
+                        _errorText={responsibilitiesErrorMessage}
+                        required={true}
+                        multiline
+                        inputBoxStyle={[styles.pv15, styles.ml15]}
+                    />
+                </View>
+                <HButton
+                    // disabled={isNextDisabled}
+                    onPress={onPressNext}
+                    isLoading={isLoading}
+                    textType={"S16"}
+                    color={
+                        isNextDisabled
+                            ? Colors[colorScheme]?.grayScale6
+                            : Colors[colorScheme]?.white
+                    }
+                    title={"Next"}
+                    containerStyle={[localStyles.btnStyle]}
+                    bgColor={
+                        isNextDisabled
+                            ? Colors[colorScheme]?.grayScale5
+                            : Colors[colorScheme]?.primary
+                    }
+                ></HButton>
+            </HKeyBoardAvoidWrapper>
         </HSafeAreaView>
     );
 };
@@ -156,5 +160,6 @@ export default createPost;
 const localStyles = StyleSheet.create({
     btnStyle: {
         ...styles.mt50,
+        ...styles.mb30,
     },
 });
