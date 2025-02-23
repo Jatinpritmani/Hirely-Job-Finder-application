@@ -156,7 +156,7 @@ const Home = () => {
 
     const onPressLogout = () => {
         dispatch(doLogout())
-        router.replace('start')
+        router.replace('login')
     }
     const onPressFilter = () => {
         filtersheetRef?.current?.show()
