@@ -178,6 +178,8 @@ import HSafeAreaView from '../components/common/HSafeAreaView';
 import HLoader from '../components/common/HLoader';
 import { API_BASE_URL } from '../components/api';
 import { GET_RESUME } from '../components/apiConstants';
+// import Pdf from 'react-native-pdf';
+
 
 export default function ViewPdf() {
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail);
@@ -242,9 +244,12 @@ export default function ViewPdf() {
 
     return (
         <HSafeAreaView style={{ flex: 1, padding: 16 }}>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <Button title="Open PDF" onPress={openFile} />
-            </View>
+            </View> */}
+            <Pdf
+                source={{ uri: 'localhost:4402/hjfa/user/get/resume/v1?user_id=67ab757490118312917d5e52' }}
+            />
         </HSafeAreaView>
     );
 }

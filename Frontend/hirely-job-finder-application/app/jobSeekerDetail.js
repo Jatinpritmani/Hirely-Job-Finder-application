@@ -1,5 +1,7 @@
 import { ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
+import * as WebBrowser from 'expo-web-browser';
+
 
 // local imports
 import { Colors } from '@/constants/Colors';
@@ -13,6 +15,8 @@ import HText from '../components/common/HText';
 import HButton from '../components/common/HButton';
 import { useSelector } from 'react-redux';
 import ExperienceCard from '../components/screenComponents/ExperienceCard';
+import { API_BASE_URL } from '../components/api';
+import { GET_RESUME } from '../components/apiConstants';
 
 const jobSeekerDetail = () => {
     const colorScheme = useColorScheme();
@@ -35,7 +39,12 @@ const jobSeekerDetail = () => {
 
     const goBack = () => { router.back() };
 
-    const onPressResume = () => {
+    const onPressResume = async () => {
+        console.log(jobSeekerData);
+
+        console.log(`${API_BASE_URL}${GET_RESUME}?user_id=${jobSeekerData.user_id}`);
+
+        await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_RESUME}?user_id=${jobSeekerData._id}`);
 
     }
 

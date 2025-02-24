@@ -3,6 +3,8 @@ import { Image, RefreshControl, ScrollView, StyleSheet, Text, Touchable, Touchab
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { router, useFocusEffect } from 'expo-router'
+import * as WebBrowser from 'expo-web-browser';
+
 
 // local imports 
 import HSafeAreaView from '../../components/common/HSafeAreaView'
@@ -15,6 +17,8 @@ import { Colors } from '@/constants/Colors';
 import ExperienceCard from '../../components/screenComponents/ExperienceCard'
 import { getUserDetail } from '../../context/actions/userActions'
 import HLoader from '../../components/common/HLoader'
+import { API_BASE_URL } from '../../components/api';
+import { GET_RESUME } from '../../components/apiConstants';
 
 
 const Profile = () => {
@@ -49,8 +53,11 @@ const Profile = () => {
     const onPressSeeAllExperience = () => {
         router.push("allExperience")
     }
-    const onPressResume = () => {
-        router.push("viewPdf")
+    const onPressResume = async () => {
+        // router.push("viewPdf")
+        // const openPdf = async () => {
+        await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_RESUME}?user_id=${currentUserDetail.user_id}`);
+        //   };
     }
 
     const onPressReupload = () => {
