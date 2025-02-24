@@ -73,7 +73,7 @@ const allFeaturedJobs = () => {
             <HHeader title={isUserRecruiter(currentUserDetail?.user_type) ? 'All Applicants' : 'All Featured Jobs'} />
 
             <FlatList
-                data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails : allJobListData}
+                data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails?.reverse() : allJobListData?.reverse()}
                 renderItem={renderJobCard}
                 onRefresh={onRefresh}
                 refreshing={refreshing}

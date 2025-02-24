@@ -9,7 +9,7 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 // Local import
 import { Colors } from '@/constants/Colors';
-import { ApplySuccessIcon, CrossIcon } from '../../assets/svgs';
+import { CrossIcon } from '../../assets/svgs';
 import { jobTypes, locations, moderateScale, screenWidth } from '../../constants/constants';
 import HText from '../common/HText';
 import HButton from '../common/HButton';

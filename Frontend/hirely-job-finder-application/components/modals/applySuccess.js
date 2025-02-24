@@ -6,7 +6,7 @@ import { styles } from '../../themes';
 
 // Local import
 import { Colors } from '@/constants/Colors';
-import { ApplySuccessIcon, RegisterSuccessIcon } from '../../assets/svgs';
+import { ApplySuccessIcon } from '../../assets/svgs';
 import { moderateScale } from '../../constants/constants';
 import HText from '../common/HText';
 import HButton from '../common/HButton';
@@ -18,7 +18,11 @@ export default function ApplySuccess({ SheetRef }) {
 
     const onPressTeackJobs = () => {
         SheetRef?.current?.hide()
-        router.replace('trackJob')
+        router.replace('appliedJobs')
+        // router.push({
+        //     pathname: "/trackJob",
+        //     params: { jobDetail: JSON.stringify(item) }, // Pass parameters
+        // })
 
     };
     const onPressBrowseJobs = () => {

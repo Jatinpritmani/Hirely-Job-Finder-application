@@ -57,7 +57,7 @@ const appliedJobs = () => {
                 You applied in {appliedJobsdata?.length || 0} Jobs
             </HText>
             <FlatList
-                data={appliedJobsdata}
+                data={appliedJobsdata?.reverse()}
                 renderItem={renderSavedJob}
                 onRefresh={onRefresh}
                 refreshing={refreshing}

@@ -1,4 +1,4 @@
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React from 'react'
 
 // local import
@@ -19,24 +19,29 @@ const FeaturedJob = ({ item, index, isVertical = false }) => {
         if (isUserRecruiter(currentUserDetail?.user_type)) {
             router.push({
                 pathname: "/jobSeekerDetail",
-                params: { jobseekerDetail: JSON.stringify(item) }, // Pass parameters
+                params: { jobseekerDetail: JSON.stringify(item), index: index }, // Pass parameters
             })
         } else {
             router.push({
                 pathname: "/jobDetail",
-                params: { jobDetail: JSON.stringify(item) }, // Pass parameters
+                params: { jobDetail: JSON.stringify(item), index: index }, // Pass parameters
             })
         }
     }
     return (
-        <TouchableOpacity onPress={onPressJob} style={[localstyles.main, { backgroundColor: index % 2 == 0 ? Colors[colorScheme]?.primary : Colors[colorScheme]?.primary1, }, isVertical && styles.mb15]}>
+        <TouchableOpacity onPress={onPressJob} style={[localstyles.main, { backgroundColor: index % 2 == 0 ? Colors[colorScheme]?.primary : Colors[colorScheme]?.primary1, }, isVertical && styles.mb15, isUserRecruiter(currentUserDetail?.user_type) && { height: moderateScale(170) }]}>
             <ImageBackground
                 source={images.jobBackground}
                 style={localstyles.imageStyle}
                 imageStyle={{ opacity: 0.1 }}
             >
                 <View style={[styles.flexRow, { gap: moderateScale(16) }]}>
-                    <View style={[localstyles.logo, { backgroundColor: Colors[colorScheme]?.white }]} />
+                    <View style={[localstyles.logo, { backgroundColor: Colors[colorScheme]?.white }]} >
+                        <Image
+                            source={isUserRecruiter(currentUserDetail?.user_type) ? index % 2 == 0 ? images.profileImage1 : index % 1 == 0 ? images.profileImage2 : images.profileImage3 : index % 2 == 0 ? images.fb : images.google}
+                            style={localstyles.profileImageStyle}
+                        />
+                    </View>
                     <View style={styles.justifyCenter}>
                         <HText type="S16" color={Colors[colorScheme]?.white}>
                             {isUserRecruiter(currentUserDetail?.user_type) ? item?.user_name : item?.position}
@@ -47,7 +52,7 @@ const FeaturedJob = ({ item, index, isVertical = false }) => {
                     </View>
 
                 </View>
-                {isUserRecruiter(currentUserDetail?.user_type) ?
+                {/* {isUserRecruiter(currentUserDetail?.user_type) ?
                     <View style={styles.rowSpaceBetween}>
 
                         <View style={[localstyles.labelStyle, { backgroundColor: Colors[colorScheme]?.white15 }]}>
@@ -79,7 +84,7 @@ const FeaturedJob = ({ item, index, isVertical = false }) => {
                                 {getLocationLabel(item?.location) || ''}
                             </HText>
                         </View>
-                    </>}
+                    </>} */}
             </ImageBackground>
 
         </TouchableOpacity>
@@ -103,6 +108,12 @@ const localstyles = StyleSheet.create({
         width: moderateScale(46),
         height: moderateScale(46),
         borderRadius: moderateScale(12)
+    },
+    profileImageStyle: {
+        width: moderateScale(46),
+        height: moderateScale(46),
+        borderRadius: moderateScale(12),
+        ...styles.selfCenter
     },
     labelStyle: {
         ...styles.mt25,

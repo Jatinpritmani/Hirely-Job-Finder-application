@@ -8,6 +8,10 @@ export default {
     profileImage: require('./profilePic.png'),
     jobBackground: require('./jobBackground.png'),
     google: require('./google.png'),
-    fb: require('./fb.png')
+    fb: require('./fb.png'),
+    profileImage1: require('./profile1.jpeg'),
+    profileImage2: require('./profile2.jpeg'),
+    profileImage3: require('./profile3.jpeg'),
+
 };
 

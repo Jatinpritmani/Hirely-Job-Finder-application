@@ -55,9 +55,8 @@ const Profile = () => {
     }
     const onPressResume = async () => {
         // router.push("viewPdf")
-        // const openPdf = async () => {
         await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_RESUME}?user_id=${currentUserDetail.user_id}`);
-        //   };
+        // // await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_RESUME}?user_id=${currentUserDetail.user_id}`);
     }
 
     const onPressReupload = () => {
@@ -81,7 +80,7 @@ const Profile = () => {
                 }
             >
                 <Image
-                    source={images.profileImage}
+                    source={images.profileImage1}
                     style={localStyles.profileImageStyle}
                 />
                 <HText type="S22" align='center' style={styles.mt10}>

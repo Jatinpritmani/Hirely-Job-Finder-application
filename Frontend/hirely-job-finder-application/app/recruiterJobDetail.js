@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 
 // local imports
@@ -15,14 +15,17 @@ import apiRequest from '../components/api';
 import { APPLY_JOB, GET_ALL_JOBS, UNSAVE_JOB } from '../components/apiConstants';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllJobList } from '../context/actions/jobAction';
+import images from '../assets/images';
 
 const recruiterJobDetail = () => {
     const colorScheme = useColorScheme();
-    const { jobDetail } = useLocalSearchParams()
+    const { jobDetail, index } = useLocalSearchParams()
     const dispatch = useDispatch()
     const [jobDetails, setJobDetails] = useState(JSON.parse(jobDetail))
     const [responsibilities, setResponsibilities] = useState()
     const allJobList = useSelector(state => state.jobReducer.allJobList)
+    const recruiterDetails = useSelector(state => state.userReducer.recruiterDetails)
+
 
 
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
@@ -31,7 +34,7 @@ const recruiterJobDetail = () => {
 
     useEffect(() => {
 
-        const job = allJobList?.find(job => job.job_id === jobDetails?.job_id);
+        const job = recruiterDetails?.jobDetails?.find(job => job.job_id === jobDetails?.job_id);
         setJobDetails(job)
         const sentencesArray = job?.requirenment?.split("\n");
 
@@ -108,12 +111,6 @@ const recruiterJobDetail = () => {
         }, [jobDetails])
     );
 
-    const onPressApplyNow = () => {
-        router.push({
-            pathname: "/applyJob",
-            params: { jobDetail: JSON.stringify(jobDetails) }, // Pass parameters
-        })
-    }
     return (
 
         <HSafeAreaView containerStyle={styles.ph0} style={localStyles.main}>
@@ -122,7 +119,10 @@ const recruiterJobDetail = () => {
                     <HHeader title="" isLeftIcon={<LeftIcon />} isHideBack={true} containerStyle={styles.ph20}
                     />
                     <View style={[localStyles.imgStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
-
+                        <Image
+                            source={index % 2 == 0 ? images.fb : images.google}
+                            style={localStyles.imgStyle}
+                        />
                     </View>
                     <HText type="B24" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
                         {jobDetails?.position}

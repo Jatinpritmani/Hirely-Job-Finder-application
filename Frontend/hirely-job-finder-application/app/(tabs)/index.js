@@ -61,13 +61,22 @@ const Home = () => {
     useEffect(() => {
         if (debouncedSearchTerm) {
             if (isUserRecruiter(currentUserDetail?.user_type)) {
-                const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
-                const filteredJobs = recruiterDetails?.jobDetails?.filter(job =>
-                    job.position.toLowerCase().includes(lowerCaseSearchTerm) ||
-                    job.location.toLowerCase().includes(lowerCaseSearchTerm) ||
-                    job.summary?.toLowerCase().includes(lowerCaseSearchTerm) // Optional in case summary is missing
-                );
-                setRecruiterSerchedJobs(filteredJobs)
+                // const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
+                // const filteredJobs = recruiterDetails?.jobDetails?.filter(job =>
+                //     job.position.toLowerCase().includes(lowerCaseSearchTerm) ||
+                //     job.location.toLowerCase().includes(lowerCaseSearchTerm) ||
+                //     job.summary?.toLowerCase().includes(lowerCaseSearchTerm) // Optional in case summary is missing
+                // );
+                // setRecruiterSerchedJobs(filteredJobs)
+                let data = {
+                    "user_id": currentUserDetail?.user_id,
+                    search: searchQuery,
+                    filter_by_location: filter?.filter_by_location,
+                    filter_by_salary: filter?.filter_by_salary,
+                    filter_by_job_type: filter?.filter_by_job_type
+                }
+
+                dispatch(getAllJobListSearch(data))
             }
             else {
 
@@ -93,13 +102,24 @@ const Home = () => {
             setIsSearch(true)
         }
         if (isUserRecruiter(currentUserDetail?.user_type)) {
-            const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
-            const filteredJobs = recruiterDetails?.jobDetails?.filter(job =>
-                job.position.toLowerCase().includes(lowerCaseSearchTerm) ||
-                job.location.toLowerCase().includes(lowerCaseSearchTerm) ||
-                job.summary?.toLowerCase().includes(lowerCaseSearchTerm) // Optional in case summary is missing
-            );
-            setRecruiterSerchedJobs(filteredJobs)
+            console.log(recruiterDetails?.jobDetails[0], filter);
+
+            let data = {
+                "user_id": currentUserDetail?.user_id,
+                search: searchQuery,
+                filter_by_location: filter?.filter_by_location,
+                filter_by_salary: filter?.filter_by_salary,
+                filter_by_job_type: filter?.filter_by_job_type
+            }
+
+            dispatch(getAllJobListSearch(data))
+            // const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
+            // const filteredJobs = recruiterDetails?.jobDetails?.filter(job =>
+            //     job.position.toLowerCase().includes(lowerCaseSearchTerm) ||
+            //     job.location.toLowerCase().includes(lowerCaseSearchTerm) ||
+            //     job.summary?.toLowerCase().includes(lowerCaseSearchTerm) // Optional in case summary is missing
+            // );
+            // setRecruiterSerchedJobs(filteredJobs)
         }
         else {
             let data = {
@@ -210,13 +230,22 @@ const Home = () => {
     const onRefresh = () => {
         setRefreshing(true)
         if (isUserRecruiter(currentUserDetail?.user_type)) {
-            const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
-            const filteredJobs = recruiterDetails?.jobDetails?.filter(job =>
-                job.position.toLowerCase().includes(lowerCaseSearchTerm) ||
-                job.location.toLowerCase().includes(lowerCaseSearchTerm) ||
-                job.summary?.toLowerCase().includes(lowerCaseSearchTerm) // Optional in case summary is missing
-            );
-            setRecruiterSerchedJobs(filteredJobs)
+            // const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
+            // const filteredJobs = recruiterDetails?.jobDetails?.filter(job =>
+            //     job.position.toLowerCase().includes(lowerCaseSearchTerm) ||
+            //     job.location.toLowerCase().includes(lowerCaseSearchTerm) ||
+            //     job.summary?.toLowerCase().includes(lowerCaseSearchTerm) // Optional in case summary is missing
+            // );
+            // setRecruiterSerchedJobs(filteredJobs)
+            let data = {
+                "user_id": currentUserDetail?.user_id,
+                search: searchQuery,
+                filter_by_location: filter?.filter_by_location,
+                filter_by_salary: filter?.filter_by_salary,
+                filter_by_job_type: filter?.filter_by_job_type
+            }
+
+            dispatch(getAllJobListSearch(data))
         }
         else {
             let data = {
@@ -277,11 +306,12 @@ const Home = () => {
                 {isSearch ?
                     <>
                         <HText type="S14" style={[styles.mt20, { marginBottom: -moderateScale(10) }]}>
-                            {`${isUserRecruiter(currentUserDetail?.user_type) ? recruiterSearchedJobs?.length : searchedJobs?.length || '0'} Jobs Found`}
+                            {/* {`${isUserRecruiter(currentUserDetail?.user_type) ? recruiterSearchedJobs?.length : searchedJobs?.length || '0'} Jobs Found`} */}
+                            {`${searchedJobs?.length || '0'} Jobs Found`}
 
                         </HText>
                         <FlatList
-                            data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterSearchedJobs : searchedJobs}
+                            data={searchedJobs}
                             renderItem={renderRecomendedJobItem}
                             style={[styles.mt25]}
                             scrollEnabled={false}
@@ -302,7 +332,7 @@ const Home = () => {
                         />
                         <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'Recent People Applied' : 'Featured Jobs'} onPressSeeAll={onPressSeeAllFeaturedJobs} />
                         <FlatList
-                            data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails : allJobList}
+                            data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails?.reverse() : allJobList?.reverse()}
                             renderItem={renderFeaturedJobItem}
                             style={[styles.mt25]}
                             horizontal

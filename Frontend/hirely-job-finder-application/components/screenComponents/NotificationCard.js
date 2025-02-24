@@ -50,12 +50,12 @@ const NotificationCard = ({ item, index }) => {
     }
     return (
         <TouchableOpacity onPress={readNotificaiton} style={localStyles.main}>
-            <View style={[localStyles.imageStyle, { backgroundColor: Colors[colorsScheme]?.subText }]}>
+            {/* <View style={[localStyles.imageStyle, { backgroundColor: Colors[colorsScheme]?.subText }]}>
 
-            </View>
+            </View> */}
             <View>
 
-                <HText type="R14" style={styles.flex} color={Colors[colorsScheme]?.subText}>{item?.message}</HText>
+                <HText type="R14" style={[styles.flex]} color={Colors[colorsScheme]?.subText}>{item?.message}</HText>
                 <View style={styles.flexRow}>
                     <HText type={item?.is_read ? "R14" : "M14"} color={item?.is_read ? Colors[colorsScheme]?.subText : Colors[colorsScheme]?.text}>{moment(item?.createdAt).fromNow()}</HText>
                     {!item?.is_read ? <View style={[localStyles.unreadStyle, { backgroundColor: Colors[colorsScheme]?.primary }]}></View > : null}

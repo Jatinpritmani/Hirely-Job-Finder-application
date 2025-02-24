@@ -17,6 +17,7 @@ import { APPLY_JOB } from '../components/apiConstants';
 import ApplySuccess from '../components/modals/applySuccess';
 import { useSelector } from 'react-redux';
 import { CheckMark } from '../assets/svgs';
+import HKeyBoardAvoidWrapper from '../components/common/HKeyBoardAvoidWrapper';
 
 const applyJob = () => {
     const colorScheme = useColorScheme();
@@ -39,107 +40,109 @@ const applyJob = () => {
         }
     };
     const onPressApply = async (text) => {
-        if (!isTruthyString(coverLetter)) {
-            setCoverLetterErrorMessage('*Please Enter a Cover Letter.')
-        } else {
-            let payload = {
-                recruiter_id: jodDetails?.recruiter_id,
-                job_id: jodDetails?._id,
-                job_seeker_id: currentUserDetail?.user_id,
-                apply_type: "apply_job",
-                status: "application_submitted",
-                cover_letter: coverLetter
-            }
-            try {
-                let response = await apiRequest("POST", APPLY_JOB, payload);
-                if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
-                    applySuccessSheetRef?.current?.show()
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            } finally {
-                setIsLoading(false)
-            }
+        // if (!isTruthyString(coverLetter)) {
+        //     setCoverLetterErrorMessage('*Please Enter a Cover Letter.')
+        // } else {
+        let payload = {
+            recruiter_id: jodDetails?.recruiter_id,
+            job_id: jodDetails?._id,
+            job_seeker_id: currentUserDetail?.user_id,
+            apply_type: "apply_job",
+            status: "application_submitted",
+            cover_letter: coverLetter || ''
         }
+        try {
+            let response = await apiRequest("POST", APPLY_JOB, payload);
+            if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                applySuccessSheetRef?.current?.show()
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setIsLoading(false)
+        }
+        // }
     };
 
     return (
         <HSafeAreaView containerStyle={styles.ph0}>
-            <View style={{ backgroundColor: Colors[colorScheme]?.white }}>
-                <HHeader title="Apply Job" containerStyle={styles.ph20}
-                />
-                <View style={localstyles.jobStyle}>
-                    <View style={[localstyles.imgStyle, { backgroundColor: Colors[colorScheme]?.grayScale4 }]} />
-                    <View style={[styles.flex, styles.ml15]}>
-                        <View style={styles.rowSpaceBetween}>
-                            <HText type="S14">
-                                {jodDetails?.position}
-                            </HText>
-                            <HText type="M12">
-                                {jodDetails?.salary ? `$${jodDetails?.salary}/y` : ''}
-                            </HText>
-                        </View>
-                        <View style={styles.rowSpaceBetween}>
-                            <HText type="R12" style={{ opacity: 0.5 }}>
-                                {jodDetails?.company_name || 'Google'}
-                            </HText>
-                            <HText type="R12" color={Colors[colorScheme]?.grayScale7}>
-                                {getLocationLabel(jodDetails?.location) || ''}
-                            </HText>
+            <HKeyBoardAvoidWrapper containerStyle={[styles.flexGrow1]} >
+                <View style={{ backgroundColor: Colors[colorScheme]?.white }}>
+                    <HHeader title="Apply Job" containerStyle={styles.ph20}
+                    />
+
+                    <View style={localstyles.jobStyle}>
+                        <View style={[localstyles.imgStyle, { backgroundColor: Colors[colorScheme]?.grayScale4 }]} />
+                        <View style={[styles.flex, styles.ml15]}>
+                            <View style={styles.rowSpaceBetween}>
+                                <HText type="S14">
+                                    {jodDetails?.position}
+                                </HText>
+                                <HText type="M12">
+                                    {jodDetails?.salary ? `$${jodDetails?.salary}/y` : ''}
+                                </HText>
+                            </View>
+                            <View style={styles.rowSpaceBetween}>
+                                <HText type="R12" style={{ opacity: 0.5 }}>
+                                    {jodDetails?.company_name || 'Google'}
+                                </HText>
+                                <HText type="R12" color={Colors[colorScheme]?.grayScale7}>
+                                    {getLocationLabel(jodDetails?.location) || ''}
+                                </HText>
+                            </View>
                         </View>
                     </View>
-                </View>
 
-
-            </View>
-            <View style={[styles.mv30, styles.mh25]}>
-                <HText type="S16">
-                    {'Select a resume'}
-                </HText>
-                <View style={[localstyles.resumeSelectStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
-                    <CheckMark />
-
-                    <View>
-
-                        <HText type="M10" align='center' color={Colors[colorScheme]?.white} style={[localstyles.desStyle, { backgroundColor: Colors[colorScheme]?.yellow }]}>
-                            {currentUserDetail?.designation}
-                        </HText>
-                        <HText type="B12" align='center' >
-                            {currentUserDetail?.user_name}
-                        </HText>
-                    </View>
 
                 </View>
-                <HText type="S16">
-                    {'Cover Later / Resume '}
-
-                    <HText type="R16" color={Colors[colorScheme]?.subText}>
-                        (Optional)
+                <View style={[styles.mv30, styles.mh25]}>
+                    <HText type="S16">
+                        {'Select a resume'}
                     </HText>
-                </HText>
+                    <View style={[localstyles.resumeSelectStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
+                        <CheckMark />
 
-                <HInput
-                    _value={coverLetter}
-                    // label="Job Description"
-                    placeHolder="Write a cover letter......"
-                    toGetTextFieldValue={onChangeCoverLetter}
-                    _errorText={coverLetterErrorMessage}
-                    required={true}
-                    multiline
-                    inputContainerStyle={[styles.mt15, { borderWidth: 0, backgroundColor: Colors[colorScheme]?.white }]}
-                    inputBoxStyle={[styles.pv15, styles.ml15]}
-                />
-                <HButton
-                    onPress={onPressApply}
-                    textType={"S16"}
-                    color={Colors[colorScheme]?.white}
-                    title={"Apply Now"}
-                    containerStyle={[styles.mv30,]}
-                    bgColor={Colors[colorScheme]?.primary}
-                ></HButton>
-            </View>
-            <ApplySuccess SheetRef={applySuccessSheetRef} />
+                        <View>
 
+                            <HText type="M10" align='center' color={Colors[colorScheme]?.white} style={[localstyles.desStyle, { backgroundColor: Colors[colorScheme]?.yellow }]}>
+                                {currentUserDetail?.designation}
+                            </HText>
+                            <HText type="B12" align='center' >
+                                {currentUserDetail?.user_name}
+                            </HText>
+                        </View>
+
+                    </View>
+                    <HText type="S16">
+                        {'Cover Letter / Resume '}
+
+                        <HText type="R16" color={Colors[colorScheme]?.subText}>
+                            (Optional)
+                        </HText>
+                    </HText>
+
+                    <HInput
+                        _value={coverLetter}
+                        // label="Job Description"
+                        placeHolder="Write a cover letter......"
+                        toGetTextFieldValue={onChangeCoverLetter}
+                        _errorText={coverLetterErrorMessage}
+                        required={true}
+                        multiline
+                        inputContainerStyle={[styles.mt15, { borderWidth: 0, backgroundColor: Colors[colorScheme]?.white }]}
+                        inputBoxStyle={[styles.pv15, styles.ml15]}
+                    />
+                    <HButton
+                        onPress={onPressApply}
+                        textType={"S16"}
+                        color={Colors[colorScheme]?.white}
+                        title={"Apply Now"}
+                        containerStyle={[styles.mv30,]}
+                        bgColor={Colors[colorScheme]?.primary}
+                    ></HButton>
+                </View>
+                <ApplySuccess SheetRef={applySuccessSheetRef} />
+            </HKeyBoardAvoidWrapper>
         </HSafeAreaView>
 
     )

@@ -66,7 +66,7 @@ const notification = () => {
             <HHeader title={'Notification'} />
 
             <FlatList
-                data={jobNotificatioData}
+                data={jobNotificatioData?.reverse()}
                 renderItem={renderNotificaiton}
                 showsVerticalScrollIndicator={false}
                 style={styles.mt15}
@@ -87,7 +87,7 @@ const notification = () => {
                                 {'Applications'}
                             </HText>}
                             <FlatList
-                                data={statusNotificatioData}
+                                data={statusNotificatioData?.reverse()}
                                 renderItem={renderNotificaiton}
                                 showsVerticalScrollIndicator={false}
                                 style={styles.mt15}

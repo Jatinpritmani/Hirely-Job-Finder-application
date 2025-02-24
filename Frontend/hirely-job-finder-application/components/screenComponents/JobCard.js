@@ -19,12 +19,12 @@ const JobCard = ({ item, index, cardStyle, isSavedCard = false }) => {
         if (isUserRecruiter(currentUserDetail?.user_type)) {
             router.push({
                 pathname: "/recruiterJobDetail",
-                params: { jobDetail: JSON.stringify(item) }, // Pass parameters
+                params: { jobDetail: JSON.stringify(item), index: index }, // Pass parameters
             })
         } else {
             router.push({
                 pathname: "/jobDetail",
-                params: { jobDetail: JSON.stringify(item) }, // Pass parameters
+                params: { jobDetail: JSON.stringify(item), index: index }, // Pass parameters
             })
         }
 

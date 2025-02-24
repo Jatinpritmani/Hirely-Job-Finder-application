@@ -1,4 +1,4 @@
-import { StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { Image, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import React, { useCallback, useRef, useState } from 'react'
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useSelector } from 'react-redux';
@@ -12,12 +12,13 @@ import { getLocationLabel, moderateScale } from '../constants/constants';
 import HText from '../components/common/HText';
 import apiRequest from '../components/api';
 import { GET_APPLIED_JOBS } from '../components/apiConstants';
+import images from '../assets/images';
 
 const trackJob = () => {
     const colorScheme = useColorScheme();
 
 
-    const { jobDetail } = useLocalSearchParams()
+    const { jobDetail, index } = useLocalSearchParams()
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
 
     const [jodDetails, setJobDetails] = useState(JSON.parse(jobDetail))
@@ -53,7 +54,12 @@ const trackJob = () => {
                 <HHeader title="Track Job" containerStyle={styles.ph20}
                 />
                 <View style={localstyles.jobStyle}>
-                    <View style={[localstyles.imgStyle, { backgroundColor: Colors[colorScheme]?.grayScale4 }]} />
+                    <View style={[localstyles.imgStyle, { backgroundColor: Colors[colorScheme]?.grayScale4 }]} >
+                        <Image
+                            source={index % 2 == 0 ? images.fb : images.google}
+                            style={localstyles.imgStyle}
+                        />
+                    </View>
                     <View style={[styles.flex, styles.ml15]}>
                         <View style={styles.rowSpaceBetween}>
                             <HText type="S14">

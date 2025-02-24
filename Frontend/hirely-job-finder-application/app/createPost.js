@@ -162,7 +162,7 @@ const createPost = () => {
                     />
                 </View>
 
-                <View>
+                {/* <View>
                     <HText style={[styles.mt15, styles.mb5]} type={'S14'} >
                         {'Choose Image'}
                     </HText>
@@ -175,7 +175,7 @@ const createPost = () => {
                             style={localStyles.imageView}
                         />}
                     </TouchableOpacity>
-                </View>
+                </View> */}
                 <HButton
                     // disabled={isNextDisabled}
                     onPress={onPressNext}

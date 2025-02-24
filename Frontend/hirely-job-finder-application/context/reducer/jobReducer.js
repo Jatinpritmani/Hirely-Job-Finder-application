@@ -30,6 +30,15 @@ export default function (state = INITIAL_STATE, action) {
 
         case types.GET_ALL_SEARCH_JOB_LIST_ERROR:
             return { ...state, searchLoading: false, searchError: action.payload };
+        case types.LOG_OUT:
+            return {
+                loading: false,
+                allJobList: null,
+                searchedJobs: null,
+                error: null,
+                searchLoading: false,
+                searchError: null
+            };
         default:
             return state;
     }

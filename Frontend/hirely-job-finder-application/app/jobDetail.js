@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 
 // local imports
@@ -16,10 +16,11 @@ import { APPLY_JOB, GET_ALL_JOBS, UNSAVE_JOB } from '../components/apiConstants'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllJobList } from '../context/actions/jobAction';
 import Toast from 'react-native-toast-message';
+import images from '../assets/images';
 
 const jobDetail = () => {
     const colorScheme = useColorScheme();
-    const { jobDetail } = useLocalSearchParams()
+    const { jobDetail, index } = useLocalSearchParams()
     const dispatch = useDispatch()
     const [jobDetails, setJobDetails] = useState(JSON.parse(jobDetail))
     const [responsibilities, setResponsibilities] = useState()
@@ -34,7 +35,7 @@ const jobDetail = () => {
 
         const job = allJobList.find(job => job.job_id === jobDetails?.job_id);
         setJobDetails(job)
-        const sentencesArray = job?.requirenment.split("\n");
+        const sentencesArray = job?.requirenment && job?.requirenment.split("\n");
 
         setResponsibilities(sentencesArray)
     }, [loading])
@@ -110,7 +111,7 @@ const jobDetail = () => {
     useFocusEffect(
         useCallback(() => {
 
-            const sentencesArray = jobDetails?.requirenment.split("\n");
+            const sentencesArray = jobDetails?.requirenment && jobDetails?.requirenment?.split("\n");
 
             setResponsibilities(sentencesArray)
             return () => { };
@@ -123,6 +124,7 @@ const jobDetail = () => {
             params: { jobDetail: JSON.stringify(jobDetails) }, // Pass parameters
         })
     }
+
     return (
 
         <HSafeAreaView containerStyle={styles.ph0} style={localStyles.main}>
@@ -131,7 +133,10 @@ const jobDetail = () => {
                     <HHeader title="" isLeftIcon={<LeftIcon />} isHideBack={true} rightIcon={<RightIcon />} containerStyle={styles.ph20}
                     />
                     <View style={[localStyles.imgStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
-
+                        <Image
+                            source={index % 2 == 0 ? images.fb : images.google}
+                            style={localStyles.imgStyle}
+                        />
                     </View>
                     <HText type="B24" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
                         {jobDetails?.position}
