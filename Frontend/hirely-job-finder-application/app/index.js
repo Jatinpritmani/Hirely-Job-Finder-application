@@ -80,7 +80,7 @@ async function registerForPushNotificationsAsync() {
             ).data;
             await AsyncStorage.setItem('pushToken', pushTokenString);
 
-            console.log(pushTokenString);
+            console.log(pushTokenString,"<-------token");
             return pushTokenString;
         } catch (e) {
             handleRegistrationError(`${e}`);

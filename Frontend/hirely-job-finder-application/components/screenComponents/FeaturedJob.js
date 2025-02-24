@@ -91,7 +91,8 @@ export default FeaturedJob
 const localstyles = StyleSheet.create({
     main: {
         ...styles.ml10,
-        borderRadius: moderateScale(24)
+        borderRadius: moderateScale(24),
+        height: moderateScale(186)
     },
     imageStyle: {
         width: moderateScale(280),

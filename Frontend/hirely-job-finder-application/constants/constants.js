@@ -118,7 +118,7 @@ export const locations = [
 
 export const getLocationLabel = (value) => {
   const location = locations.find((loc) => loc.value === value);
-  return location ? location.label : "-";
+  return location ? location.label : "USA";
 };
 
 export const getJobTypeLabel = (value) => {

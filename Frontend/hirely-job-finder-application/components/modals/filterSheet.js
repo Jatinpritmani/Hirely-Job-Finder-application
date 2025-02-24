@@ -38,7 +38,6 @@ export default function FilterSheet({ SheetRef, filter, setFilter, setIsSearch }
 
     const renderJobtype = ({ item, index }) => {
         const onPressJobType = () => {
-            console.log(filter.filter_by_job_type?.includes(item.value));
 
             setFilter((prevFilter) => {
                 const isSelected = prevFilter.filter_by_job_type?.includes(item.value);
@@ -63,7 +62,6 @@ export default function FilterSheet({ SheetRef, filter, setFilter, setIsSearch }
     }
     const renderLocation = ({ item, index }) => {
         const onPressLocation = () => {
-            console.log(filter.filter_by_location?.includes(item.value));
 
             setFilter((prevFilter) => {
                 const isSelected = prevFilter.filter_by_location?.includes(item.value);

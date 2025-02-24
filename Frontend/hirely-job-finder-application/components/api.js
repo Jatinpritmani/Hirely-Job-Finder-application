@@ -15,7 +15,6 @@ export const API_BASE_URL = 'http://192.168.29.187:4402/hjfa/'; // Replace with 
 const apiRequest = async (method = "GET", endpoint, data = {}, params = {}, headers = {}) => {
     try {
         const isFileUpload = data instanceof FormData; // Check if data is FormData
-        console.log('Url=====>>>', `${API_BASE_URL}${endpoint}`, data)
         const response = await axios({
             method,
             url: `${API_BASE_URL}${endpoint}`,

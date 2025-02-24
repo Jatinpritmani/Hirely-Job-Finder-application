@@ -1,6 +1,6 @@
 import { StyleSheet, Text, useColorScheme, View } from 'react-native'
-import React, { useRef, useState } from 'react'
-import { useLocalSearchParams } from 'expo-router';
+import React, { useCallback, useRef, useState } from 'react'
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useSelector } from 'react-redux';
 
 // local imports
@@ -10,6 +10,8 @@ import HHeader from '../components/common/HHeader';
 import { styles } from '../themes';
 import { getLocationLabel, moderateScale } from '../constants/constants';
 import HText from '../components/common/HText';
+import apiRequest from '../components/api';
+import { GET_APPLIED_JOBS } from '../components/apiConstants';
 
 const trackJob = () => {
     const colorScheme = useColorScheme();
@@ -19,30 +21,54 @@ const trackJob = () => {
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
 
     const [jodDetails, setJobDetails] = useState(JSON.parse(jobDetail))
+    const [appliedJobData, setAppliedJobData] = useState()
 
+    useFocusEffect(
+        useCallback(() => {
+            getAppliedJobs()
+            return () => { };
+        }, [])
+    );
+    const getAppliedJobs = async () => {
+        let payload = {
+            user_id: currentUserDetail?.user_id,
+            applied_job_id: jodDetails?.applied_job_id
+
+        }
+        try {
+            let response = await apiRequest("POST", GET_APPLIED_JOBS, payload);
+            if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                setAppliedJobData(response?.data && response?.data[0])
+            }
+            else {
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
 
     return (
         <HSafeAreaView containerStyle={styles.ph0}>
             <View style={{ backgroundColor: Colors[colorScheme]?.white }}>
-                <HHeader title="Apply Job" containerStyle={styles.ph20}
+                <HHeader title="Track Job" containerStyle={styles.ph20}
                 />
                 <View style={localstyles.jobStyle}>
                     <View style={[localstyles.imgStyle, { backgroundColor: Colors[colorScheme]?.grayScale4 }]} />
                     <View style={[styles.flex, styles.ml15]}>
                         <View style={styles.rowSpaceBetween}>
                             <HText type="S14">
-                                {jodDetails?.position}
+                                {appliedJobData?.position}
                             </HText>
                             <HText type="M12">
-                                {jodDetails?.salary ? `$${jodDetails?.salary}/y` : ''}
+                                {appliedJobData?.salary ? `$${appliedJobData?.salary}/y` : ''}
                             </HText>
                         </View>
                         <View style={styles.rowSpaceBetween}>
                             <HText type="R12" style={{ opacity: 0.5 }}>
-                                {jodDetails?.company_name || 'Google'}
+                                {appliedJobData?.company_name || 'Google'}
                             </HText>
                             <HText type="R12" color={Colors[colorScheme]?.grayScale7}>
-                                {getLocationLabel(jodDetails?.location) || ''}
+                                {getLocationLabel(appliedJobData?.location) || 'USA'}
                             </HText>
                         </View>
                     </View>

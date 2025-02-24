@@ -28,10 +28,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const login = () => {
     const colorScheme = useColorScheme();
     const dispatch = useDispatch()
-    // const [email, setEmail] = useState("darsil.pansuriya@gmail.com");
-    // const [password, setPassword] = useState("dp7685..");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("darsil.pansuriya@gmail.com");
+    const [password, setPassword] = useState("dp7685..");
+    // const [email, setEmail] = useState("");
+    // const [password, setPassword] = useState("");
     const [isShowPassword, setIsShowPassword] = useState(true);
     const [isLoginDisabled, setIsLoginDisabled] = useState(true);
     const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -52,7 +52,6 @@ const login = () => {
     }, [email, password]);
 
     useEffect(() => {
-        console.log("isUserLoggedIn state changed:", isUserLoggedIn);
 
         if (isUserLoggedIn) {
             // router.replace('/(tabs)')

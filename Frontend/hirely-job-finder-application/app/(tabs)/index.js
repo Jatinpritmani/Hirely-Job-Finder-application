@@ -1,5 +1,5 @@
 // library imports
-import { BackHandler, FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { BackHandler, FlatList, RefreshControl, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { router, useFocusEffect } from 'expo-router';
@@ -37,6 +37,8 @@ const Home = () => {
     const [isSearch, setIsSearch] = useState(false)
     const [recruiterSearchedJobs, setRecruiterSerchedJobs] = useState([])
     const debouncedSearchTerm = useDebounce(searchQuery, 300);
+    const [refreshing, setRefreshing] = useState(false);
+
 
     const [filter, setFilter] = useState({
         filter_by_location: [],
@@ -79,9 +81,6 @@ const Home = () => {
 
                 dispatch(getAllJobListSearch(data))
             }
-
-            // Trigger an API call or expensive operation
-            console.log('Searching for:', debouncedSearchTerm);
         }
     }, [debouncedSearchTerm, filter]);
 
@@ -114,8 +113,6 @@ const Home = () => {
             dispatch(getAllJobListSearch(data))
         }
 
-        // Trigger an API call or expensive operation
-        console.log('Searching for:', debouncedSearchTerm);
     }, [filter])
 
 
@@ -210,6 +207,31 @@ const Home = () => {
         })
     }
 
+    const onRefresh = () => {
+        setRefreshing(true)
+        if (isUserRecruiter(currentUserDetail?.user_type)) {
+            const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
+            const filteredJobs = recruiterDetails?.jobDetails?.filter(job =>
+                job.position.toLowerCase().includes(lowerCaseSearchTerm) ||
+                job.location.toLowerCase().includes(lowerCaseSearchTerm) ||
+                job.summary?.toLowerCase().includes(lowerCaseSearchTerm) // Optional in case summary is missing
+            );
+            setRecruiterSerchedJobs(filteredJobs)
+        }
+        else {
+            let data = {
+                "user_id": currentUserDetail?.user_id,
+                search: searchQuery,
+                filter_by_location: filter?.filter_by_location,
+                filter_by_salary: filter?.filter_by_salary,
+                filter_by_job_type: filter?.filter_by_job_type
+            }
+
+            dispatch(getAllJobListSearch(data))
+        }
+        setRefreshing(false)
+    }
+
 
     if (allJobloading || loadingRecruiterDetai) {
         return <HLoader />;
@@ -225,7 +247,10 @@ const Home = () => {
                 titleColor={Colors[colorsScheme]?.primary}
                 titleType='B24'
             />
-            <ScrollView contentContainerStyle={[styles.flexGrow1, styles.pv15]} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle={[styles.flexGrow1, styles.pv15]}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                } showsVerticalScrollIndicator={false}>
                 <View style={[styles.mt30, styles.flexRow]}>
                     <View style={[localStyles.searchBar, styles.itemsCenter, { backgroundColor: Colors[colorsScheme]?.grayScale8 }]}>
                         <Search />

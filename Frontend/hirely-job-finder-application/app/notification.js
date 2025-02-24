@@ -17,6 +17,7 @@ const notification = () => {
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
     const [jobNotificatioData, setJobNotificationData] = useState([])
     const [statusNotificatioData, setStatusNotificationData] = useState([])
+    const [refreshing, setRefreshing] = useState(false)
 
     useFocusEffect(
         useCallback(() => {
@@ -32,9 +33,6 @@ const notification = () => {
         try {
             let response = await apiRequest("POST", GET_NOTIFICAITONS, data);
             if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
-                console.log('====================================');
-                console.log(response);
-                console.log('====================================');
 
                 const jobNotifications = response?.data?.filter(item => item.type === "job_posted");
                 const statusNotifications = response?.data?.filter(item => item.type === "status_update");
@@ -49,6 +47,12 @@ const notification = () => {
             console.error("Error fetching data:", error);
         }
 
+    }
+
+    const onRefresh = async () => {
+        setRefreshing(true)
+        await getAllNotifications()
+        setRefreshing(false)
     }
 
     const renderNotificaiton = ({ item, index }) => {
@@ -66,6 +70,8 @@ const notification = () => {
                 renderItem={renderNotificaiton}
                 showsVerticalScrollIndicator={false}
                 style={styles.mt15}
+                onRefresh={onRefresh}
+                refreshing={refreshing}
                 ListHeaderComponent={() => {
                     return (
                         <>

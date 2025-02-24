@@ -48,9 +48,6 @@ const Register = () => {
 
     const currentUserType = useSelector(state => state.commonReducer.current_user_type)
 
-    console.log('====================================');
-    console.log(currentUserType);
-    console.log('====================================');
 
     const onChangeFullName = (text) => {
         setFullName(text);
