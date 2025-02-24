@@ -190,7 +190,7 @@ const Register = () => {
         }
 
     };
-    const onPressLogin = () => { router.back() };
+    const onPressLogin = () => { router.push('login') };
 
 
     return (

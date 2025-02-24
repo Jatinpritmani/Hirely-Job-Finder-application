@@ -29,7 +29,7 @@ const start = () => {
     const onPressUserType = (userType) => {
         dispatch(setCurrentUserType(userType))
         setTimeout(() => {
-            router.push('login')
+            router.push('register')
         }, 1000);
     }
 
