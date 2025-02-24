@@ -26,7 +26,8 @@ module.exports={
     recruiterDetails:recruiterDetails,
     updateAppliedJobStatus:updateAppliedJobStatus,
     notificationList:notificationList,
-    updateNotificationRead:updateNotificationRead
+    updateNotificationRead:updateNotificationRead,
+    uploadImage:uploadImage
 }
 
 async function encryptPassword(password){
@@ -152,7 +153,7 @@ async function getUserDetails(req) {
         
         let user_id = req.body.user_id 
         let userDetails = await User.findOne({_id : user_id},
-            {resume:0,user_password:0,__v:0,createdAt:0,updatedAt:0}
+            {user_password:0,__v:0,createdAt:0,updatedAt:0}
         )
         const total_job_applied = await Application.countDocuments({job_seeker_id:user_id})
         userDetails = userDetails.toJSON(); 
@@ -194,8 +195,11 @@ async function getUserResume(req) {
         let filePath
         let filename=userDetails.resume.originalname
         if(userDetails.resume){
-            filePath = path.join(__dirname, "../resumes", userDetails.resume.filename);
+            // filePath = path.join(__dirname, "../resumes", userDetails.resume.originalname);
+            filePath = userDetails.resume.path
         }
+        console.log("filePath",filePath);
+        
         return {filename,filePath}
     } catch (error) {
         logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
@@ -215,7 +219,7 @@ async function uploadUserResume(req) {
         )
         userDetails = userDetails.toJSON(); 
         if(userDetails.resume){
-            const filePath = path.join(__dirname, "../resumes", userDetails.resume.filename);
+            const filePath = path.join(__dirname, "../resumes", userDetails.resume.originalname);
             if(fs.existsSync(filePath)){
                 await fs.promises.unlink(filePath)
             }
@@ -225,7 +229,7 @@ async function uploadUserResume(req) {
                 filename: req.file.filename,
                 contentType: req.file.mimetype,
                 originalname:req.file.originalname,
-                path:req.file.path
+                path : path.join(__dirname, "../resumes", req.file.originalname)
             }
             await User.findByIdAndUpdate({_id:user_id},{$set:{resume:resume}})
         }
@@ -298,7 +302,8 @@ async function createJobPost(req) {
             utility_func.statusGenerator(
                 utility_func.httpStatus.ReasonPhrases.OK,
                 utility_func.httpStatus.StatusCodes.OK),
-            false
+            false,
+            {job_id:jobDetails._id}
         )
 
     } catch (error) {
@@ -364,6 +369,7 @@ async function getAllJobPosts(req) {
                     job_type: "$job_type",
                     summary: "$summary",
                     requirenment: "$requirenment",
+                    image:"$image"
                 }
             }
         ])
@@ -523,6 +529,7 @@ async function getSavedJobs(req) {
                     summary: "$jobDetails.summary",
                     requirenment: "$jobDetails.requirenment",
                     job_id: "$jobDetails._id",
+                    image:"$jobDetails.image",
                     company_name:"$recruiterDetails.company_name"
                 }
             }
@@ -606,6 +613,7 @@ async function getAppliedJobs(req) {
                     job_type: "$jobDetails.job_type",
                     summary: "$jobDetails.summary",
                     requirenment: "$jobDetails.requirenment",
+                    image:"$jobDetails.image",
                     company_name:"$recruiterDetails.company_name"
                 }
             }
@@ -724,7 +732,8 @@ async function recruiterDetails(req) {
                                     job_type: "$$job.job_type",
                                     summary: "$$job.summary",
                                     requirenment: "$$job.requirenment",
-                                    number_of_opening:"$$job.number_of_opening"
+                                    number_of_opening:"$$job.number_of_opening",
+                                    image:"$$job.image"
                                 }
                             }
                         },
@@ -776,7 +785,6 @@ async function recruiterDetails(req) {
             jobDetails[0]["appliedJobDetails"]=jobDetails[0]["appliedJobDetails"].map((appliedJob)=>{
                 let {job, job_seeker ,...rest}=appliedJob
                 delete job_seeker["user_password"]
-                delete job_seeker["resume"]
                 delete job_seeker["fcm_token"]
                 delete job_seeker["user_password"]
 
@@ -904,6 +912,51 @@ async function updateNotificationRead(req) {
         const notification_id =req.body.notification_id
         await Notification.findByIdAndUpdate({_id:notification_id},{$set:{is_read:true}})  
         
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false
+        )
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+async function uploadImage(req) {
+    let func_name = "uploadImage"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let job_id = req.body.job_id         
+        
+        let jobDetails = await Job.findOne({_id : job_id},
+            {image:1}
+        )
+        jobDetails = jobDetails.toJSON(); 
+        if(jobDetails.image){
+            const filePath = path.join(__dirname, "../resumes", jobDetails.image.originalname);
+            if(fs.existsSync(filePath)){
+                await fs.promises.unlink(filePath)
+            }
+        }
+        if(req.file){
+            let image={
+                filename: req.file.filename,
+                contentType: req.file.mimetype,
+                originalname:req.file.originalname,
+                path : path.join(__dirname, "../resumes", req.file.originalname)
+            }
+            await Job.findByIdAndUpdate({_id:job_id},{$set:{image:image}})
+        }
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,
             utility_func.statusGenerator(

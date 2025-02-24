@@ -1,6 +1,11 @@
 const mongoose=require("mongoose")
 const utility_func=require("../utilities/utility-functions")
-
+const imageSchema = new mongoose.Schema({
+  originalname: { type: String, required: true },
+  filename: { type: String, required: true },
+  contentType: { type: String, required: true },
+  path: { type: String, required: true }, 
+});
 const jobSchema = new mongoose.Schema({
     job_id: { type: mongoose.Schema.Types.ObjectId, alias: '_id'},
     recruiter_id:{type: mongoose.Schema.Types.ObjectId, ref:'User'},
@@ -11,6 +16,7 @@ const jobSchema = new mongoose.Schema({
     number_of_opening:{type:Number},
     summary:{type:String},
     requirenment:{type:String},
+    image : imageSchema
   },
   {
     autoCreate: true,

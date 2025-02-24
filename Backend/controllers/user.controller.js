@@ -18,7 +18,8 @@ module.exports={
     recruiterDetails:recruiterDetails,
     updateAppliedJobStatus:updateAppliedJobStatus,
     notificationList:notificationList,
-    updateNotificationRead:updateNotificationRead
+    updateNotificationRead:updateNotificationRead,
+    uploadImage:uploadImage
 }
 
 async function userRegistration(req,res) {
@@ -273,6 +274,22 @@ async function updateNotificationRead(req,res) {
 
     try {
         const response = await userService.updateNotificationRead(req);
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+        res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(response);
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
+        res.status(parseInt(error[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(error);
+    } 
+}
+
+async function uploadImage(req,res) {
+    const func_name = 'uploadImage';
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+
+    try {
+        const response = await userService.uploadImage(req);
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
         res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
         res.send(response);
