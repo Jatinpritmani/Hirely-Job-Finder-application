@@ -52,10 +52,10 @@ const FeaturedJob = ({ item, index, isVertical = false }) => {
                     </View>
 
                 </View>
-                {/* {isUserRecruiter(currentUserDetail?.user_type) ?
+                {isUserRecruiter(currentUserDetail?.user_type) ?
                     <View style={styles.rowSpaceBetween}>
 
-                        <View style={[localstyles.labelStyle, { backgroundColor: Colors[colorScheme]?.white15 }]}>
+                        {/* <View style={[localstyles.labelStyle, { backgroundColor: Colors[colorScheme]?.white15 }]}>
 
                             <HText type="R12" color={Colors[colorScheme]?.white}>
                                 {'See Resume'}
@@ -66,7 +66,7 @@ const FeaturedJob = ({ item, index, isVertical = false }) => {
                             <HText type="R12" color={Colors[colorScheme]?.white}>
                                 {'See Profile'}
                             </HText>
-                        </View>
+                        </View> */}
                     </View>
                     :
                     <>
@@ -84,7 +84,7 @@ const FeaturedJob = ({ item, index, isVertical = false }) => {
                                 {getLocationLabel(item?.location) || ''}
                             </HText>
                         </View>
-                    </>} */}
+                    </>}
             </ImageBackground>
 
         </TouchableOpacity>
