@@ -11,7 +11,7 @@ const HLoader = () => {
   const colorScheme = useColorScheme();
 
   return (
-    <View style={localStyles.vwMainStyle}>
+    <View style={[localStyles.vwMainStyle, { backgroundColor: Colors[colorScheme]?.background }]}>
       <ActivityIndicator size="large" color={Colors[colorScheme]?.primary} />
     </View>
   );
