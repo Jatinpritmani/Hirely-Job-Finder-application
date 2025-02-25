@@ -323,7 +323,7 @@ const Home = () => {
                     <>
                         <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'your job posting' : 'Recommended Jobs'} onPressSeeAll={onPressSeeAllJobs} style={styles.mt30} />
                         <FlatList
-                            data={isUserRecruiter(currentUserDetail?.user_type) ? (recruiterDetailsData && recruiterDetailsData?.jobDetails?.slice(0, 2)) : (allJobList && allJobList.slice(0, 2))}
+                            data={isUserRecruiter(currentUserDetail?.user_type) ? (recruiterDetailsData && recruiterDetailsData?.jobDetails?.slice(-2).reverse()) : (allJobList && allJobList.slice(-2).reverse())}
                             renderItem={renderRecomendedJobItem}
                             style={[styles.mt25]}
                             scrollEnabled={false}
