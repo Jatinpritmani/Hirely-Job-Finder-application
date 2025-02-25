@@ -7,7 +7,7 @@ const notificationSchema = new mongoose.Schema({
     job_seeker_id:{type: mongoose.Schema.Types.ObjectId, ref:'User'},
     recruiter_id:{type: mongoose.Schema.Types.ObjectId, ref:'User'},
     applied_job_id:{type: mongoose.Schema.Types.ObjectId, ref:'Application'},
-    type: {type: String, enum:['job_posted','status_update'] },
+    type: {type: String, enum:['job_posted','status_update','job_application'] },
     title: {type: String},
     message: {type: String},
     is_read: {type: Boolean, default:false}

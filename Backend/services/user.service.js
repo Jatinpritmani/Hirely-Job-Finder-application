@@ -458,6 +458,18 @@ async function applyJob(req) {
                     type:'status_update' 
                 }
                 await Notification.create(notification);
+                
+                let jobNotification = {
+                    job_id : applicationDetails.job_id, 
+                    job_seeker_id : applicationDetails.job_seeker_id,
+                    recruiter_id : applicationDetails.recruiter_id,
+                    applied_job_id: applicationDetails._id,
+                    title:"Job Application",
+                    message:`${jobSeekerDetails.user_name} has been applied for job. Click here to check`,
+                    type:'job_application' 
+                }
+                await Notification.create(jobNotification);
+                
             }
             let notification={
                 title:"Job Application",
@@ -881,8 +893,14 @@ async function notificationList(req) {
 
     try {
         const user_id =req.body.user_id
-        let notificationList= await Notification.find({job_seeker_id:user_id,is_read:false},{})  
-         
+        let notificationList
+        if(req.body.user_id){
+            notificationList = await Notification.find({job_seeker_id:req.body.user_id,is_read:false},{})  
+        }
+        if(req.body.recruiter_id){
+            notificationList = await Notification.find({recruiter_id:req.body.recruiter_id,is_read:false,type:"job_application"},{})   
+        }
+        
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,
             utility_func.statusGenerator(
