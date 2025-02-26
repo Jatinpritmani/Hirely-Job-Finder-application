@@ -1,17 +1,17 @@
-import { router, Tabs, useSegments } from 'expo-router';
+import { Tabs, useSegments } from 'expo-router';
 import { useSelector } from 'react-redux';
 
 
 // local imports
 import { AppliedJob, AppliedJObBlue, CreateJobBlueIcon, CreateJobIcon, HomeBlueIcon, HomeIcon, ProfileBlueIcon, ProfileIcon, SaveBlueIcon, SaveIcon } from '../../assets/svgs';
 import typography from '../../themes/typography';
-import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme } from 'react-native';
 import { Colors } from '@/constants/Colors'
 import { styles } from '../../themes';
 import { getHeight, isUserJobSeeker, isUserRecruiter } from '../../constants/constants';
 
 export default function TabLayout() {
-    const currentTab = useSegments()?.[1]; // Tabs are in "(tabs)", so index 1 is the active tab
+    const currentTab = useSegments()?.[1];
     const colorScheme = useColorScheme()
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
 

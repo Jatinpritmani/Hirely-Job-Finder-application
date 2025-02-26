@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text, useColorScheme, View } from 'react-native'
-import React, { useCallback, useRef, useState } from 'react'
+import { Image, StyleSheet, useColorScheme, View } from 'react-native'
+import React, { useCallback, useState } from 'react'
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useSelector } from 'react-redux';
 

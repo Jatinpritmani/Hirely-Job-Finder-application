@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Alert } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 // export const API_BASE_URL = 'http://127.0.0.1:4402/hjfa/'; // Replace with your actual API base URL
@@ -68,8 +67,8 @@ export const uploadFile = (endpoint, fileUri, fileType, fileName, extraData) => 
 
     formData.append('file', {
         uri: fileUri,
-        type: fileType,  // Example: 'application/pdf'
-        name: fileName,  // Example: 'document.pdf'
+        type: fileType,
+        name: fileName,
     });
     Object.keys(extraData).forEach(key => {
         formData.append(key, extraData[key]);

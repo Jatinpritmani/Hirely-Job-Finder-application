@@ -35,7 +35,6 @@ const JobCard = ({ item, index, cardStyle, isSavedCard = false }) => {
             <View style={styles.rowCenter} >
                 <View style={[localStyles.emptyView, { bordeColor: Colors[colorScheme]?.grayScale1, }]}>
                     <Image
-                        // source={index % 2 == 0 ? images.fb : images.google}
                         source={item?.image?.originalname ? { uri: FILE_BASE_URL + item?.image?.originalname } : index % 2 == 0 ? images.fb : images.google}
                         style={localStyles.emptyView}
                     />

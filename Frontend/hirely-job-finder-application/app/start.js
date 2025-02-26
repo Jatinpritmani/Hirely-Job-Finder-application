@@ -1,9 +1,9 @@
-import { ImageBackground, StyleSheet, Text, useColorScheme, View } from 'react-native'
-import { router, useRouter } from "expo-router";
+import { ImageBackground, StyleSheet, useColorScheme, View } from 'react-native'
+import { useRouter } from "expo-router";
 import { useDispatch, useSelector } from 'react-redux';
 
 
-import React, { createRef, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import images from '../assets/images'
 import { isUserJobSeeker, isUserRecruiter, moderateScale, screenHeight, screenWidth } from '../constants/constants'
 import { Colors } from '@/constants/Colors'
@@ -12,7 +12,6 @@ import { styles } from '../themes'
 import HButton from '../components/common/HButton'
 import { CheckMark, UnCheckedMark } from '../assets/svgs'
 import { setCurrentUserType } from '../context/actions/commonActioin';
-import HSafeAreaView from '../components/common/HSafeAreaView';
 
 const start = () => {
     const colorScheme = useColorScheme()
@@ -67,7 +66,6 @@ const localStyles = StyleSheet.create({
         height: '100%',
     },
     titleStyle: {
-        // ...styles.justifyCenter,
         ...styles.flex,
         ...styles.itemsCenter,
         marginTop: '70%',
@@ -77,8 +75,6 @@ const localStyles = StyleSheet.create({
         borderTopStartRadius: moderateScale(32),
         height: '30%',
         width: '100%',
-        // bottom: 0,
-        // position: 'absolute',
         ...styles.center,
         ...styles.p20,
     },

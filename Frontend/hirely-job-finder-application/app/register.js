@@ -168,7 +168,7 @@ const Register = () => {
                 // route to complete profile if usertype is job_seeker
                 router.push({
                     pathname: "/submitProfileDetail",
-                    params: { userDetail: JSON.stringify(userdetail) }, // Pass parameters
+                    params: { userDetail: JSON.stringify(userdetail) },
                 })
             }
             if (currentUserType == 'recruiter') {

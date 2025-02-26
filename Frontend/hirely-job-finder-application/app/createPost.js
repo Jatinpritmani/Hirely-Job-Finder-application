@@ -67,7 +67,6 @@ const createPost = () => {
             Toast.show({
                 type: "error",
                 text1: "Please Select Image",
-                // text2: "Your job posting has been published.",
             });
             return
         }

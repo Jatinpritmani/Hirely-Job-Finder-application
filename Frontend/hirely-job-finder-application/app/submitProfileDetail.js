@@ -185,8 +185,6 @@ const SubmitPforileDetail = () => {
             setIsShowExperienceFields(false)
 
         }
-
-        // setCom
     }
 
     const onPressStartDate = () => {
@@ -399,9 +397,6 @@ const localStyles = StyleSheet.create({
     inputContainer: {
         ...styles.mt30,
     },
-
-
-
     btnStyle: {
         ...styles.mt30,
         ...styles.mh20,

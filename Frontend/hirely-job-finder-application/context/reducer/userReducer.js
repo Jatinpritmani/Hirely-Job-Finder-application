@@ -1,4 +1,4 @@
-import { SET_CURRENT_USER_DETAIL } from "../types/type";
+
 import * as types from '../types/type'
 
 const INITIAL_STATE = {

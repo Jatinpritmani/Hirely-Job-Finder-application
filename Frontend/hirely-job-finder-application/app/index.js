@@ -1,18 +1,15 @@
 import { router } from "expo-router";
 import {
-    ActivityIndicator,
     Image,
     StyleSheet,
-    Text,
     TouchableOpacity,
     useColorScheme,
     View,
-Platform
+    Platform
 } from "react-native";
 import Swiper from "react-native-swiper";
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
 
 
 // local imports
@@ -80,7 +77,7 @@ async function registerForPushNotificationsAsync() {
             ).data;
             await AsyncStorage.setItem('pushToken', pushTokenString);
 
-            console.log(pushTokenString,"<-------token");
+            console.log(pushTokenString, "<-------token");
             return pushTokenString;
         } catch (e) {
             handleRegistrationError(`${e}`);
@@ -98,29 +95,25 @@ export default function onBoarding() {
     const notificationListener = useRef();
     const responseListener = useRef();
 
-useEffect(() => {
-    registerForPushNotificationsAsync()
-        .then(token => setExpoPushToken(token ?? ''))
-        .catch((error) => setExpoPushToken(`${error}`));
+    useEffect(() => {
+        registerForPushNotificationsAsync()
+            .then(token => setExpoPushToken(token ?? ''))
+            .catch((error) => setExpoPushToken(`${error}`));
 
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-        console.log('=================notification===================');
-        console.log(notification);
-        console.log('====================================');
-        // setNotification(notification);
-    });
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            console.log('=================notification===================');
+            console.log(notification);
+            console.log('====================================');
+            // setNotification(notification);
+        });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-        console.log(response,"response");
-    });
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log(response, "response");
+        });
 
-    return () => {
-        // notificationListener.current &&
-        //     Notifications.removeNotificationSubscription(notificationListener.current);
-        // responseListener.current &&
-        //     Notifications.removeNotificationSubscription(responseListener.current);
-    };
-}, []);
+        return () => {
+        };
+    }, []);
 
     useEffect(() => {
         if (currentUserDetail) {
@@ -129,7 +122,6 @@ useEffect(() => {
                     router.replace("(tabs)");
                     setLoading(false);
                 }, 100);
-                // router?.replace("(tabs)"); // Redirect to tabs if user is logged in
             }
             else {
                 setLoading(false)
@@ -186,7 +178,6 @@ useEffect(() => {
                         Hirely
                     </HText>
 
-                    {/* <ActivityIndicator size="large" color={Colors[colorScheme]?.primary} /> */}
                 </View>
             </View>
         );
@@ -307,27 +298,4 @@ const localStyles = StyleSheet.create({
         bottom: moderateScale(0),
     },
 });
-
-
-
-// export default function App() {
-//     const [expoPushToken, setExpoPushToken] = useState('');
-//     const [notification, setNotification] = useState(
-//         undefined
-//     );
-    
-
-    
-
-//     return (
-//         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around' }}>
-//             <Text>Your Expo push token: {expoPushToken}</Text>
-//             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-//                 <Text>Title: {notification && notification.request.content.title} </Text>
-//                 <Text>Body: {notification && notification.request.content.body}</Text>
-//                 <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
-//             </View>
-//         </View>
-//     );
-// }
 

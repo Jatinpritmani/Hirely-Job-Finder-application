@@ -1,6 +1,6 @@
 // Library import
-import { Image, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
-import React, { memo, useCallback, useState } from 'react';
+import { StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
+import React from 'react';
 import ActionSheet, { FlatList } from 'react-native-actions-sheet';
 import { styles } from '../../themes';
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
@@ -13,7 +13,6 @@ import { CrossIcon } from '../../assets/svgs';
 import { jobTypes, locations, moderateScale, screenWidth } from '../../constants/constants';
 import HText from '../common/HText';
 import HButton from '../common/HButton';
-import { router } from 'expo-router';
 
 
 export default function FilterSheet({ SheetRef, filter, setFilter, setIsSearch }) {

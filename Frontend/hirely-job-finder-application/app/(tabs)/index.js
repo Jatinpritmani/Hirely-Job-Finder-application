@@ -296,9 +296,6 @@ const Home = () => {
 
                             <CrossIcon />
                         </TouchableOpacity>}
-                        {/* <HText type="R14" style={styles.ml10} color={Colors[colorsScheme]?.subText}>
-                            Search here
-                        </HText> */}
                     </View>
                     <TouchableOpacity onPress={onPressFilter} style={[localStyles.searchBar, styles.ml10, styles.center, { width: '15%', backgroundColor: Colors[colorsScheme]?.grayScale8 }]}>
                         <Filter />
@@ -307,7 +304,6 @@ const Home = () => {
                 {isSearch ?
                     <>
                         <HText type="S14" style={[styles.mt20, { marginBottom: -moderateScale(10) }]}>
-                            {/* {`${isUserRecruiter(currentUserDetail?.user_type) ? recruiterSearchedJobs?.length : searchedJobs?.length || '0'} Jobs Found`} */}
                             {`${searchedJobs?.length || '0'} Jobs Found`}
 
                         </HText>

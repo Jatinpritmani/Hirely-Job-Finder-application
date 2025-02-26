@@ -67,12 +67,10 @@ export default function RootLayout() {
           <StatusBar style="dark" backgroundColor={'white'} />
 
           <Stack initialRouteName='uploadCV' screenOptions={{ headerShown: false, }}>
-            {/* <Stack.Screen name="index" /> */}
             <Stack.Screen name="start" />
             <Stack.Screen name="login" />
             <Stack.Screen name="register" />
             <Stack.Screen name="submitProfileDetail" />
-            <Stack.Screen name="forgotPassword" />
             <Stack.Screen name="uploadCV" />
             <Stack.Screen name="allExperience" />
             <Stack.Screen name="createPost" />

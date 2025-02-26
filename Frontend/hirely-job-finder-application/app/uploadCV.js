@@ -200,7 +200,6 @@ const uploadCV = () => {
                 ></HButton>
             </View>
             <HButton
-                // disabled={isRegisterDisabled}
                 onPress={fromProfile == 'true' ? onPressSave : onPressRegister}
                 textType={"S16"}
                 color={

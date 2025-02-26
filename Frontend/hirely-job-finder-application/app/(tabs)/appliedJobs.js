@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { useFocusEffect } from 'expo-router'
 import { useSelector } from 'react-redux'
@@ -9,7 +9,6 @@ import HText from '../../components/common/HText'
 import { styles } from '../../themes'
 import apiRequest from '../../components/api'
 import { GET_APPLIED_JOBS } from '../../components/apiConstants'
-import JobCard from '../../components/screenComponents/JobCard'
 import EmptyListComponent from '../../components/common/EmptyListComponent'
 import AppliedJobCard from '../../components/screenComponents/appliedJobCard'
 

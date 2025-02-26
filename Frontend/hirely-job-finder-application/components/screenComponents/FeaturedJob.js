@@ -55,19 +55,6 @@ const FeaturedJob = ({ item, index, isVertical = false }) => {
                 </View>
                 {isUserRecruiter(currentUserDetail?.user_type) ?
                     <View style={styles.rowSpaceBetween}>
-
-                        {/* <View style={[localstyles.labelStyle, { backgroundColor: Colors[colorScheme]?.white15 }]}>
-
-                            <HText type="R12" color={Colors[colorScheme]?.white}>
-                                {'See Resume'}
-                            </HText>
-                        </View>
-                        <View style={[localstyles.labelStyle, { borderWidth: moderateScale(1), borderColor: Colors[colorScheme]?.grayScale7 }]}>
-
-                            <HText type="R12" color={Colors[colorScheme]?.white}>
-                                {'See Profile'}
-                            </HText>
-                        </View> */}
                     </View>
                     :
                     <>

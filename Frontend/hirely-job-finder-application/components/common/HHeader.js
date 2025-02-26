@@ -7,7 +7,7 @@ import { router } from 'expo-router'
 import { styles } from '../../themes';
 import HText from './HText';
 import { moderateScale } from '../../constants/constants';
-import { ArrowLeft, NotificationIcon } from '../../assets/svgs';
+import { ArrowLeft } from '../../assets/svgs';
 import { Colors } from '@/constants/Colors'
 
 
@@ -38,7 +38,6 @@ export default function HHeader(props) {
           color={titleColor}
           numberOfLines={1}
           align={'center'}
-          style={[localStyles.titleText]}
           type={titleType}>
           {title}
         </HText>
@@ -76,8 +75,5 @@ const localStyles = StyleSheet.create({
   rightContainer: {
     position: 'absolute',
     right: 0
-  },
-  titleText: {
-    // marginLeft: moderateScale(54)
   },
 });

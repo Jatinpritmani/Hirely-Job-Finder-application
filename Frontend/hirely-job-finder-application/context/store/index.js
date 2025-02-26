@@ -9,7 +9,6 @@ export const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
 };
-// const store = createStore(rootReducer, applyMiddleware(thunk));
 // Connect our store to the reducers
 export const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = createStore(persistedReducer, applyMiddleware(thunk));

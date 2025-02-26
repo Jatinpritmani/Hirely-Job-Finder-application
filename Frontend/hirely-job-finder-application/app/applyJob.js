@@ -1,4 +1,4 @@
-import { StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { StyleSheet, useColorScheme, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 
 // local imports
@@ -10,7 +10,6 @@ import { getLocationLabel, moderateScale } from '../constants/constants';
 import HText from '../components/common/HText';
 import { useLocalSearchParams } from 'expo-router';
 import HInput from '../components/common/HInput';
-import { isTruthyString } from '../utils/validator';
 import HButton from '../components/common/HButton';
 import apiRequest from '../components/api';
 import { APPLY_JOB } from '../components/apiConstants';
@@ -40,9 +39,6 @@ const applyJob = () => {
         }
     };
     const onPressApply = async (text) => {
-        // if (!isTruthyString(coverLetter)) {
-        //     setCoverLetterErrorMessage('*Please Enter a Cover Letter.')
-        // } else {
         let payload = {
             recruiter_id: jodDetails?.recruiter_id,
             job_id: jodDetails?._id,
@@ -61,7 +57,6 @@ const applyJob = () => {
         } finally {
             setIsLoading(false)
         }
-        // }
     };
 
     return (

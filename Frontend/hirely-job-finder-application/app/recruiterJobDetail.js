@@ -120,7 +120,6 @@ const recruiterJobDetail = () => {
                     />
                     <View style={[localStyles.imgStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
                         <Image
-                            // source={index % 2 == 0 ? images.fb : images.google}
                             source={jobDetails?.image?.originalname ? { uri: FILE_BASE_URL + jobDetails?.image?.originalname } : index % 2 == 0 ? images.fb : images.google}
                             style={localStyles.imgStyle}
                         />
@@ -176,14 +175,6 @@ const recruiterJobDetail = () => {
                         )
                     })}
                 </View>
-                {/* {!jobDetails?.is_job_applied && <HButton
-                    onPress={onPressApplyNow}
-                    textType={"S16"}
-                    color={Colors[colorScheme]?.white}
-                    title={"Apply Now"}
-                    containerStyle={[styles.mv30, styles.mh25]}
-                    bgColor={Colors[colorScheme]?.primary}
-                ></HButton>} */}
 
             </ScrollView>
 

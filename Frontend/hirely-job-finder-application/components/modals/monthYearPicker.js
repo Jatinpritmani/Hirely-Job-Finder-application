@@ -1,5 +1,5 @@
 import { FlatList, Modal, StyleSheet, View, Alert, useColorScheme } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 // local imports
 import { styles } from '../../themes'

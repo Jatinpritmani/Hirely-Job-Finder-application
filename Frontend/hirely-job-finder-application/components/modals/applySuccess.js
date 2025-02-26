@@ -1,6 +1,6 @@
 // Library import
-import { Image, StyleSheet, useColorScheme, View } from 'react-native';
-import React, { memo, useState } from 'react';
+import { StyleSheet, useColorScheme, View } from 'react-native';
+import React from 'react';
 import ActionSheet from 'react-native-actions-sheet';
 import { styles } from '../../themes';
 
@@ -19,10 +19,6 @@ export default function ApplySuccess({ SheetRef }) {
     const onPressTeackJobs = () => {
         SheetRef?.current?.hide()
         router.replace('appliedJobs')
-        // router.push({
-        //     pathname: "/trackJob",
-        //     params: { jobDetail: JSON.stringify(item) }, // Pass parameters
-        // })
 
     };
     const onPressBrowseJobs = () => {

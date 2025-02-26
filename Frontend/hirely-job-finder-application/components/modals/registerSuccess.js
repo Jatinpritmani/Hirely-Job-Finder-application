@@ -1,6 +1,6 @@
 // Library import
-import { Image, StyleSheet, useColorScheme, View } from 'react-native';
-import React, { memo, useState } from 'react';
+import { StyleSheet, useColorScheme, View } from 'react-native';
+import React from 'react';
 import ActionSheet from 'react-native-actions-sheet';
 import { styles } from '../../themes';
 
@@ -55,14 +55,6 @@ export default function RegisterSuccess({ SheetRef }) {
                 containerStyle={[localStyles.btnStyle, styles.mt45]}
                 bgColor={Colors[colorScheme]?.primary}
             ></HButton>
-            {/* <HButton
-                onPress={onPressReturnToHomePage}
-                textType={"S16"}
-                color={Colors[colorScheme]?.text}
-                title={"Return to Homepage"}
-                containerStyle={[localStyles.btnStyle, { borderWidth: moderateScale(1), borderColor: Colors[colorScheme]?.borderColor }]}
-                bgColor={Colors[colorScheme]?.white}
-            ></HButton> */}
 
         </ActionSheet>
     );

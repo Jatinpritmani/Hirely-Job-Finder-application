@@ -1,10 +1,9 @@
-import { StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { StyleSheet, useColorScheme, View } from 'react-native'
 import React from 'react'
 import { Colors } from '@/constants/Colors'
 
 // local import 
 import HText from '../common/HText'
-import { moderateScale } from '../../constants/constants'
 import { styles } from '../../themes'
 
 const AuthHeader = ({ title, description, style }) => {

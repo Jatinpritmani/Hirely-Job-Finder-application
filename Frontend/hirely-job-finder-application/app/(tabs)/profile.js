@@ -54,15 +54,14 @@ const Profile = () => {
         router.push("allExperience")
     }
     const onPressResume = async () => {
-        // router.push("viewPdf")
+
         await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_RESUME}?user_id=${currentUserDetail.user_id}`);
-        // // await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_RESUME}?user_id=${currentUserDetail.user_id}`);
     }
 
     const onPressReupload = () => {
         router.push({
             pathname: "/uploadCV",
-            params: { fromProfile: 'true' }, // Pass parameters
+            params: { fromProfile: 'true' },
         })
     }
 

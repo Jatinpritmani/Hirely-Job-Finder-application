@@ -17,7 +17,6 @@ import { EyeIconDark, EyeIconLight } from "../assets/svgs";
 import HInput from "../components/common/HInput";
 import HText from "../components/common/HText";
 import HButton from "../components/common/HButton";
-import { moderateScale } from "../constants/constants";
 import { Colors } from "@/constants/Colors";
 import { isTruthyString, isValidEmail } from "../utils/validator";
 import { USER_LOGIN } from "../components/apiConstants";
@@ -28,8 +27,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const login = () => {
     const colorScheme = useColorScheme();
     const dispatch = useDispatch()
-    // const [email, setEmail] = useState("darsil.pansuriya@gmail.com");
-    // const [password, setPassword] = useState("dp7685..");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isShowPassword, setIsShowPassword] = useState(true);
@@ -39,7 +36,6 @@ const login = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     const currentUserType = useSelector(state => state.commonReducer.current_user_type)
-    const currentUserDetail = useSelector(state => state.userReducer)
 
     const isUserLoggedIn = useSelector(state => state.userReducer.isUserLoggedIn)
 
@@ -54,9 +50,7 @@ const login = () => {
     useEffect(() => {
 
         if (isUserLoggedIn) {
-            // router.replace('/(tabs)')
             router.push('/(tabs)')
-            // router.setParams({ screen: "(tabs)" });
         }
     }, [isUserLoggedIn])
 
@@ -133,25 +127,9 @@ const login = () => {
             }
         }
     };
-    const onPressForgotPassword = () => {
-        if (email?.length > 0 && isValidEmail(email)) {
-
-            router.push({
-                pathname: 'forgotPassword',
-                params: {
-                    mail: email
-                }
-            })
-        } else if (email?.length == 0) {
-            setEmailErrorMessage('*Please Enter a E-Mail.')
-        }
-        else if (!isValidEmail(email)) {
-            setEmailErrorMessage('Please Enter a valid E-Mail.')
-        }
-    };
 
     return (
-        <HSafeAreaView style={localStyles.main}>
+        <HSafeAreaView >
             <AuthHeader
                 title="Welcome Back"
                 description={currentUserType == 'job_seeker' ? "Let’s Login. Apply to jobs!" : "Let’s Login. Start hiring top talent today!"}
@@ -177,18 +155,7 @@ const login = () => {
                         required={true}
                     />
 
-                    {/* <TouchableOpacity onPress={onPressForgotPassword} style={localStyles.forgotPasswordBtnStyle}>
-                        <HText
-                            align={"right"}
-                            color={Colors[colorScheme]?.grayScale4}
-                            type="M14"
-                        >
-                            Forgot Password?
-                        </HText>
-                    </TouchableOpacity> */}
-
                     <HButton
-                        // disabled={isLoginDisabled}
                         isLoading={isLoading}
                         onPress={onPressLogin}
                         textType={"S16"}
@@ -233,19 +200,12 @@ const login = () => {
 export default login;
 
 const localStyles = StyleSheet.create({
-    main: {
-        // ...styles.ph20,
-    },
     innerContainer: {
         ...styles.justifyBetween,
         ...styles.flex,
     },
     inputContainer: {
         ...styles.mt10,
-    },
-    forgotPasswordBtnStyle: {
-        marginTop: moderateScale(12),
-        ...styles.selfEnd,
     },
     btnStyle: {
         ...styles.mt30,
