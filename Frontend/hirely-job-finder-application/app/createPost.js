@@ -13,8 +13,8 @@ import HInput from "../components/common/HInput";
 import { styles } from "../themes";
 import HButton from "../components/common/HButton";
 import { isTruthyString } from "../utils/validator";
-import apiRequest from "../components/api";
-import { CREATE_JOB_POST } from "../components/apiConstants";
+import apiRequest, { uploadFile } from "../components/api";
+import { CREATE_JOB_POST, UPLOAD_IMAGE } from "../components/apiConstants";
 import HKeyBoardAvoidWrapper from "../components/common/HKeyBoardAvoidWrapper";
 import HText from "../components/common/HText";
 import { moderateScale } from "../constants/constants";
@@ -33,7 +33,7 @@ const createPost = () => {
         useState("");
     const [isNextDisabled, setIsNextDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState();
 
 
     useEffect(() => {
@@ -63,8 +63,16 @@ const createPost = () => {
         } else {
             setResponsibilitiesErrorMessage("");
         }
+        if (!selectedImage) {
+            Toast.show({
+                type: "error",
+                text1: "Please Select Image",
+                // text2: "Your job posting has been published.",
+            });
+            return
+        }
 
-        if (isTruthyString(jobDescription) && isTruthyString(responsibilities)) {
+        if (isTruthyString(jobDescription) && isTruthyString(responsibilities) && selectedImage) {
             let new_post_payload = {
                 ...JSON.parse(new_post),
                 summary: jobDescription,
@@ -78,12 +86,36 @@ const createPost = () => {
                     new_post_payload
                 );
                 if (response?.code == "HJFA_MS_OK_200" && !response?.error_status) {
-                    Toast.show({
-                        type: "success",
-                        text1: "Job Created Successfully!",
-                        text2: "Your job posting has been published.",
-                    });
-                    router.replace("(tabs)");
+
+                    try {
+                        const uploadResponse = await uploadFile(
+                            UPLOAD_IMAGE,
+                            selectedImage?.uri,
+                            selectedImage?.mimeType,
+                            selectedImage?.fileName,
+                            { job_id: response?.data?.job_id }
+                        );
+                        if (uploadResponse?.code == 'HJFA_MS_OK_200' && !uploadResponse?.error_status) {
+
+                            Toast.show({
+                                type: "success",
+                                text1: "Job Created Successfully!",
+                                text2: "Your job posting has been published.",
+                            });
+                            router.replace("(tabs)");
+
+                        }
+                        else {
+                            Toast.show({
+                                type: 'error',
+                                text1: 'Upload Failed',
+                                text2: 'Failed to Upload your image.',
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Upload Error:', error);
+                    }
+
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -130,7 +162,7 @@ const createPost = () => {
 
         if (!result.canceled) {
             const file = result.assets[0];
-            setSelectedImage(file.uri);
+            setSelectedImage(file);
         }
     };
 
@@ -162,7 +194,7 @@ const createPost = () => {
                     />
                 </View>
 
-                {/* <View>
+                <View>
                     <HText style={[styles.mt15, styles.mb5]} type={'S14'} >
                         {'Choose Image'}
                     </HText>
@@ -171,11 +203,11 @@ const createPost = () => {
                             {selectedImage ? "Selected Image" : 'Select Image'}
                         </HText>
                         {selectedImage && <Image
-                            source={{ uri: selectedImage }}
+                            source={{ uri: selectedImage?.uri }}
                             style={localStyles.imageView}
                         />}
                     </TouchableOpacity>
-                </View> */}
+                </View>
                 <HButton
                     // disabled={isNextDisabled}
                     onPress={onPressNext}

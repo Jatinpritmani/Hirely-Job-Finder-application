@@ -11,6 +11,11 @@ export const API_BASE_URL = 'http://192.168.29.187:4402/hjfa/'; // Replace with 
 // Android Emulator	http://10.0.2.2:4402
 // Physical Device	http://<your-local-IP>:4402
 
+
+/// File Base Url 
+export const FILE_BASE_URL = 'http://192.168.29.187:4402/resumes/'  // use your machines IP here for real devices
+
+
 // Common API function 
 const apiRequest = async (method = "GET", endpoint, data = {}, params = {}, headers = {}) => {
     try {

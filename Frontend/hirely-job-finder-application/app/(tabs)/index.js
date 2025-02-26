@@ -102,7 +102,6 @@ const Home = () => {
             setIsSearch(true)
         }
         if (isUserRecruiter(currentUserDetail?.user_type)) {
-            console.log(recruiterDetails?.jobDetails[0], filter);
 
             let data = {
                 "user_id": currentUserDetail?.user_id,
@@ -229,6 +228,7 @@ const Home = () => {
 
     const onRefresh = () => {
         setRefreshing(true)
+
         if (isUserRecruiter(currentUserDetail?.user_type)) {
             // const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
             // const filteredJobs = recruiterDetails?.jobDetails?.filter(job =>
@@ -248,6 +248,7 @@ const Home = () => {
             dispatch(getAllJobListSearch(data))
         }
         else {
+
             let data = {
                 "user_id": currentUserDetail?.user_id,
                 search: searchQuery,

@@ -7,6 +7,7 @@ import { Colors } from '@/constants/Colors';
 import { getJobTypeLabel, getLocationLabel, moderateScale } from "../../constants/constants";
 import { router } from "expo-router";
 import images from "../../assets/images";
+import { FILE_BASE_URL } from '../../components/api'
 
 
 const AppliedJobCard = ({ item, index, cardStyle, }) => {
@@ -23,7 +24,8 @@ const AppliedJobCard = ({ item, index, cardStyle, }) => {
             <View style={styles.rowCenter} >
                 <View style={[localStyles.emptyView,]}>
                     <Image
-                        source={index % 2 == 0 ? images.fb : images.google}
+                        // source={index % 2 == 0 ? images.fb : images.google}
+                        source={item?.image?.originalname ? { uri: FILE_BASE_URL + item?.image?.originalname } : index % 2 == 0 ? images.fb : images.google}
                         style={localStyles.emptyView}
                     />
                 </View>

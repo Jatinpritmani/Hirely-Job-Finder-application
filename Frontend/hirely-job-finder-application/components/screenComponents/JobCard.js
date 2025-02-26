@@ -8,6 +8,7 @@ import HText from "../common/HText";
 import { Colors } from '@/constants/Colors';
 import { getJobTypeLabel, getLocationLabel, isUserRecruiter, moderateScale } from "../../constants/constants";
 import images from "../../assets/images";
+import { FILE_BASE_URL } from "../api";
 
 
 const JobCard = ({ item, index, cardStyle, isSavedCard = false }) => {
@@ -34,7 +35,8 @@ const JobCard = ({ item, index, cardStyle, isSavedCard = false }) => {
             <View style={styles.rowCenter} >
                 <View style={[localStyles.emptyView, { bordeColor: Colors[colorScheme]?.grayScale1, }]}>
                     <Image
-                        source={index % 2 == 0 ? images.fb : images.google}
+                        // source={index % 2 == 0 ? images.fb : images.google}
+                        source={item?.image?.originalname ? { uri: FILE_BASE_URL + item?.image?.originalname } : index % 2 == 0 ? images.fb : images.google}
                         style={localStyles.emptyView}
                     />
 

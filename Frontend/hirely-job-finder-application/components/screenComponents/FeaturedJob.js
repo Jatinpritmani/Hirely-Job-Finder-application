@@ -9,6 +9,7 @@ import { styles } from '../../themes';
 import HText from '../common/HText';
 import { router } from 'expo-router';
 import { useSelector } from 'react-redux';
+import { FILE_BASE_URL } from '../api';
 
 
 const FeaturedJob = ({ item, index, isVertical = false }) => {
@@ -38,7 +39,7 @@ const FeaturedJob = ({ item, index, isVertical = false }) => {
                 <View style={[styles.flexRow, { gap: moderateScale(16) }]}>
                     <View style={[localstyles.logo, { backgroundColor: Colors[colorScheme]?.white }]} >
                         <Image
-                            source={isUserRecruiter(currentUserDetail?.user_type) ? index % 2 == 0 ? images.profileImage1 : index % 1 == 0 ? images.profileImage2 : images.profileImage3 : index % 2 == 0 ? images.fb : images.google}
+                            source={isUserRecruiter(currentUserDetail?.user_type) ? index % 2 == 0 ? images.profileImage1 : index % 1 == 0 ? images.profileImage2 : images.profileImage3 : item?.image?.originalname ? { uri: FILE_BASE_URL + item?.image?.originalname } : index % 2 == 0 ? images.fb : images.google}
                             style={localstyles.profileImageStyle}
                         />
                     </View>

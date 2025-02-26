@@ -11,7 +11,7 @@ import { BulletIcon, LeftWhiteArrowIcon, SavedJob, SavedJobBlue } from '../asset
 import { getJobTypeLabel, getLocationLabel, moderateScale } from '../constants/constants';
 import HText from '../components/common/HText';
 import HButton from '../components/common/HButton';
-import apiRequest from '../components/api';
+import apiRequest, { FILE_BASE_URL } from '../components/api';
 import { APPLY_JOB, GET_ALL_JOBS, UNSAVE_JOB } from '../components/apiConstants';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllJobList } from '../context/actions/jobAction';
@@ -120,7 +120,8 @@ const recruiterJobDetail = () => {
                     />
                     <View style={[localStyles.imgStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
                         <Image
-                            source={index % 2 == 0 ? images.fb : images.google}
+                            // source={index % 2 == 0 ? images.fb : images.google}
+                            source={jobDetails?.image?.originalname ? { uri: FILE_BASE_URL + jobDetails?.image?.originalname } : index % 2 == 0 ? images.fb : images.google}
                             style={localStyles.imgStyle}
                         />
                     </View>

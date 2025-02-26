@@ -10,7 +10,7 @@ import HHeader from '../components/common/HHeader';
 import { styles } from '../themes';
 import { getLocationLabel, moderateScale } from '../constants/constants';
 import HText from '../components/common/HText';
-import apiRequest from '../components/api';
+import apiRequest, { FILE_BASE_URL } from '../components/api';
 import { GET_APPLIED_JOBS } from '../components/apiConstants';
 import images from '../assets/images';
 
@@ -56,7 +56,8 @@ const trackJob = () => {
                 <View style={localstyles.jobStyle}>
                     <View style={[localstyles.imgStyle, { backgroundColor: Colors[colorScheme]?.grayScale4 }]} >
                         <Image
-                            source={index % 2 == 0 ? images.fb : images.google}
+                            source={appliedJobData?.image?.originalname ? { uri: FILE_BASE_URL + appliedJobData?.image?.originalname } : index % 2 == 0 ? images.fb : images.google}
+
                             style={localstyles.imgStyle}
                         />
                     </View>
