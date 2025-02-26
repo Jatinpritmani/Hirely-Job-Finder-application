@@ -30,4 +30,6 @@ router.post('/updateAppliedJobStatus/v1',userController.updateAppliedJobStatus)
 router.post('/notificationList/v1',userController.notificationList)
 router.post('/update/notification/read/v1',userController.updateNotificationRead)
 
+router.post('/logout/v1',userController.logout)
+
 module.exports=router

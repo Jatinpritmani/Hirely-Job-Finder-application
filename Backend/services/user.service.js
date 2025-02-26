@@ -27,7 +27,8 @@ module.exports={
     updateAppliedJobStatus:updateAppliedJobStatus,
     notificationList:notificationList,
     updateNotificationRead:updateNotificationRead,
-    uploadImage:uploadImage
+    uploadImage:uploadImage,
+    logout:logout
 }
 
 async function encryptPassword(password){
@@ -288,9 +289,13 @@ async function createJobPost(req) {
                     token:user.fcm_token,
                     notification:notification
                 }))
-                let tokens=users.map((user)=> user.fcm_token)
+                let tokens=users.map((user)=> {
+                    return user.fcm_token
+                }).filter((token)=> token != undefined || token != null)
                 
-                await sendNotification(tokens,notification)
+                if(Array.isArray(tokens)&& tokens.length!==0){
+                    await sendNotification(tokens,notification)
+                }
                 
             }
         }
@@ -476,7 +481,9 @@ async function applyJob(req) {
                 body:`${jobSeekerDetails.user_name} has been applied for job. Click here to check`,
                 data : {applied_job_id:applicationDetails._id}
             }
-            await sendNotification(recruiterDetails.fcm_token,notification)
+            if(recruiterDetails.fcm_token){
+                await sendNotification(recruiterDetails.fcm_token,notification)
+            }
         }
         
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
@@ -865,8 +872,9 @@ async function updateAppliedJobStatus(req) {
             token:userDetails.fcm_token,
             notification:notification
         }]
-        
-        await sendNotification(userDetails.fcm_token,notification)
+        if(userDetails.fcm_token){
+            await sendNotification(userDetails.fcm_token,notification)
+        }
         return utility_func.responseGenerator(
             utility_func.responseCons.RESP_SUCCESS_MSG,
             utility_func.statusGenerator(
@@ -982,6 +990,37 @@ async function uploadImage(req) {
                 utility_func.httpStatus.StatusCodes.OK),
             false
         )
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+async function logout(req) {
+    let func_name = "logout"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let user_id = req.body.user_id;
+        
+        await User.findByIdAndUpdate(user_id,{fcm_token:null});
+        
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
+
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false
+        )
+
     } catch (error) {
         logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
         return utility_func.responseGenerator(
