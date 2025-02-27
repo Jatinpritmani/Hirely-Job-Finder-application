@@ -51,7 +51,10 @@ const Profile = () => {
     }
 
     const onPressSeeAllExperience = () => {
-        router.push("allExperience")
+        router.push({
+            pathname: "/allExperience",
+            params: { fromJobSeeker: 'false', jobSeekerDetails: null },
+        })
     }
     const onPressResume = async () => {
 

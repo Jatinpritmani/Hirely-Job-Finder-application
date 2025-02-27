@@ -21,6 +21,9 @@ import HLoader from '../../components/common/HLoader';
 import typography from '../../themes/typography';
 import { useDebounce } from '../../components/useDebounce';
 import FilterSheet from '../../components/modals/filterSheet';
+import apiRequest from '../../components/api';
+import { LOGOUT } from '../../components/apiConstants';
+import Toast from 'react-native-toast-message';
 
 const Home = () => {
     const colorsScheme = useColorScheme()
@@ -61,13 +64,6 @@ const Home = () => {
     useEffect(() => {
         if (debouncedSearchTerm) {
             if (isUserRecruiter(currentUserDetail?.user_type)) {
-                // const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
-                // const filteredJobs = recruiterDetails?.jobDetails?.filter(job =>
-                //     job.position.toLowerCase().includes(lowerCaseSearchTerm) ||
-                //     job.location.toLowerCase().includes(lowerCaseSearchTerm) ||
-                //     job.summary?.toLowerCase().includes(lowerCaseSearchTerm) // Optional in case summary is missing
-                // );
-                // setRecruiterSerchedJobs(filteredJobs)
                 let data = {
                     "user_id": currentUserDetail?.user_id,
                     search: searchQuery,
@@ -112,13 +108,6 @@ const Home = () => {
             }
 
             dispatch(getAllJobListSearch(data))
-            // const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
-            // const filteredJobs = recruiterDetails?.jobDetails?.filter(job =>
-            //     job.position.toLowerCase().includes(lowerCaseSearchTerm) ||
-            //     job.location.toLowerCase().includes(lowerCaseSearchTerm) ||
-            //     job.summary?.toLowerCase().includes(lowerCaseSearchTerm) // Optional in case summary is missing
-            // );
-            // setRecruiterSerchedJobs(filteredJobs)
         }
         else {
             let data = {
@@ -170,9 +159,23 @@ const Home = () => {
         )
     }
 
-    const onPressLogout = () => {
-        dispatch(doLogout())
-        router.replace('login')
+    const onPressLogout = async () => {
+        try {
+            let payload = {
+                "user_id": currentUserDetail?.user_id
+            }
+            let response = await apiRequest("POST", LOGOUT, payload);
+            if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                Toast.show({
+                    type: "success",
+                    text1: "Logged out successfully. See you soon!",
+                });
+                dispatch(doLogout())
+                router.replace('login')
+            }
+        } catch (error) {
+
+        }
     }
     const onPressFilter = () => {
         filtersheetRef?.current?.show()
@@ -230,13 +233,6 @@ const Home = () => {
         setRefreshing(true)
 
         if (isUserRecruiter(currentUserDetail?.user_type)) {
-            // const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
-            // const filteredJobs = recruiterDetails?.jobDetails?.filter(job =>
-            //     job.position.toLowerCase().includes(lowerCaseSearchTerm) ||
-            //     job.location.toLowerCase().includes(lowerCaseSearchTerm) ||
-            //     job.summary?.toLowerCase().includes(lowerCaseSearchTerm) // Optional in case summary is missing
-            // );
-            // setRecruiterSerchedJobs(filteredJobs)
             let data = {
                 "user_id": currentUserDetail?.user_id,
                 search: searchQuery,

@@ -1,9 +1,7 @@
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 
-// export const API_BASE_URL = 'http://127.0.0.1:4402/hjfa/'; // Replace with your actual API base URL
-// export const API_BASE_URL = 'http://10.0.2.2:4402/hjfa/'; // Replace with your actual API base URL
-export const API_BASE_URL = 'http://192.168.29.187:4402/hjfa/'; // Replace with your actual API base URL
+export const API_BASE_URL = 'http://192.168.29.187:4402/hjfa/';
 
 
 // iOS Simulator	http://localhost:4402

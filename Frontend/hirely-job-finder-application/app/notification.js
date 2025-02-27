@@ -11,12 +11,15 @@ import { GET_NOTIFICAITONS } from '../components/apiConstants'
 import NotificationCard from '../components/screenComponents/NotificationCard'
 import { styles } from '../themes'
 import HText from '../components/common/HText'
+import EmptyListComponent from '../components/common/EmptyListComponent'
+import { isUserRecruiter } from '../constants/constants'
 
 const notification = () => {
 
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
     const [jobNotificatioData, setJobNotificationData] = useState([])
     const [statusNotificatioData, setStatusNotificationData] = useState([])
+    const [jobApplicationNotificationData, setJobApplicationNotificationData] = useState([])
     const [refreshing, setRefreshing] = useState(false)
 
     useFocusEffect(
@@ -27,8 +30,15 @@ const notification = () => {
     );
 
     const getAllNotifications = async () => {
-        let data = {
-            "user_id": currentUserDetail?.user_id
+        let data = {}
+        if (isUserRecruiter(currentUserDetail?.user_type)) {
+            data = {
+                "recruiter_id": currentUserDetail?.user_id
+            }
+        } else {
+            data = {
+                "user_id": currentUserDetail?.user_id
+            }
         }
         try {
             let response = await apiRequest("POST", GET_NOTIFICAITONS, data);
@@ -36,9 +46,11 @@ const notification = () => {
 
                 const jobNotifications = response?.data?.filter(item => item.type === "job_posted");
                 const statusNotifications = response?.data?.filter(item => item.type === "status_update");
+                const jobApplicationNotification = response?.data?.filter(item => item.type === "job_application");
 
                 setJobNotificationData(jobNotifications);
                 setStatusNotificationData(statusNotifications);
+                setJobApplicationNotificationData(jobApplicationNotification);
             }
             else {
 
@@ -91,9 +103,27 @@ const notification = () => {
                                 renderItem={renderNotificaiton}
                                 showsVerticalScrollIndicator={false}
                                 style={styles.mt15}
-                            /></>
+                            />
+
+                            {isUserRecruiter(currentUserDetail?.user_type) && <>
+                                {statusNotificatioData?.length > 0 && <HText type={'S14'} style={styles.mt25}>
+                                    {'Applications'}
+                                </HText>}
+                                <FlatList
+                                    data={jobApplicationNotificationData?.reverse()}
+                                    renderItem={renderNotificaiton}
+                                    showsVerticalScrollIndicator={false}
+                                    style={styles.mt15}
+                                />
+                            </>}
+
+                        </>
                     )
                 }}
+                ListEmptyComponent={() => {
+                    return (!jobApplicationNotificationData?.length && !statusNotificatioData?.length && !jobNotificatioData?.length) && <EmptyListComponent title={`You have no new notifications at this time.`} />
+                }
+                }
             />
 
         </HSafeAreaView>

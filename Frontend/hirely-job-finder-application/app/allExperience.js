@@ -2,6 +2,7 @@
 import { FlatList, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useLocalSearchParams } from 'expo-router'
 
 // local imports
 import ExperienceCard from '../components/screenComponents/ExperienceCard'
@@ -16,6 +17,8 @@ const allExperience = () => {
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
     const loading = useSelector(state => state.userReducer.loading)
     const dispatch = useDispatch()
+    const jobSeekerDetails = useLocalSearchParams()?.jobSeekerDetails && JSON.parse(useLocalSearchParams()?.jobSeekerDetails) || []
+    const fromJobSeeker = JSON.parse(useLocalSearchParams()?.fromJobSeeker) || false
 
     const [isLoading, setIsLoading] = useState(false)
     const [refreshing, setRefreshing] = useState(false);
@@ -47,7 +50,7 @@ const allExperience = () => {
             <FlatList
                 onRefresh={onRefresh}
                 refreshing={refreshing}
-                data={currentUserDetail?.experience}
+                data={fromJobSeeker ? jobSeekerDetails : currentUserDetail?.experience}
                 renderItem={renderItem}
                 style={styles.mt10}
                 ListEmptyComponent={<EmptyListComponent title={`No Experience.`} />}

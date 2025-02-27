@@ -57,7 +57,11 @@ const jobSeekerDetail = () => {
     }
 
     const onPressSeeAllExperience = () => {
-        router.push("allExperience")
+        router.push({
+            pathname: "/allExperience",
+            params: { fromJobSeeker: 'true', jobSeekerDetails: JSON.stringify(jobSeekerData?.experience) },
+        })
+
     }
 
 
