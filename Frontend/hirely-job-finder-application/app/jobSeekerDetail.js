@@ -2,7 +2,6 @@ import { Image, ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View }
 import React, { useCallback, useEffect, useState } from 'react'
 import * as WebBrowser from 'expo-web-browser';
 
-
 // local imports
 import { Colors } from '@/constants/Colors';
 import HSafeAreaView from '../components/common/HSafeAreaView';
@@ -19,59 +18,63 @@ import { API_BASE_URL } from '../components/api';
 import { GET_RESUME } from '../components/apiConstants';
 import images from '../assets/images';
 
+/**
+ * This component renders the job seeker detail screen.
+ * It displays the job seeker's profile, resume, and experiences.
+ */
 const jobSeekerDetail = () => {
     const colorScheme = useColorScheme();
     const { jobseekerDetail, index } = useLocalSearchParams()
     const [jobSeekerData, setJobSeekerData] = useState(JSON.parse(jobseekerDetail))
     const allJobList = useSelector(state => state.jobReducer.allJobList)
-
-
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
-
     const loading = useSelector(state => state.jobReducer.loading)
 
+    /**
+     * Effect to update job seeker data when jobseekerDetail changes.
+     */
     useEffect(() => {
-
         setJobSeekerData(JSON.parse(jobseekerDetail))
     }, [])
 
-
-
-
+    /**
+     * Handles the back button press.
+     */
     const goBack = () => { router.back() };
 
+    /**
+     * Opens the resume in a web browser.
+     */
     const onPressResume = async () => {
-
-
         await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_RESUME}?user_id=${jobSeekerData._id}`);
-
     }
 
+    /**
+     * Component for rendering the left icon in the header.
+     */
     const LeftIcon = () => {
         return (
-
             <TouchableOpacity onPress={goBack}>
                 <LeftWhiteArrowIcon width={moderateScale(24)} height={moderateScale(24)} />
             </TouchableOpacity>
         )
     }
 
+    /**
+     * Navigates to the all experiences screen.
+     */
     const onPressSeeAllExperience = () => {
         router.push({
             pathname: "/allExperience",
             params: { fromJobSeeker: 'true', jobSeekerDetails: JSON.stringify(jobSeekerData?.experience) },
         })
-
     }
 
-
     return (
-
         <HSafeAreaView containerStyle={styles.ph0} style={localStyles.main}>
             <ScrollView showsVerticalScrollIndicator={false} >
                 <View style={[localStyles.upperContainer, { backgroundColor: Colors[colorScheme]?.primary }]}>
-                    <HHeader title="" isLeftIcon={<LeftIcon />} isHideBack={true} containerStyle={styles.ph20}
-                    />
+                    <HHeader title="" isLeftIcon={<LeftIcon />} isHideBack={true} containerStyle={styles.ph20} />
                     <View style={[localStyles.imgStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
                         <Image
                             source={isUserRecruiter(currentUserDetail?.user_type) ? index % 2 == 0 ? images.profileImage1 : index % 1 == 0 ? images.profileImage2 : images.profileImage3 : index % 2 == 0 ? images.fb : images.google}
@@ -88,7 +91,6 @@ const jobSeekerDetail = () => {
 
                 <View style={localStyles.bottomContainer}>
                     <View style={{ borderBottomWidth: 1, borderColor: Colors[colorScheme]?.borderColor }} >
-
                         <HText type="M14" align='left' color={Colors[colorScheme]?.primary} style={{ width: '20%', paddingBottom: moderateScale(10), borderBottomWidth: moderateScale(2), borderColor: Colors[colorScheme]?.primary }}>
                             {'Profile'}
                         </HText>
@@ -96,56 +98,42 @@ const jobSeekerDetail = () => {
                     <HText type="S16" align='left' color={Colors[colorScheme]?.headerColor} style={styles.mt25}  >
                         {'Resume'}
                     </HText>
-
                     <TouchableOpacity onPress={onPressResume} style={[localStyles.cvContainer, { backgroundColor: Colors[colorScheme]?.white }]}>
                         <View style={styles.rowSpaceBetween}>
                             <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.primary1 }]}>
                                 <HText type="M10" color={Colors[colorScheme]?.white} >
                                     {'CV'}
-
                                 </HText>
-
                             </View>
                             <View>
                                 <HText type="B12" align='center' >
                                     {jobSeekerData.user_name}
-
                                 </HText>
                                 <HText type="R12" align='center' color={Colors[colorScheme]?.subText}>
                                     {jobSeekerData.designation}
-
                                 </HText>
                             </View>
                             <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.red80 }]}>
                                 <HText type="M10" color={Colors[colorScheme]?.white} >
                                     {'PDF'}
-
                                 </HText>
-
                             </View>
                         </View>
                         <HText type="L12" numberOfLines={3} color={Colors[colorScheme]?.subText} style={styles.mt10} >
                             {jobSeekerData.bio}
-
                         </HText>
                     </TouchableOpacity>
                     <>
                         <View style={localStyles.resumeContainerStyle}>
                             <HText type="S16" color={Colors[colorScheme]?.headerColor} style={styles.mt10}>
                                 {'Experience'}
-
                             </HText>
                             <TouchableOpacity onPress={onPressSeeAllExperience} style={styles.mt10}>
-
                                 <HText type="R12" color={Colors[colorScheme]?.grayScale4} >
                                     {'See all'}
-
                                 </HText>
                             </TouchableOpacity>
-
-
                         </View>
-
                         <ExperienceCard item={jobSeekerData?.experience[0]} isShowDelete={false} cardStyle={localStyles.experiencecardStyle} />
                     </>
                     <HButton
@@ -165,9 +153,7 @@ const jobSeekerDetail = () => {
                         bgColor={Colors[colorScheme]?.white}
                     ></HButton>
                 </View>
-
             </ScrollView>
-
         </HSafeAreaView >
     )
 }

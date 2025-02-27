@@ -4,7 +4,6 @@ import { router, useLocalSearchParams } from "expo-router";
 import Toast from "react-native-toast-message";
 import * as ImagePicker from "expo-image-picker";
 
-
 // local import
 import { Colors } from "@/constants/Colors";
 import HSafeAreaView from "../components/common/HSafeAreaView";
@@ -19,23 +18,25 @@ import HKeyBoardAvoidWrapper from "../components/common/HKeyBoardAvoidWrapper";
 import HText from "../components/common/HText";
 import { moderateScale } from "../constants/constants";
 
+/**
+ * This component allows recruiters to create a new job post.
+ * It includes form fields for job description, responsibilities, and image upload.
+ * It validates the input fields and handles the job post creation process.
+ */
 const createPost = () => {
     const { new_post } = useLocalSearchParams();
-
     const colorScheme = useColorScheme();
-
     const [jobDescription, setJobDescription] = useState("");
-    const [jobDescriptionErrorMessage, setJobDescriptionErrorMessage] =
-        useState("");
-
+    const [jobDescriptionErrorMessage, setJobDescriptionErrorMessage] = useState("");
     const [responsibilities, setResponsibilities] = useState("");
-    const [responsibilitiesErrorMessage, setResponsibilitiesErrorMessage] =
-        useState("");
+    const [responsibilitiesErrorMessage, setResponsibilitiesErrorMessage] = useState("");
     const [isNextDisabled, setIsNextDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedImage, setSelectedImage] = useState();
 
-
+    /**
+     * Effect to validate input fields and enable/disable the Next button.
+     */
     useEffect(() => {
         if (jobDescription?.length > 0) {
             setJobDescriptionErrorMessage("");
@@ -43,7 +44,6 @@ const createPost = () => {
         if (responsibilities?.length > 0) {
             setResponsibilitiesErrorMessage("");
         }
-
         if (jobDescription?.length > 0 && responsibilities?.length > 0) {
             setIsNextDisabled(false);
         } else {
@@ -51,13 +51,16 @@ const createPost = () => {
         }
     }, [jobDescription, responsibilities]);
 
+    /**
+     * Handles the Next button press event.
+     * Validates the input fields and handles the job post creation process.
+     */
     const onPressNext = async () => {
         if (!isTruthyString(jobDescription)) {
             setJobDescriptionErrorMessage("*Please Enter a Job Description.");
         } else {
             setJobDescriptionErrorMessage("");
         }
-
         if (!isTruthyString(responsibilities)) {
             setResponsibilitiesErrorMessage("*Please Enter Responsibilities.");
         } else {
@@ -70,7 +73,6 @@ const createPost = () => {
             });
             return
         }
-
         if (isTruthyString(jobDescription) && isTruthyString(responsibilities) && selectedImage) {
             let new_post_payload = {
                 ...JSON.parse(new_post),
@@ -79,13 +81,8 @@ const createPost = () => {
             };
             setIsLoading(true);
             try {
-                let response = await apiRequest(
-                    "POST",
-                    CREATE_JOB_POST,
-                    new_post_payload
-                );
+                let response = await apiRequest("POST", CREATE_JOB_POST, new_post_payload);
                 if (response?.code == "HJFA_MS_OK_200" && !response?.error_status) {
-
                     try {
                         const uploadResponse = await uploadFile(
                             UPLOAD_IMAGE,
@@ -95,16 +92,13 @@ const createPost = () => {
                             { job_id: response?.data?.job_id }
                         );
                         if (uploadResponse?.code == 'HJFA_MS_OK_200' && !uploadResponse?.error_status) {
-
                             Toast.show({
                                 type: "success",
                                 text1: "Job Created Successfully!",
                                 text2: "Your job posting has been published.",
                             });
                             router.replace("(tabs)");
-
-                        }
-                        else {
+                        } else {
                             Toast.show({
                                 type: 'error',
                                 text1: 'Upload Failed',
@@ -114,7 +108,6 @@ const createPost = () => {
                     } catch (error) {
                         console.error('Upload Error:', error);
                     }
-
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -124,6 +117,10 @@ const createPost = () => {
         }
     };
 
+    /**
+     * Updates the job description state and validates the input.
+     * @param {string} text - The job description input.
+     */
     const onChangeJobDescription = (text) => {
         setJobDescription(text);
         if (!text.length > 0) {
@@ -133,6 +130,10 @@ const createPost = () => {
         }
     };
 
+    /**
+     * Updates the responsibilities state and validates the input.
+     * @param {string} text - The responsibilities input.
+     */
     const onChangeResponsibilities = (text) => {
         setResponsibilities(text);
         if (!text.length > 0) {
@@ -142,7 +143,9 @@ const createPost = () => {
         }
     };
 
-
+    /**
+     * Opens the image picker to select an image.
+     */
     const onPressImagePicker = async () => {
         // Ask for permissions
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -169,7 +172,6 @@ const createPost = () => {
         <HSafeAreaView>
             <HHeader title="Create Post" />
             <HKeyBoardAvoidWrapper containerStyle={[localStyles.inputContainer, styles.flexGrow1]} >
-
                 <View style={styles.mt50}>
                     <HInput
                         _value={jobDescription}
@@ -192,7 +194,6 @@ const createPost = () => {
                         inputBoxStyle={[styles.pv15, styles.ml15]}
                     />
                 </View>
-
                 <View>
                     <HText style={[styles.mt15, styles.mb5]} type={'S14'} >
                         {'Choose Image'}

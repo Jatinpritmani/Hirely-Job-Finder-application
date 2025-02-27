@@ -2,7 +2,6 @@ import { StyleSheet, useColorScheme, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Dropdown } from 'react-native-element-dropdown';
 
-
 // local imports
 import HSafeAreaView from '../../components/common/HSafeAreaView'
 import HHeader from '../../components/common/HHeader'
@@ -19,14 +18,17 @@ import { router } from 'expo-router';
 import { useSelector } from 'react-redux';
 import HKeyBoardAvoidWrapper from '../../components/common/HKeyBoardAvoidWrapper';
 
-
+/**
+ * This component allows recruiters to create a new job post.
+ * It includes form fields for position, salary, job type, location, and number of job openings.
+ * It validates the input fields and navigates to the next screen upon successful validation.
+ */
 const createJob = () => {
     const [position, setPosition] = useState('')
     const [positionErrorMessage, setPositionErrorMessage] = useState("");
     const [salary, setSalary] = useState('')
     const [salaryErrorMessage, setSalaryErrorMessage] = useState("");
     const colorScheme = useColorScheme();
-
 
     const [SelectedJobType, setSelectedJobType] = useState(null);
     const [SelectedJobTypeErrorMessage, setSelectedJobTypeErrorMessage] = useState("");
@@ -38,7 +40,9 @@ const createJob = () => {
 
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
 
-
+    /**
+     * Effect to validate input fields and enable/disable the Next button.
+     */
     useEffect(() => {
         if (SelectedJobType?.length > 0) {
             setSelectedJobTypeErrorMessage('')
@@ -53,7 +57,10 @@ const createJob = () => {
         }
     }, [position, salary, SelectedJobType, SelectedLoaction, numOfJobOpening]);
 
-
+    /**
+     * Updates the position state and validates the input.
+     * @param {string} text - The position input.
+     */
     const onChangePosition = (text) => {
         setPosition(text);
         if (!text.length > 0) {
@@ -62,6 +69,11 @@ const createJob = () => {
             setPositionErrorMessage("");
         }
     };
+
+    /**
+     * Updates the salary state and validates the input.
+     * @param {string} text - The salary input.
+     */
     const onChangeSalary = (text) => {
         setSalary(text);
         if (!text.length > 0) {
@@ -73,6 +85,11 @@ const createJob = () => {
             setSalaryErrorMessage("");
         }
     };
+
+    /**
+     * Updates the number of job openings state and validates the input.
+     * @param {string} text - The number of job openings input.
+     */
     const onChangeNumOfJobOpening = (text) => {
         setnumOfJobOpening(text);
         if (!text.length > 0) {
@@ -85,6 +102,10 @@ const createJob = () => {
         }
     };
 
+    /**
+     * Handles the Next button press event.
+     * Validates the input fields and navigates to the next screen if all fields are valid.
+     */
     const onPressNext = () => {
         if (!isTruthyString(position)) {
             setPositionErrorMessage("*Please Enter a Position");

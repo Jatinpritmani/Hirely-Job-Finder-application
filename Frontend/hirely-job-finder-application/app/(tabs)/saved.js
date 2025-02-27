@@ -12,11 +12,19 @@ import { GET_SAVED_JOBS } from '../../components/apiConstants'
 import JobCard from '../../components/screenComponents/JobCard'
 import EmptyListComponent from '../../components/common/EmptyListComponent'
 
+/**
+ * This component renders a list of saved jobs for a user.
+ * It fetches saved job data based on the user ID.
+ * It also supports pull-to-refresh functionality.
+ */
 const Saved = () => {
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
     const [savedJobs, setSavedJobs] = useState([])
     const [refreshing, setRefreshing] = useState(false);
 
+    /**
+     * Focus effect to fetch saved jobs when the screen is focused.
+     */
     useFocusEffect(
         useCallback(() => {
             getSavedJobs()
@@ -24,6 +32,9 @@ const Saved = () => {
         }, [])
     );
 
+    /**
+     * Fetches saved jobs based on the user ID.
+     */
     const getSavedJobs = async () => {
         let payload = {
             user_id: currentUserDetail?.user_id
@@ -34,16 +45,26 @@ const Saved = () => {
                 setSavedJobs(response?.data || [])
             }
             else {
+                console.error("Error fetching saved jobs:", response?.message);
             }
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     }
+
+    /**
+     * Renders a saved job card.
+     * @param {Object} param0 - The job item and index.
+     */
     const renderSavedJob = ({ item, index }) => {
         return (
             <JobCard item={item} index={index} isSavedCard={true} />
         )
     }
+
+    /**
+     * Handles the pull-to-refresh functionality.
+     */
     const onRefresh = async () => {
         setRefreshing(true)
         await getSavedJobs()

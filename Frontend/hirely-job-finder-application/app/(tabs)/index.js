@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { router, useFocusEffect } from 'expo-router';
 import { Colors } from '@/constants/Colors'
 
-
 // local imports
 import HSafeAreaView from '../../components/common/HSafeAreaView'
 import { styles } from '../../themes'
@@ -25,6 +24,11 @@ import apiRequest from '../../components/api';
 import { LOGOUT } from '../../components/apiConstants';
 import Toast from 'react-native-toast-message';
 
+/**
+ * This component renders the home screen with job listings.
+ * It fetches job data based on the user type (recruiter or job seeker).
+ * It also supports search and filter functionality.
+ */
 const Home = () => {
     const colorsScheme = useColorScheme()
     const dispatch = useDispatch()
@@ -42,7 +46,6 @@ const Home = () => {
     const debouncedSearchTerm = useDebounce(searchQuery, 300);
     const [refreshing, setRefreshing] = useState(false);
 
-
     const [filter, setFilter] = useState({
         filter_by_location: [],
         filter_by_salary: "",
@@ -51,16 +54,18 @@ const Home = () => {
 
     const filtersheetRef = useRef(null)
 
-
-
+    /**
+     * Effect to prevent back navigation.
+     */
     useEffect(() => {
         const onBackPress = () => true; // Prevent back navigation
         BackHandler.addEventListener("hardwareBackPress", onBackPress);
         return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     }, []);
 
-
-
+    /**
+     * Effect to fetch job data based on search query and filters.
+     */
     useEffect(() => {
         if (debouncedSearchTerm) {
             if (isUserRecruiter(currentUserDetail?.user_type)) {
@@ -71,11 +76,8 @@ const Home = () => {
                     filter_by_salary: filter?.filter_by_salary,
                     filter_by_job_type: filter?.filter_by_job_type
                 }
-
                 dispatch(getAllJobListSearch(data))
-            }
-            else {
-
+            } else {
                 let data = {
                     "user_id": currentUserDetail?.user_id,
                     search: searchQuery,
@@ -83,22 +85,21 @@ const Home = () => {
                     filter_by_salary: filter?.filter_by_salary,
                     filter_by_job_type: filter?.filter_by_job_type
                 }
-
                 dispatch(getAllJobListSearch(data))
             }
         }
     }, [debouncedSearchTerm, filter]);
 
+    /**
+     * Effect to update search state based on filters.
+     */
     useEffect(() => {
         if (filter?.filter_by_job_type?.length == 0 && filter?.filter_by_location?.length == 0 && filter?.filter_by_salary == "") {
             setIsSearch(false)
-        }
-        else {
-
+        } else {
             setIsSearch(true)
         }
         if (isUserRecruiter(currentUserDetail?.user_type)) {
-
             let data = {
                 "user_id": currentUserDetail?.user_id,
                 search: searchQuery,
@@ -106,10 +107,8 @@ const Home = () => {
                 filter_by_salary: filter?.filter_by_salary,
                 filter_by_job_type: filter?.filter_by_job_type
             }
-
             dispatch(getAllJobListSearch(data))
-        }
-        else {
+        } else {
             let data = {
                 "user_id": currentUserDetail?.user_id,
                 search: searchQuery,
@@ -117,48 +116,54 @@ const Home = () => {
                 filter_by_salary: filter?.filter_by_salary,
                 filter_by_job_type: filter?.filter_by_job_type
             }
-
             dispatch(getAllJobListSearch(data))
         }
-
     }, [filter])
 
-
+    /**
+     * Effect to update recruiter details data when recruiterDetails changes.
+     */
     useEffect(() => {
         if (recruiterDetails) {
             setRecruiterDetailsData(recruiterDetails)
         }
-
     }, [recruiterDetails])
 
+    /**
+     * Focus effect to fetch all jobs when the screen is focused.
+     */
     useFocusEffect(
         useCallback(() => {
-
             if (isUserRecruiter(currentUserDetail?.user_type)) {
-
                 dispatch(getRecruiterDetail(currentUserDetail?.user_id))
-
             } else {
-
                 dispatch(getAllJobList(currentUserDetail?.user_id))
             }
             return () => { }
         }, [])
     );
 
+    /**
+     * Navigates to the notification screen.
+     */
     const onPressNotificationIcon = () => {
         router.push('/notification')
     }
 
+    /**
+     * Renders the left icon in the header.
+     */
     const LeftIcon = () => {
         return (
-
             <TouchableOpacity onPress={onPressNotificationIcon}>
                 <NotificationIcon width={moderateScale(32)} height={moderateScale(32)} />
             </TouchableOpacity>
         )
     }
 
+    /**
+     * Logs out the user.
+     */
     const onPressLogout = async () => {
         try {
             let payload = {
@@ -174,51 +179,78 @@ const Home = () => {
                 router.replace('login')
             }
         } catch (error) {
-
+            console.error("Error logging out:", error);
         }
     }
+
+    /**
+     * Opens the filter sheet.
+     */
     const onPressFilter = () => {
         filtersheetRef?.current?.show()
     }
 
+    /**
+     * Updates the search query state.
+     * @param {string} text - The search query.
+     */
     const onChangeSearchQuery = (text) => {
         if (text?.length > 0) {
             setIsSearch(true)
-        }
-        else {
+        } else {
             setIsSearch(false)
         }
         setSearchQuery(text)
-
     }
 
+    /**
+     * Renders the right icon in the header.
+     */
     const RightIcon = () => {
         return (
-
             <TouchableOpacity onPress={onPressLogout}>
                 <LogoutIcon width={moderateScale(24)} height={moderateScale(24)} />
             </TouchableOpacity>
         )
     }
+
+    /**
+     * Renders a recommended job item.
+     * @param {Object} param0 - The job item and index.
+     */
     const renderRecomendedJobItem = ({ item, index }) => {
         return (
             <JobCard item={item} index={index} />
         )
     }
+
+    /**
+     * Renders a featured job item.
+     * @param {Object} param0 - The job item and index.
+     */
     const renderFeaturedJobItem = ({ item, index }) => {
         return (
             <FeaturedJob item={item} index={index} />
         )
     }
 
+    /**
+     * Navigates to the all jobs list screen.
+     */
     const onPressSeeAllJobs = () => {
         router.push('allJobList')
     }
 
+    /**
+     * Navigates to the all featured jobs screen.
+     */
     const onPressSeeAllFeaturedJobs = () => {
         router.push('allFeaturedJobs')
-
     }
+
+    /**
+     * Clears the search query and filters.
+     */
     const onPressClearSearch = () => {
         setIsSearch(false)
         setSearchQuery('')
@@ -229,9 +261,11 @@ const Home = () => {
         })
     }
 
+    /**
+     * Handles the pull-to-refresh functionality.
+     */
     const onRefresh = () => {
         setRefreshing(true)
-
         if (isUserRecruiter(currentUserDetail?.user_type)) {
             let data = {
                 "user_id": currentUserDetail?.user_id,
@@ -240,11 +274,8 @@ const Home = () => {
                 filter_by_salary: filter?.filter_by_salary,
                 filter_by_job_type: filter?.filter_by_job_type
             }
-
             dispatch(getAllJobListSearch(data))
-        }
-        else {
-
+        } else {
             let data = {
                 "user_id": currentUserDetail?.user_id,
                 search: searchQuery,
@@ -252,12 +283,10 @@ const Home = () => {
                 filter_by_salary: filter?.filter_by_salary,
                 filter_by_job_type: filter?.filter_by_job_type
             }
-
             dispatch(getAllJobListSearch(data))
         }
         setRefreshing(false)
     }
-
 
     if (allJobloading || loadingRecruiterDetai) {
         return <HLoader />;
@@ -287,9 +316,7 @@ const Home = () => {
                             style={localStyles.searchInputstyle}
                             placeholderTextColor={Colors[colorsScheme]?.subText}
                         />
-
                         {searchQuery?.length > 0 && <TouchableOpacity onPress={onPressClearSearch} style={styles.itemsEnd}>
-
                             <CrossIcon />
                         </TouchableOpacity>}
                     </View>
@@ -301,7 +328,6 @@ const Home = () => {
                     <>
                         <HText type="S14" style={[styles.mt20, { marginBottom: -moderateScale(10) }]}>
                             {`${searchedJobs?.length || '0'} Jobs Found`}
-
                         </HText>
                         <FlatList
                             data={searchedJobs}
@@ -334,28 +360,26 @@ const Home = () => {
                         />
                     </>
                 }
-
             </ScrollView>
-
             <FilterSheet SheetRef={filtersheetRef} setFilter={setFilter} filter={filter} setIsSearch={setIsSearch} />
-
         </HSafeAreaView>
     )
 }
 
+/**
+ * This component renders the title and "See all" button.
+ * @param {Object} param0 - The title, onPressSeeAll function, and style.
+ */
 const TitleComponent = ({ title, onPressSeeAll, style }) => {
     const colorScheme = useColorScheme()
-
     return (
         <View style={[styles.rowSpaceBetween, style]}>
             <HText type="S16" style={styles.mt10}>
                 {title}
-
             </HText>
             <TouchableOpacity onPress={onPressSeeAll}>
                 <HText type="R14" style={styles.mt10} color={Colors[colorScheme]?.subText}>
                     {'See all'}
-
                 </HText>
             </TouchableOpacity>
         </View>

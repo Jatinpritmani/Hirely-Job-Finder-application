@@ -8,10 +8,7 @@ import 'react-native-reanimated';
 import Toast, { BaseToast } from 'react-native-toast-message';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-
-
 // local imports 
-
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Provider, useSelector } from 'react-redux';
 import { store } from '../context/store';
@@ -22,8 +19,11 @@ import { moderateScale } from '@/constants/constants';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-
-
+/**
+ * This component defines the root layout for the application.
+ * It includes the navigation stack and theme provider.
+ * It also configures the toast notifications.
+ */
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const color = useTheme()
@@ -59,13 +59,11 @@ export default function RootLayout() {
     return null;
   }
 
-
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Provider store={store}>
           <StatusBar style="dark" backgroundColor={'white'} />
-
           <Stack initialRouteName='uploadCV' screenOptions={{ headerShown: false, }}>
             <Stack.Screen name="start" />
             <Stack.Screen name="login" />

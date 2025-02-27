@@ -18,18 +18,24 @@ import { useSelector } from 'react-redux';
 import { CheckMark } from '../assets/svgs';
 import HKeyBoardAvoidWrapper from '../components/common/HKeyBoardAvoidWrapper';
 
+/**
+ * This component renders the apply job screen.
+ * It includes form fields for cover letter and resume selection.
+ * It validates the input fields and handles the job application process.
+ */
 const applyJob = () => {
     const colorScheme = useColorScheme();
     const applySuccessSheetRef = useRef(null)
-
-
     const { jobDetail } = useLocalSearchParams()
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
-
     const [jodDetails, setJobDetails] = useState(JSON.parse(jobDetail))
     const [coverLetter, setCoverLetter] = useState('')
     const [coverLetterErrorMessage, setCoverLetterErrorMessage] = useState('')
 
+    /**
+     * Updates the cover letter state and validates the input.
+     * @param {string} text - The cover letter input.
+     */
     const onChangeCoverLetter = (text) => {
         setCoverLetter(text);
         if (!text.length > 0) {
@@ -38,6 +44,11 @@ const applyJob = () => {
             setCoverLetterErrorMessage("");
         }
     };
+
+    /**
+     * Handles the Apply Now button press event.
+     * Validates the input fields and handles the job application process.
+     */
     const onPressApply = async (text) => {
         let payload = {
             recruiter_id: jodDetails?.recruiter_id,
@@ -63,9 +74,7 @@ const applyJob = () => {
         <HSafeAreaView containerStyle={styles.ph0}>
             <HKeyBoardAvoidWrapper containerStyle={[styles.flexGrow1]} >
                 <View style={{ backgroundColor: Colors[colorScheme]?.white }}>
-                    <HHeader title="Apply Job" containerStyle={styles.ph20}
-                    />
-
+                    <HHeader title="Apply Job" containerStyle={styles.ph20} />
                     <View style={localstyles.jobStyle}>
                         <View style={[localstyles.imgStyle, { backgroundColor: Colors[colorScheme]?.grayScale4 }]} />
                         <View style={[styles.flex, styles.ml15]}>
@@ -87,8 +96,6 @@ const applyJob = () => {
                             </View>
                         </View>
                     </View>
-
-
                 </View>
                 <View style={[styles.mv30, styles.mh25]}>
                     <HText type="S16">
@@ -96,9 +103,7 @@ const applyJob = () => {
                     </HText>
                     <View style={[localstyles.resumeSelectStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
                         <CheckMark />
-
                         <View>
-
                             <HText type="M10" align='center' color={Colors[colorScheme]?.white} style={[localstyles.desStyle, { backgroundColor: Colors[colorScheme]?.yellow }]}>
                                 {currentUserDetail?.designation}
                             </HText>
@@ -106,16 +111,13 @@ const applyJob = () => {
                                 {currentUserDetail?.user_name}
                             </HText>
                         </View>
-
                     </View>
                     <HText type="S16">
                         {'Cover Letter / Resume '}
-
                         <HText type="R16" color={Colors[colorScheme]?.subText}>
                             (Optional)
                         </HText>
                     </HText>
-
                     <HInput
                         _value={coverLetter}
                         // label="Job Description"
@@ -139,7 +141,6 @@ const applyJob = () => {
                 <ApplySuccess SheetRef={applySuccessSheetRef} />
             </HKeyBoardAvoidWrapper>
         </HSafeAreaView>
-
     )
 }
 
@@ -164,7 +165,6 @@ const localstyles = StyleSheet.create({
         ...styles.rowCenter,
         gap: moderateScale(16),
         borderRadius: moderateScale(12),
-
     },
     desStyle: {
         ...styles.ph10,
@@ -172,5 +172,4 @@ const localstyles = StyleSheet.create({
         borderRadius: moderateScale(6),
         ...styles.selfCenter
     }
-
 })

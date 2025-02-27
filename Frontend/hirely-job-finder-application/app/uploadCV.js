@@ -18,6 +18,11 @@ import { UPLOAD_RESUME, USER_REGISTER } from "../components/apiConstants";
 import RegisterSuccess from "../components/modals/registerSuccess";
 import { useSelector } from "react-redux";
 
+/**
+ * This component renders the upload CV screen.
+ * It allows users to upload their resume or CV.
+ * It handles the file selection and upload process.
+ */
 const uploadCV = () => {
     const colorScheme = useColorScheme();
     const [isRegisterDisabled, setIsRegisterDisabled] = useState(true);
@@ -26,7 +31,10 @@ const uploadCV = () => {
     const registerSuccessSheetRef = useRef(null)
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
 
-    // function to Register User 
+    /**
+     * Handles the Register button press event.
+     * Registers the user and uploads the selected file.
+     */
     const onPressRegister = async () => {
         if (!selectedFile) {
             return
@@ -75,6 +83,11 @@ const uploadCV = () => {
             console.error("Error fetching data:", error);
         }
     };
+
+    /**
+     * Handles the Save button press event.
+     * Uploads the selected file for the current user.
+     */
     const onPressSave = async () => {
         if (!selectedFile) {
             return
@@ -110,9 +123,10 @@ const uploadCV = () => {
         }
     };
 
-
-
-    // Function to pick pdf from files (mobile storage)
+    /**
+     * Function to pick a PDF file from the device storage.
+     * Sets the selected file and updates the state.
+     */
     const pickPDF = async () => {
         try {
             const result = await DocumentPicker.getDocumentAsync({

@@ -1,13 +1,7 @@
-import {
-    StyleSheet,
-    TouchableOpacity,
-    useColorScheme,
-    View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router } from 'expo-router'
 import { useDispatch, useSelector } from 'react-redux';
-
 
 // local imports
 import HSafeAreaView from "../components/common/HSafeAreaView";
@@ -24,6 +18,11 @@ import apiRequest from "../components/api";
 import { getUserDetail } from "../context/actions/userActions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+/**
+ * This component renders the login screen.
+ * It includes form fields for email and password.
+ * It validates the input fields and handles the login process.
+ */
 const login = () => {
     const colorScheme = useColorScheme();
     const dispatch = useDispatch()
@@ -36,9 +35,11 @@ const login = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     const currentUserType = useSelector(state => state.commonReducer.current_user_type)
-
     const isUserLoggedIn = useSelector(state => state.userReducer.isUserLoggedIn)
 
+    /**
+     * Effect to validate input fields and enable/disable the Login button.
+     */
     useEffect(() => {
         if (email?.length > 0 && password?.length > 0 && isValidEmail(email)) {
             setIsLoginDisabled(false);
@@ -47,27 +48,33 @@ const login = () => {
         }
     }, [email, password]);
 
+    /**
+     * Effect to navigate to the home screen if the user is already logged in.
+     */
     useEffect(() => {
-
         if (isUserLoggedIn) {
             router.push('/(tabs)')
         }
     }, [isUserLoggedIn])
 
-
-
+    /**
+     * Updates the email state and validates the input.
+     * @param {string} text - The email input.
+     */
     const onChangeEmail = (text) => {
         setEmail(text);
         if (!isValidEmail(text)) {
-            let message =
-                !text?.length > 0
-                    ? "*Please Enter a E-Mail."
-                    : "Please Enter a valid E-Mail.";
+            let message = !text?.length > 0 ? "*Please Enter a E-Mail." : "Please Enter a valid E-Mail.";
             setEmailErrorMessage(message);
         } else {
             setEmailErrorMessage("");
         }
     };
+
+    /**
+     * Updates the password state and validates the input.
+     * @param {string} text - The password input.
+     */
     const onChangePassword = (text) => {
         setPassword(text);
         if (!text.length > 0) {
@@ -76,12 +83,17 @@ const login = () => {
             setPasswordErrorMessage("");
         }
     };
+
+    /**
+     * Navigates to the registration screen.
+     */
     const onPressRegister = () => {
         router.push('start')
     }
 
-
-
+    /**
+     * Renders the password hide/show icon.
+     */
     const passwordHideIcon = () => {
         return (
             <TouchableOpacity onPress={() => setIsShowPassword(!isShowPassword)}>
@@ -90,25 +102,25 @@ const login = () => {
         );
     };
 
+    /**
+     * Handles the Login button press event.
+     * Validates the input fields and handles the login process.
+     */
     const onPressLogin = async () => {
         let pushToken = await AsyncStorage.getItem('pushToken');
         if (!isTruthyString(email)) {
             setEmailErrorMessage("*Please Enter E-Mail Address.");
-
         }
         if (!isValidEmail(email)) {
             setEmailErrorMessage("Please Enter a valid E-Mail.");
         }
         if (!isTruthyString(password)) {
             setPasswordErrorMessage("*Please Enter a Password");
-
         }
         if (!isValidEmail(email) || !isTruthyString(email) || !isTruthyString(password)) {
             return
-        }
-        else {
+        } else {
             setIsLoading(true)
-
             let login_cred = {
                 user_email: email,
                 user_password: password,
@@ -154,7 +166,6 @@ const login = () => {
                         _errorText={passwordErrorMessage}
                         required={true}
                     />
-
                     <HButton
                         isLoading={isLoading}
                         onPress={onPressLogin}

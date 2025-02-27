@@ -28,6 +28,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
+// Set notification handler
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
@@ -36,14 +37,19 @@ Notifications.setNotificationHandler({
     }),
 });
 
-
-
-
+/**
+ * Handles registration errors.
+ * @param {string} errorMessage - The error message.
+ */
 function handleRegistrationError(errorMessage) {
     alert(errorMessage);
     throw new Error(errorMessage);
 }
 
+/**
+ * Registers the device for push notifications.
+ * @returns {Promise<string>} - The push token.
+ */
 async function registerForPushNotificationsAsync() {
     if (Platform.OS === 'android') {
         Notifications.setNotificationChannelAsync('default', {
@@ -86,6 +92,11 @@ async function registerForPushNotificationsAsync() {
         handleRegistrationError('Must use physical device for push notifications');
     }
 }
+
+/**
+ * This component renders the onboarding screen.
+ * It includes a swiper with onboarding slides and handles push notification registration.
+ */
 export default function onBoarding() {
     const currentUserDetail = useSelector(state => state.userReducer)
     const colorScheme = useColorScheme();
@@ -158,10 +169,16 @@ export default function onBoarding() {
         },
     };
 
+    /**
+     * Handles the Get Started button press.
+     */
     const onPressGetStarted = () => {
         router.replace("start");
     };
 
+    /**
+     * Handles the Next button press.
+     */
     const onPressNext = () => {
         swiperRef?.current?.scrollTo(currentIndex + 1);
     };
@@ -209,6 +226,10 @@ export default function onBoarding() {
     );
 }
 
+/**
+ * This component renders an onboarding slide.
+ * @param {Object} param0 - The onboarding item.
+ */
 const OnboardingItem = ({ item }) => {
     const colorScheme = useColorScheme();
     const onPressSkip = () => {

@@ -18,6 +18,11 @@ import { getAllJobList } from '../context/actions/jobAction';
 import Toast from 'react-native-toast-message';
 import images from '../assets/images';
 
+/**
+ * This component renders the job detail screen.
+ * It displays job details, job description, and responsibilities.
+ * It also allows users to save or apply for the job.
+ */
 const jobDetail = () => {
     const colorScheme = useColorScheme();
     const { jobDetail, index } = useLocalSearchParams()
@@ -25,24 +30,23 @@ const jobDetail = () => {
     const [jobDetails, setJobDetails] = useState(JSON.parse(jobDetail))
     const [responsibilities, setResponsibilities] = useState()
     const allJobList = useSelector(state => state.jobReducer.allJobList)
-
-
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
-
     const loading = useSelector(state => state.jobReducer.loading)
 
+    /**
+     * Effect to update job details and responsibilities when loading changes.
+     */
     useEffect(() => {
-
         const job = allJobList.find(job => job.job_id === jobDetails?.job_id);
         setJobDetails(job)
         const sentencesArray = job?.requirenment && job?.requirenment.split("\n");
-
         setResponsibilities(sentencesArray)
     }, [loading])
 
-
+    /**
+     * Handles the save job button press.
+     */
     const onPressSave = async () => {
-
         if (jobDetails?.is_job_saved) {
             let payload = {
                 saved_job_id: jobDetails?.saved_job_id
@@ -55,23 +59,19 @@ const jobDetail = () => {
                         text1: 'Job UnSaved Successfully',
                     });
                     dispatch(getAllJobList(currentUserDetail?.user_id))
-
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
                 setIsLoading(false)
             }
-        }
-        else {
-
+        } else {
             let payload = {
                 recruiter_id: jobDetails?.recruiter_id,
                 job_id: jobDetails?._id,
                 job_seeker_id: currentUserDetail?.user_id,
                 apply_type: "save_job",
             }
-
             try {
                 let response = await apiRequest("POST", APPLY_JOB, payload);
                 if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
@@ -80,7 +80,6 @@ const jobDetail = () => {
                         text1: 'Job Saved Successfully',
                     });
                     dispatch(getAllJobList(currentUserDetail?.user_id))
-
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -88,36 +87,46 @@ const jobDetail = () => {
                 setIsLoading(false)
             }
         }
-
     }
+
+    /**
+     * Component for rendering the right icon in the header.
+     */
     const RightIcon = () => {
         return (
-
             <TouchableOpacity onPress={onPressSave}>
                 {jobDetails?.is_job_saved ? <SavedJobBlue width={moderateScale(24)} height={moderateScale(24)} /> : <SavedJob width={moderateScale(24)} height={moderateScale(24)} />}
             </TouchableOpacity>
         )
     }
+
+    /**
+     * Handles the back button press.
+     */
     const goBack = () => { router.back() };
 
+    /**
+     * Component for rendering the left icon in the header.
+     */
     const LeftIcon = () => {
         return (
-
             <TouchableOpacity onPress={goBack}>
                 <LeftWhiteArrowIcon width={moderateScale(24)} height={moderateScale(24)} />
             </TouchableOpacity>
         )
     }
+
     useFocusEffect(
         useCallback(() => {
-
             const sentencesArray = jobDetails?.requirenment && jobDetails?.requirenment?.split("\n");
-
             setResponsibilities(sentencesArray)
             return () => { };
         }, [jobDetails])
     );
 
+    /**
+     * Handles the Apply Now button press.
+     */
     const onPressApplyNow = () => {
         router.push({
             pathname: "/applyJob",
@@ -126,16 +135,13 @@ const jobDetail = () => {
     }
 
     return (
-
         <HSafeAreaView containerStyle={styles.ph0} style={localStyles.main}>
             <ScrollView showsVerticalScrollIndicator={false} >
                 <View style={[localStyles.upperContainer, { backgroundColor: Colors[colorScheme]?.primary }]}>
-                    <HHeader title="" isLeftIcon={<LeftIcon />} isHideBack={true} rightIcon={<RightIcon />} containerStyle={styles.ph20}
-                    />
+                    <HHeader title="" isLeftIcon={<LeftIcon />} isHideBack={true} rightIcon={<RightIcon />} containerStyle={styles.ph20} />
                     <View style={[localStyles.imgStyle, { backgroundColor: Colors[colorScheme]?.white }]}>
                         <Image
                             source={jobDetails?.image?.originalname ? { uri: FILE_BASE_URL + jobDetails?.image?.originalname } : index % 2 == 0 ? images.fb : images.google}
-
                             style={localStyles.imgStyle}
                         />
                     </View>
@@ -154,7 +160,6 @@ const jobDetail = () => {
                         </HText>
                     </View>
                     <View style={[localStyles.labelStyle, { backgroundColor: Colors[colorScheme]?.white15 }]}>
-
                         <HText type="R12" color={Colors[colorScheme]?.white}>
                             {getJobTypeLabel(jobDetails?.job_type)}
                         </HText>
@@ -163,7 +168,6 @@ const jobDetail = () => {
 
                 <View style={localStyles.bottomContainer}>
                     <View style={{ borderBottomWidth: 1, borderColor: Colors[colorScheme]?.borderColor }} >
-
                         <HText type="M14" align='left' color={Colors[colorScheme]?.primary} style={{ width: '20%', paddingBottom: moderateScale(10), borderBottomWidth: moderateScale(2), borderColor: Colors[colorScheme]?.primary }}>
                             {'Summary'}
                         </HText>
@@ -198,9 +202,7 @@ const jobDetail = () => {
                     containerStyle={[styles.mv30, styles.mh25]}
                     bgColor={Colors[colorScheme]?.primary}
                 ></HButton>}
-
             </ScrollView>
-
         </HSafeAreaView >
     )
 }
@@ -232,6 +234,5 @@ const localStyles = StyleSheet.create({
     bottomContainer: {
         ...styles.pv25,
         ...styles.ph25,
-
     }
 })

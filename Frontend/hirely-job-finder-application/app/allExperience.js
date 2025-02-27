@@ -13,6 +13,11 @@ import HLoader from '../components/common/HLoader'
 import HHeader from '../components/common/HHeader'
 import EmptyListComponent from '../components/common/EmptyListComponent'
 
+/**
+ * This component renders a list of all experiences for a user.
+ * It fetches experience data based on the user type (job seeker).
+ * It also supports pull-to-refresh functionality.
+ */
 const allExperience = () => {
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
     const loading = useSelector(state => state.userReducer.loading)
@@ -23,30 +28,39 @@ const allExperience = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [refreshing, setRefreshing] = useState(false);
 
+    /**
+     * Effect to update loading state when loading changes.
+     */
     useEffect(() => {
         setIsLoading(loading)
         setRefreshing(loading)
     }, [loading])
 
+    /**
+     * Handles the pull-to-refresh functionality.
+     */
     const onRefresh = () => {
         setRefreshing(true);
         dispatch(getUserDetail(currentUserDetail?.user_id))
-
     }
 
-
+    /**
+     * Renders an experience card.
+     * @param {Object} param0 - The experience item and index.
+     */
     const renderItem = ({ item, index }) => {
         return (
             <ExperienceCard item={item} index={index} isShowDelete={false} cardStyle={localStyles.experiencecardStyle} />
         )
     }
+
     if (isLoading) {
         return <HLoader />
     }
+
     return (
         <HSafeAreaView>
             <HHeader title="Experiences" />
-
             <FlatList
                 onRefresh={onRefresh}
                 refreshing={refreshing}

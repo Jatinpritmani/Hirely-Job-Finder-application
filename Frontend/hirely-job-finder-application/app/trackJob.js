@@ -14,34 +14,41 @@ import apiRequest, { FILE_BASE_URL } from '../components/api';
 import { GET_APPLIED_JOBS } from '../components/apiConstants';
 import images from '../assets/images';
 
+/**
+ * This component renders the track job screen.
+ * It displays the details of the applied job and its current status.
+ */
 const trackJob = () => {
     const colorScheme = useColorScheme();
-
-
     const { jobDetail, index } = useLocalSearchParams()
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
-
     const [jodDetails, setJobDetails] = useState(JSON.parse(jobDetail))
     const [appliedJobData, setAppliedJobData] = useState()
 
+    /**
+     * Focus effect to fetch applied job details when the screen is focused.
+     */
     useFocusEffect(
         useCallback(() => {
             getAppliedJobs()
             return () => { };
         }, [])
     );
+
+    /**
+     * Fetches the details of the applied job based on the user ID and applied job ID.
+     */
     const getAppliedJobs = async () => {
         let payload = {
             user_id: currentUserDetail?.user_id,
             applied_job_id: jodDetails?.applied_job_id
-
         }
         try {
             let response = await apiRequest("POST", GET_APPLIED_JOBS, payload);
             if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
                 setAppliedJobData(response?.data && response?.data[0])
-            }
-            else {
+            } else {
+                console.error("Error fetching applied job details:", response?.message);
             }
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -51,13 +58,11 @@ const trackJob = () => {
     return (
         <HSafeAreaView containerStyle={styles.ph0}>
             <View style={{ backgroundColor: Colors[colorScheme]?.white }}>
-                <HHeader title="Track Job" containerStyle={styles.ph20}
-                />
+                <HHeader title="Track Job" containerStyle={styles.ph20} />
                 <View style={localstyles.jobStyle}>
                     <View style={[localstyles.imgStyle, { backgroundColor: Colors[colorScheme]?.grayScale4 }]} >
                         <Image
                             source={appliedJobData?.image?.originalname ? { uri: FILE_BASE_URL + appliedJobData?.image?.originalname } : index % 2 == 0 ? images.fb : images.google}
-
                             style={localstyles.imgStyle}
                         />
                     </View>
@@ -80,12 +85,8 @@ const trackJob = () => {
                         </View>
                     </View>
                 </View>
-
-
             </View>
-
         </HSafeAreaView>
-
     )
 }
 
@@ -102,5 +103,4 @@ const localstyles = StyleSheet.create({
         ...styles.mv25,
         ...styles.flexRow
     }
-
 })
