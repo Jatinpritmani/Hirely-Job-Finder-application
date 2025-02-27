@@ -76,9 +76,9 @@ Hirely-JobFinder/
   export const API_BASE_URL = "http://localhost:4402";
   ```
   If using a mobile device, replace `localhost` with your machine's local IP.
-  iOS Simulator http://localhost:4402
-  Android Emulator http://10.0.2.2:4402
-  Physical Device http://<your-local-IP>:4402
+  - iOS Simulator http://localhost:4402
+  - Android Emulator http://10.0.2.2:4402
+  - Physical Device http://<your-local-IP>:4402
 
 ---
 
