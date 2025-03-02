@@ -16,6 +16,7 @@ const jobSchema = new mongoose.Schema({
     number_of_opening:{type:Number},
     summary:{type:String},
     requirenment:{type:String},
+    is_job_closed:{type:Boolean, default:false},
     image : imageSchema
   },
   {

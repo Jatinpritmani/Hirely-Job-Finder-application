@@ -28,7 +28,8 @@ module.exports={
     notificationList:notificationList,
     updateNotificationRead:updateNotificationRead,
     uploadImage:uploadImage,
-    logout:logout
+    logout:logout,
+    updateJobDetails:updateJobDetails
 }
 
 async function encryptPassword(password){
@@ -292,7 +293,7 @@ async function createJobPost(req) {
                 let tokens=users.map((user)=> {
                     return user.fcm_token
                 }).filter((token)=> token != undefined || token != null)
-                
+
                 if(Array.isArray(tokens)&& tokens.length!==0){
                     await sendNotification(tokens,notification)
                 }
@@ -374,7 +375,8 @@ async function getAllJobPosts(req) {
                     job_type: "$job_type",
                     summary: "$summary",
                     requirenment: "$requirenment",
-                    image:"$image"
+                    image:"$image",
+                    is_job_closed:"$is_job_closed"
                 }
             }
         ])
@@ -549,7 +551,8 @@ async function getSavedJobs(req) {
                     requirenment: "$jobDetails.requirenment",
                     job_id: "$jobDetails._id",
                     image:"$jobDetails.image",
-                    company_name:"$recruiterDetails.company_name"
+                    company_name:"$recruiterDetails.company_name",
+                    is_job_saved:"$jobDetails.is_job_saved"
                 }
             }
         ]);
@@ -752,7 +755,8 @@ async function recruiterDetails(req) {
                                     summary: "$$job.summary",
                                     requirenment: "$$job.requirenment",
                                     number_of_opening:"$$job.number_of_opening",
-                                    image:"$$job.image"
+                                    image:"$$job.image",
+                                    is_job_closed:"$$job.is_job_closed"
                                 }
                             }
                         },
@@ -1010,6 +1014,37 @@ async function logout(req) {
         let user_id = req.body.user_id;
         
         await User.findByIdAndUpdate(user_id,{fcm_token:null});
+        
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
+
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false
+        )
+
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+async function updateJobDetails(req) {
+    let func_name = "updateJobDetails"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let {job_id,is_job_closed} = req.body;
+        
+        await Job.findByIdAndUpdate(job_id,{is_job_closed:is_job_closed});
         
         logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name);
 
