@@ -33,6 +33,9 @@ import ApplySuccessIcon from './applySuccess.svg'
 import LeftWhiteArrowIcon from './leftWhiteArrow.svg'
 import AppliedJob from './appliedJob.svg'
 import AppliedJObBlue from './appliedJobBlue.svg'
+import OfferLetter from './offerLetter.svg'
+import CheckMarkGray from './CheckMarkGray.svg'
+import OfferLetterBlue from './offerLetterBlue.svg'
 
 
 export {
@@ -70,5 +73,8 @@ export {
     ApplySuccessIcon,
     LeftWhiteArrowIcon,
     AppliedJObBlue,
-    AppliedJob
+    AppliedJob,
+    OfferLetter,
+    CheckMarkGray,
+    OfferLetterBlue
 }

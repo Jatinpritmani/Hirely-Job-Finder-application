@@ -125,3 +125,67 @@ export const getJobTypeLabel = (value) => {
   const jobType = jobTypes.find((job) => job.value === value);
   return jobType ? jobType.label : "-";
 };
+
+export const visibleStatus = [
+  {
+    "status": "offer_letter",
+    "label": "Offer Letter"
+  },
+  // {
+  //   "status": "final_interview_success",
+  //   "label": "Final Interview Success"
+  // },
+  {
+    "status": "final_interview",
+    "label": "Final Interview"
+  },
+  // {
+  //   "status": "screening_interview_success",
+  //   "label": "Screening Interview Success"
+  // },
+  {
+    "status": "screening_interview",
+    "label": "Screening Interview"
+  },
+  {
+    "status": "reviewed_by_team",
+    "label": "Reviewed by Team"
+  },
+  {
+    "status": "application_submitted",
+    "label": "Application Submitted"
+  }
+];
+
+export const allStatus = [
+  {
+    "status": "application_submitted",
+    "label": "Review Application" // Recruiter reviews the application
+  },
+  {
+    "status": "reviewed_by_team",
+    "label": "Schedule Screening Interview" // Recruiter schedules the first interview
+  },
+  {
+    "status": "screening_interview",
+    "label": "Mark Screening as Completed" // Mark the interview as done
+  },
+  {
+    "status": "screening_interview_success",
+    "label": "Schedule Final Interview" // Move to the final interview
+  },
+  {
+    "status": "final_interview",
+    "label": "Mark Final Interview as Completed" // Mark the final interview as done
+  },
+  {
+    "status": "final_interview_success",
+    "label": "Send Offer Letter" // Send an offer letter to the candidate
+  },
+  {
+    "status": "offer_letter",
+    "label": "Complete Hiring Process" // Final step, hiring is completed
+  }
+];
+
+

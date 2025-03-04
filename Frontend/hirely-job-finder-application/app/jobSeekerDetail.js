@@ -9,14 +9,16 @@ import HHeader from '../components/common/HHeader';
 import { router, useLocalSearchParams } from 'expo-router';
 import { styles } from '../themes';
 import { LeftWhiteArrowIcon, } from '../assets/svgs';
-import { isUserRecruiter, moderateScale } from '../constants/constants';
+import { allStatus, isUserRecruiter, moderateScale } from '../constants/constants';
 import HText from '../components/common/HText';
 import HButton from '../components/common/HButton';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ExperienceCard from '../components/screenComponents/ExperienceCard';
-import { API_BASE_URL } from '../components/api';
-import { GET_RESUME } from '../components/apiConstants';
+import apiRequest, { API_BASE_URL } from '../components/api';
+import { GET_RESUME, STATUS_UPDATE } from '../components/apiConstants';
 import images from '../assets/images';
+import { getRecruiterDetail } from '../context/actions/userActions';
+import HLoader from '../components/common/HLoader';
 
 /**
  * This component renders the job seeker detail screen.
@@ -24,18 +26,37 @@ import images from '../assets/images';
  */
 const jobSeekerDetail = () => {
     const colorScheme = useColorScheme();
+    const dispatch = useDispatch()
+
     const { jobseekerDetail, index } = useLocalSearchParams()
     const [jobSeekerData, setJobSeekerData] = useState(JSON.parse(jobseekerDetail))
     const allJobList = useSelector(state => state.jobReducer.allJobList)
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
     const loading = useSelector(state => state.jobReducer.loading)
+    const [currentStatus, setCurrentStatus] = useState()
+    const [nextStatus, setNextStatus] = useState()
+    const [loader, setLoader] = useState(false)
+    const recruiterDetails = useSelector(state => state.userReducer.recruiterDetails)
+
+
 
     /**
      * Effect to update job seeker data when jobseekerDetail changes.
      */
     useEffect(() => {
+
         setJobSeekerData(JSON.parse(jobseekerDetail))
-    }, [])
+        getNextStatus(JSON.parse(jobseekerDetail)?.status)
+    }, [jobseekerDetail,])
+
+    useEffect(() => {
+        let job = recruiterDetails?.appliedJobDetails?.find(item => item?.applied_job_id == JSON.parse(jobseekerDetail)?.applied_job_id)
+        setJobSeekerData(job)
+        getNextStatus(job?.status)
+
+    })
+
+
 
     /**
      * Handles the back button press.
@@ -70,6 +91,68 @@ const jobSeekerDetail = () => {
         })
     }
 
+    /**
+     * function to get Next Status
+     */
+    const getNextStatus = (currentStatus) => {
+        const index = allStatus.findIndex(item => item.status === currentStatus);
+        setCurrentStatus(allStatus[index])
+        index !== -1 && index < allStatus.length - 1 ? setNextStatus(allStatus[index + 1]) : setNextStatus(null);
+    };
+
+    /**
+     * job status update API Call Function
+     */
+    const onPressJobStatusUpdate = async () => {
+        let payload = {
+            applied_job_id: jobSeekerData.applied_job_id,
+            status: nextStatus?.status
+        }
+        setLoader(true)
+        try {
+            let response = await apiRequest("POST", STATUS_UPDATE, payload);
+            if (response?.code === 'HJFA_MS_OK_200' && !response?.error_status) {
+                dispatch(getRecruiterDetail(currentUserDetail?.user_id))
+
+            } else {
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+
+        } finally {
+            setLoader(false)
+
+        }
+    }
+
+    /**
+     * job status update API Call Function
+     */
+    const onPressJobStatuReject = async () => {
+        let payload = {
+            applied_job_id: jobSeekerData.applied_job_id,
+            status: 'rejected'
+        }
+        setLoader(true)
+        try {
+            let response = await apiRequest("POST", STATUS_UPDATE, payload);
+            if (response?.code === 'HJFA_MS_OK_200' && !response?.error_status) {
+                dispatch(getRecruiterDetail(currentUserDetail?.user_id))
+
+            } else {
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+
+        } finally {
+            setLoader(false)
+
+        }
+    }
+
+    if (loader) {
+        return <HLoader />;
+    }
     return (
         <HSafeAreaView containerStyle={styles.ph0} style={localStyles.main}>
             <ScrollView showsVerticalScrollIndicator={false} >
@@ -136,22 +219,26 @@ const jobSeekerDetail = () => {
                         </View>
                         <ExperienceCard item={jobSeekerData?.experience[0]} isShowDelete={false} cardStyle={localStyles.experiencecardStyle} />
                     </>
-                    <HButton
-                        onPress={() => { }}
-                        textType={"S16"}
-                        color={Colors[colorScheme]?.white}
-                        title={"Review Application"}
-                        containerStyle={[styles.mv30,]}
-                        bgColor={Colors[colorScheme]?.primary}
-                    ></HButton>
-                    <HButton
-                        onPress={() => { }}
-                        textType={"S16"}
-                        color={Colors[colorScheme]?.primary}
-                        title={"Reject Application"}
-                        containerStyle={[styles.mb20, { borderWidth: moderateScale(1), borderColor: Colors[colorScheme]?.primary }]}
-                        bgColor={Colors[colorScheme]?.white}
-                    ></HButton>
+                    {nextStatus &&
+                        <>
+                            <HButton
+                                onPress={onPressJobStatusUpdate}
+                                textType={"S16"}
+                                color={Colors[colorScheme]?.white}
+                                title={currentStatus?.label}
+                                containerStyle={[styles.mv30,]}
+                                bgColor={Colors[colorScheme]?.primary}
+                            ></HButton>
+                            <HButton
+                                onPress={onPressJobStatuReject}
+                                textType={"S16"}
+                                color={Colors[colorScheme]?.primary}
+                                title={"Reject Application"}
+                                containerStyle={[styles.mb20, { borderWidth: moderateScale(1), borderColor: Colors[colorScheme]?.primary }]}
+                                bgColor={Colors[colorScheme]?.white}
+                            ></HButton>
+
+                        </>}
                 </View>
             </ScrollView>
         </HSafeAreaView >

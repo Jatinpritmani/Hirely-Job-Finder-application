@@ -1,4 +1,4 @@
-import { Image, StyleSheet, useColorScheme, View } from 'react-native'
+import { FlatList, Image, StyleSheet, useColorScheme, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useSelector } from 'react-redux';
@@ -8,11 +8,12 @@ import { Colors } from '@/constants/Colors';
 import HSafeAreaView from '../components/common/HSafeAreaView';
 import HHeader from '../components/common/HHeader';
 import { styles } from '../themes';
-import { getLocationLabel, moderateScale } from '../constants/constants';
+import { visibleStatus, getLocationLabel, moderateScale } from '../constants/constants';
 import HText from '../components/common/HText';
 import apiRequest, { FILE_BASE_URL } from '../components/api';
 import { GET_APPLIED_JOBS } from '../components/apiConstants';
 import images from '../assets/images';
+import StatusHistory from '../components/screenComponents/StatusHistory';
 
 /**
  * This component renders the track job screen.
@@ -24,6 +25,7 @@ const trackJob = () => {
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
     const [jodDetails, setJobDetails] = useState(JSON.parse(jobDetail))
     const [appliedJobData, setAppliedJobData] = useState()
+    const [refreshing, setRefreshing] = useState(false)
 
     /**
      * Focus effect to fetch applied job details when the screen is focused.
@@ -43,6 +45,7 @@ const trackJob = () => {
             user_id: currentUserDetail?.user_id,
             applied_job_id: jodDetails?.applied_job_id
         }
+
         try {
             let response = await apiRequest("POST", GET_APPLIED_JOBS, payload);
             if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
@@ -53,6 +56,18 @@ const trackJob = () => {
         } catch (error) {
             console.error("Error fetching data:", error);
         }
+    }
+
+    const onRefresh = async () => {
+        setRefreshing(true)
+        await getAppliedJobs()
+        setRefreshing(false)
+    }
+
+    const renderStatusItem = ({ item, index }) => {
+        return (
+            <StatusHistory item={item} index={index} statushistoryList={appliedJobData?.status_history} />
+        )
     }
 
     return (
@@ -86,9 +101,24 @@ const trackJob = () => {
                     </View>
                 </View>
             </View>
+            <View style={[styles.m25]}>
+                <HText type="S16">
+                    Track Application
+                </HText>
+            </View>
+            <FlatList
+                data={visibleStatus}
+                renderItem={renderStatusItem}
+                style={styles.mh25}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+            />
         </HSafeAreaView>
     )
 }
+
+
+
 
 export default trackJob
 

@@ -42,7 +42,6 @@ const Home = () => {
 
     const [searchQuery, setSearchQuery] = useState('')
     const [isSearch, setIsSearch] = useState(false)
-    const [recruiterSearchedJobs, setRecruiterSerchedJobs] = useState([])
     const debouncedSearchTerm = useDebounce(searchQuery, 300);
     const [refreshing, setRefreshing] = useState(false);
 
