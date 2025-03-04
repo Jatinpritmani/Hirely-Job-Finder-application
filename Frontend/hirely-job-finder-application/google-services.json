@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "253571893905",
+    "project_id": "hirely-job-finder-applic-8cbe1",
+    "storage_bucket": "hirely-job-finder-applic-8cbe1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:253571893905:android:426abe0216ca6533550d30",
+        "android_client_info": {
+          "package_name": "com.jatinpritmani.hirelyjobfinderapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6_pVESDk-8A9cExjLIaxV6YR-OVONsY4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
