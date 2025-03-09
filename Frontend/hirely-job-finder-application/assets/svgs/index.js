@@ -36,6 +36,7 @@ import AppliedJObBlue from './appliedJobBlue.svg'
 import OfferLetter from './offerLetter.svg'
 import CheckMarkGray from './CheckMarkGray.svg'
 import OfferLetterBlue from './offerLetterBlue.svg'
+import RejectIcon from './rejectIcon.svg'
 
 
 export {
@@ -76,5 +77,6 @@ export {
     AppliedJob,
     OfferLetter,
     CheckMarkGray,
-    OfferLetterBlue
+    OfferLetterBlue,
+    RejectIcon
 }

@@ -40,6 +40,7 @@ export const Colors = {
     lightGreen: "#E8FDF2",
     green: "#0E9D57",
     red80: "#F57474CC",
+    red280: "#A71111CC",
   },
   dark: {
     primary1: "#1A4780",
@@ -74,6 +75,7 @@ export const Colors = {
     lightGreen: "#E8FDF2",
     green: "#0E9D57",
     red80: "#F57474CC",
+    red280: "#A71111CC",
 
     // primary: "#1A4780CC",
     // text: "#ECEDEE",

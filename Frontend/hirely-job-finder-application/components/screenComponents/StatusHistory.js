@@ -7,7 +7,7 @@ import moment from 'moment';
 // local import 
 import HText from '../common/HText';
 import { Colors } from '@/constants/Colors';
-import { CheckMark, CheckMarkGray, OfferLetter, OfferLetterBlue, UnCheckedMark } from '../../assets/svgs';
+import { CheckMark, CheckMarkGray, OfferLetter, OfferLetterBlue, RejectIcon, UnCheckedMark } from '../../assets/svgs';
 import { visibleStatus, getHeight, moderateScale } from '../../constants/constants';
 import { styles } from '../../themes';
 
@@ -33,14 +33,18 @@ const StatusHistory = ({ item, index, statushistoryList }) => {
             isCompleted = true
         }
     }
+    console.log(statushistoryList?.some(itm => itm.status == 'rejected'), statushistoryList, item.status, `statushistoryList?.some(itm => itm.status != 'rejected')`);
 
+    if (!statushistoryList?.find(itm => itm.status == 'rejected') && item.status == 'rejected') {
+        return null
+    }
 
 
     return (
         <View style={localStyles.main}>
             <View>
-                {halfCompleted ? <CheckMarkGray width={moderateScale(20)} height={moderateScale(20)} /> : isCompleted ? item?.status == 'offer_letter' ? <OfferLetterBlue width={moderateScale(20)} height={moderateScale(20)} /> : <CheckMark width={moderateScale(20)} height={moderateScale(20)} /> : <UnCheckedMark width={moderateScale(20)} height={moderateScale(20)} />}
-                {index != visibleStatus?.length - 1 && <View style={[localStyles.path, { backgroundColor: isCompleted ? Colors[colorScheme]?.primary : Colors[colorScheme]?.grayScale2 }]}>
+                {halfCompleted ? <CheckMarkGray width={moderateScale(20)} height={moderateScale(20)} /> : isCompleted ? item?.status == 'offer_letter' ? <OfferLetterBlue width={moderateScale(20)} height={moderateScale(20)} /> : item?.status == 'rejected' ? <RejectIcon width={moderateScale(20)} height={moderateScale(20)} /> : <CheckMark width={moderateScale(20)} height={moderateScale(20)} /> : <UnCheckedMark width={moderateScale(20)} height={moderateScale(20)} />}
+                {index != visibleStatus?.length - 1 && <View style={[localStyles.path, { backgroundColor: isCompleted ? item?.status == 'rejected' ? Colors[colorScheme]?.red280 : Colors[colorScheme]?.primary : Colors[colorScheme]?.grayScale2 }]}>
                 </View>}
             </View>
             <View>

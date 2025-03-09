@@ -128,6 +128,10 @@ export const getJobTypeLabel = (value) => {
 
 export const visibleStatus = [
   {
+    "status": "rejected",
+    "label": "Application Rejected"
+  },
+  {
     "status": "offer_letter",
     "label": "Offer Letter"
   },
