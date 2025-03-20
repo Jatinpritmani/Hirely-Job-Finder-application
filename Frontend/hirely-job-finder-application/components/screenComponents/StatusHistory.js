@@ -38,7 +38,10 @@ const StatusHistory = ({ item, index, statushistoryList }) => {
     if (!statushistoryList?.find(itm => itm.status == 'rejected') && item.status == 'rejected') {
         return null
     }
-
+    console.log('====================================');
+    console.log(item, isCompleted, statushistoryList?.find(itm => itm.status == item?.status));
+    console.log('====================================');
+    let currentStatus = statushistoryList?.find(itm => itm.status == item?.status)
 
     return (
         <View style={localStyles.main}>
@@ -49,7 +52,7 @@ const StatusHistory = ({ item, index, statushistoryList }) => {
             </View>
             <View>
                 <HText type="M14">{item?.label}</HText>
-                <HText type="R12" color={Colors[colorScheme]?.grayScale6}>{moment(item?.updated_at).utcOffset('+00:00').format("DD/MM/YY hh:mm A")}</HText>
+                {currentStatus ? <HText type="R12" color={Colors[colorScheme]?.grayScale6}>{moment(currentStatus?.updated_at).local().format("DD/MM/YY hh:mm A")}</HText> : null}
             </View>
         </View>
     )
