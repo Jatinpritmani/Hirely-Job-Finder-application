@@ -23,6 +23,7 @@ import FilterSheet from '../../components/modals/filterSheet';
 import apiRequest from '../../components/api';
 import { LOGOUT } from '../../components/apiConstants';
 import Toast from 'react-native-toast-message';
+import { shuffleArray } from '../../utils/validator';
 
 /**
  * This component renders the home screen with job listings.
@@ -350,7 +351,7 @@ const Home = () => {
                         />
                         <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'Recent People Applied' : 'Featured Jobs'} onPressSeeAll={onPressSeeAllFeaturedJobs} />
                         <FlatList
-                            data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails?.reverse() : allJobList?.reverse()}
+                            data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails?.reverse() : shuffleArray(allJobList?.reverse())}
                             renderItem={renderFeaturedJobItem}
                             style={[styles.mt25]}
                             horizontal

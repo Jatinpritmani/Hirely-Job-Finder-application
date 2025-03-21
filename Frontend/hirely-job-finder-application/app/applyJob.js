@@ -1,4 +1,4 @@
-import { StyleSheet, useColorScheme, View } from 'react-native'
+import { Image, StyleSheet, useColorScheme, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 
 // local imports
@@ -11,12 +11,13 @@ import HText from '../components/common/HText';
 import { useLocalSearchParams } from 'expo-router';
 import HInput from '../components/common/HInput';
 import HButton from '../components/common/HButton';
-import apiRequest from '../components/api';
+import apiRequest, { FILE_BASE_URL } from '../components/api';
 import { APPLY_JOB } from '../components/apiConstants';
 import ApplySuccess from '../components/modals/applySuccess';
 import { useSelector } from 'react-redux';
 import { CheckMark } from '../assets/svgs';
 import HKeyBoardAvoidWrapper from '../components/common/HKeyBoardAvoidWrapper';
+import images from '../assets/images';
 
 /**
  * This component renders the apply job screen.
@@ -76,7 +77,12 @@ const applyJob = () => {
                 <View style={{ backgroundColor: Colors[colorScheme]?.white }}>
                     <HHeader title="Apply Job" containerStyle={styles.ph20} />
                     <View style={localstyles.jobStyle}>
-                        <View style={[localstyles.imgStyle, { backgroundColor: Colors[colorScheme]?.grayScale4 }]} />
+                        <View style={[localstyles.imgStyle, { backgroundColor: Colors[colorScheme]?.grayScale4 }]} >
+                            <Image
+                                source={jodDetails?.image?.originalname ? { uri: FILE_BASE_URL + jodDetails?.image?.originalname } : images.fb}
+                                style={localstyles.imgStyle}
+                            />
+                        </View>
                         <View style={[styles.flex, styles.ml15]}>
                             <View style={styles.rowSpaceBetween}>
                                 <HText type="S14">

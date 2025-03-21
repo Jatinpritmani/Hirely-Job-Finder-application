@@ -219,7 +219,7 @@ const jobSeekerDetail = () => {
                         </View>
                         <ExperienceCard item={jobSeekerData?.experience[0]} isShowDelete={false} cardStyle={localStyles.experiencecardStyle} />
                     </>
-                    {nextStatus &&
+                    {nextStatus && currentStatus != 'rejected' &&
                         <>
                             <HButton
                                 onPress={onPressJobStatusUpdate}
@@ -232,9 +232,9 @@ const jobSeekerDetail = () => {
                             <HButton
                                 onPress={onPressJobStatuReject}
                                 textType={"S16"}
-                                color={Colors[colorScheme]?.primary}
+                                color={Colors[colorScheme]?.red280}
                                 title={"Reject Application"}
-                                containerStyle={[styles.mb20, { borderWidth: moderateScale(1), borderColor: Colors[colorScheme]?.primary }]}
+                                containerStyle={[styles.mb20, { borderWidth: moderateScale(1), borderColor: Colors[colorScheme]?.red280 }]}
                                 bgColor={Colors[colorScheme]?.white}
                             ></HButton>
 
