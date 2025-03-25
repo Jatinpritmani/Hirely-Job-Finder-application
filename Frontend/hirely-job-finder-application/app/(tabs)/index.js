@@ -351,7 +351,7 @@ const Home = () => {
                         />
                         <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'Recent People Applied' : 'Featured Jobs'} onPressSeeAll={onPressSeeAllFeaturedJobs} />
                         <FlatList
-                            data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails?.reverse() : shuffleArray(allJobList?.reverse())}
+                            data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails?.reverse() : shuffleArray(allJobList)}
                             renderItem={renderFeaturedJobItem}
                             style={[styles.mt25]}
                             horizontal
