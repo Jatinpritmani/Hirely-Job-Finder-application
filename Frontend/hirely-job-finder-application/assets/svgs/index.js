@@ -37,6 +37,7 @@ import OfferLetter from './offerLetter.svg'
 import CheckMarkGray from './CheckMarkGray.svg'
 import OfferLetterBlue from './offerLetterBlue.svg'
 import RejectIcon from './rejectIcon.svg'
+import FileUpload from './fileUpload.svg'
 
 
 export {
@@ -78,5 +79,6 @@ export {
     OfferLetter,
     CheckMarkGray,
     OfferLetterBlue,
-    RejectIcon
+    RejectIcon,
+    FileUpload
 }

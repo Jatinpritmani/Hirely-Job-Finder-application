@@ -33,6 +33,7 @@ export default HInput = props => {
     fieldRef,
     showError = true,
     rightAccessory,
+    style
   } = props;
 
   const colorScheme = useColorScheme();
@@ -44,7 +45,7 @@ export default HInput = props => {
 
 
   return (
-    <View >
+    <View style={style}>
       {label && (
         <View style={[localStyle.labelContainer, labelStyle]}>
           <View style={styles.flexRow}>
