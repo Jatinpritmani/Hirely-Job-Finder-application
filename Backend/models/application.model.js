@@ -1,6 +1,13 @@
 const mongoose=require("mongoose")
 const utility_func=require("../utilities/utility-functions")
 
+
+const coverLetterDocSchema = new mongoose.Schema({
+  originalname: { type: String, required: true },
+  filename: { type: String, required: true },
+  contentType: { type: String, required: true },
+  path: { type: String, required: true }, 
+});
 const applicationSchema = new mongoose.Schema({
     application_id: { type: mongoose.Schema.Types.ObjectId, alias: '_id'},
     job_id:{type: mongoose.Schema.Types.ObjectId, ref:'Job'},
@@ -12,7 +19,8 @@ const applicationSchema = new mongoose.Schema({
         status: { type: String, required: true },
         updated_at: { type: Date, default: Date.now },
       }],
-    cover_letter:{type:String}
+    cover_letter:{type:String},
+    cover_letter_doc:coverLetterDocSchema
   },
   {
     autoCreate: true,
@@ -26,6 +34,6 @@ const applicationSchema = new mongoose.Schema({
   });
 
 
-const Application = mongoose.model('Application', applicationSchema);
+const   Application = mongoose.model('Application', applicationSchema);
 
 module.exports = {Application};
