@@ -70,6 +70,9 @@ const jobSeekerDetail = () => {
         await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_RESUME}?user_id=${jobSeekerData._id}`);
     }
 
+    console.log('====================================');
+    console.log('jobSeekerData', jobSeekerData?.cover_letter_doc);
+    console.log('====================================');
     /**
      * Component for rendering the left icon in the header.
      */
