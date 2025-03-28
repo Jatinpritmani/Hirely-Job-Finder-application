@@ -15,7 +15,7 @@ import HButton from '../components/common/HButton';
 import { useDispatch, useSelector } from 'react-redux';
 import ExperienceCard from '../components/screenComponents/ExperienceCard';
 import apiRequest, { API_BASE_URL } from '../components/api';
-import { GET_RESUME, STATUS_UPDATE } from '../components/apiConstants';
+import { GET_COVER_LETTER, GET_RESUME, STATUS_UPDATE } from '../components/apiConstants';
 import images from '../assets/images';
 import { getRecruiterDetail } from '../context/actions/userActions';
 import HLoader from '../components/common/HLoader';
@@ -70,9 +70,13 @@ const jobSeekerDetail = () => {
         await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_RESUME}?user_id=${jobSeekerData._id}`);
     }
 
-    console.log('====================================');
-    console.log('jobSeekerData', jobSeekerData?.cover_letter_doc);
-    console.log('====================================');
+    /**
+     * Opens the Cover Letter in a web browser.
+     */
+    const onPressCoverLetter = async () => {
+        await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_COVER_LETTER}?application_id=${jobSeekerData.applied_job_id}`);
+    }
+
     /**
      * Component for rendering the left icon in the header.
      */
@@ -205,10 +209,42 @@ const jobSeekerDetail = () => {
                                 </HText>
                             </View>
                         </View>
-                        <HText type="L12" numberOfLines={3} color={Colors[colorScheme]?.subText} style={styles.mt10} >
+                        <HText type="L12" color={Colors[colorScheme]?.subText} style={styles.mt10} >
                             {jobSeekerData.bio}
                         </HText>
                     </TouchableOpacity>
+
+
+                    <HText type="S16" align='left' color={Colors[colorScheme]?.headerColor} style={styles.mt25}  >
+                        {'Cover Letter'}
+                    </HText>
+                    <TouchableOpacity onPress={onPressCoverLetter} style={[localStyles.cvContainer, { backgroundColor: Colors[colorScheme]?.white }]}>
+                        <View style={styles.rowSpaceBetween}>
+                            <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.primary1 }]}>
+                                <HText type="M10" color={Colors[colorScheme]?.white} >
+                                    {'CL'}
+                                </HText>
+                            </View>
+                            <View>
+                                <HText type="B12" align='center' >
+                                    {jobSeekerData.user_name}
+                                </HText>
+                                <HText type="R12" align='center' color={Colors[colorScheme]?.subText}>
+                                    {jobSeekerData.designation}
+                                </HText>
+                            </View>
+                            <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.red80 }]}>
+                                <HText type="M10" color={Colors[colorScheme]?.white} >
+                                    {'PDF'}
+                                </HText>
+                            </View>
+                        </View>
+                        <HText type="L12" color={Colors[colorScheme]?.subText} style={styles.mt10} >
+                            {jobSeekerData.cover_letter}
+                        </HText>
+                    </TouchableOpacity>
+
+
                     <>
                         <View style={localStyles.resumeContainerStyle}>
                             <HText type="S16" color={Colors[colorScheme]?.headerColor} style={styles.mt10}>
