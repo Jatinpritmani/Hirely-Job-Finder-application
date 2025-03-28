@@ -30,7 +30,8 @@ module.exports={
     uploadImage:uploadImage,
     logout:logout,
     updateJobDetails:updateJobDetails,
-    uploadCoverLetter:uploadCoverLetter
+    uploadCoverLetter:uploadCoverLetter,
+    getCoverLetter:getCoverLetter
 }
 
 async function encryptPassword(password){
@@ -1092,6 +1093,9 @@ async function uploadCoverLetter(req) {
                 await fs.promises.unlink(filePath)
             }
         }
+        console.log("req.filereq.file",req.file);
+        console.log("application_id",application_id);
+        
         if(req.file){
             let cover_letter_doc={
                 filename: req.file.filename,
@@ -1120,3 +1124,32 @@ async function uploadCoverLetter(req) {
         )
     }
 }
+
+
+async function getCoverLetter(req) {
+    let func_name = "getCoverLetter"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let application_id = req.query.application_id 
+
+        let applicationDetails = await Application.findOne({_id : application_id},
+            {cover_letter_doc:1}
+        )
+        
+        applicationDetails = applicationDetails.toJSON(); 
+        let filePath
+        let filename=applicationDetails.cover_letter_doc.originalname
+        if(applicationDetails.cover_letter_doc){
+            // filePath = path.join(__dirname, "../resumes", userDetails.resume.originalname);
+            filePath = applicationDetails.cover_letter_doc.path
+        }
+        console.log("filePath",filePath);
+        
+        return {filename,filePath}
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        throw error
+    }
+}
+
