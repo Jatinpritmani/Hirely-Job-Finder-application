@@ -72,7 +72,7 @@ const Profile = () => {
      * Opens the resume in a web browser.
      */
     const onPressResume = async () => {
-        await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_RESUME}?user_id=${currentUserDetail.user_id}`);
+        await WebBrowser.openBrowserAsync(`${API_BASE_URL}${GET_RESUME}?user_id=${currentUserDetail?.user_id}`);
     }
 
     /**
@@ -103,16 +103,16 @@ const Profile = () => {
                     style={localStyles.profileImageStyle}
                 />
                 <HText type="S22" align='center' style={styles.mt10}>
-                    {currentUserDetail.user_name}
+                    {currentUserDetail?.user_name}
                 </HText>
                 <HText type="R12" align='center' color={Colors[colorScheme]?.subText}>
-                    {currentUserDetail.designation}
+                    {currentUserDetail?.designation}
                 </HText>
 
                 {isUserJobSeeker(currentUserDetail?.user_type) &&
                     <>
                         <HText type="B16" align='center' style={styles.mt30}>
-                            {currentUserDetail.total_job_applied}
+                            {currentUserDetail?.total_job_applied}
                         </HText>
 
                         <HText type="R12" align='center' color={Colors[colorScheme]?.subText} style={styles.mt10}>
@@ -123,7 +123,7 @@ const Profile = () => {
                 {isUserRecruiter(currentUserDetail?.user_type) &&
                     <>
                         <HText type="B16" align='center' style={styles.mt30}>
-                            {currentUserDetail.company_name || 'Google'}
+                            {currentUserDetail?.company_name || 'Google'}
                         </HText>
                         <HText type="R12" align='center' color={Colors[colorScheme]?.subText} style={styles.mt10}>
                             {'Company Name'}
@@ -150,10 +150,10 @@ const Profile = () => {
                                 </View>
                                 <View>
                                     <HText type="B12" align='center' >
-                                        {currentUserDetail.user_name}
+                                        {currentUserDetail?.user_name}
                                     </HText>
                                     <HText type="R12" align='center' color={Colors[colorScheme]?.subText}>
-                                        {currentUserDetail.designation}
+                                        {currentUserDetail?.designation}
                                     </HText>
                                 </View>
                                 <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.red80 }]}>
@@ -163,7 +163,7 @@ const Profile = () => {
                                 </View>
                             </View>
                             <HText type="L12" numberOfLines={3} color={Colors[colorScheme]?.subText} style={styles.mt10} >
-                                {currentUserDetail.bio}
+                                {currentUserDetail?.bio}
                             </HText>
                         </TouchableOpacity>
                     </>}

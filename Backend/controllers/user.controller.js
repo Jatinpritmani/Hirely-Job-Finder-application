@@ -21,7 +21,9 @@ module.exports={
     updateNotificationRead:updateNotificationRead,
     uploadImage:uploadImage,
     logout:logout,
-    updateJobDetails:updateJobDetails
+    updateJobDetails:updateJobDetails,
+    uploadCoverLetter:uploadCoverLetter,
+    getCoverLetter:getCoverLetter
 }
 
 async function userRegistration(req,res) {
@@ -331,5 +333,58 @@ async function updateJobDetails(req,res) {
         logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
         res.status(parseInt(error[utility_func.responseCons.RESP_CODE].slice(-3)));
         res.send(error);
+    } 
+}
+
+async function uploadCoverLetter(req,res) {
+    const func_name = 'uploadCoverLetter';
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+
+    try {
+        const response = await userService.uploadCoverLetter(req);
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+        res.status(parseInt(response[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(response);
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
+        res.status(parseInt(error[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(error);
+    } 
+}
+
+async function getCoverLetter(req,res) {
+    const func_name = 'getCoverLetter';
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+
+    try {
+        const {filename,filePath} = await userService.getCoverLetter(req);
+       
+        logger.info(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name);
+        // res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+        res.download(filePath,filename ,(err) => {
+            if (err) {
+                let errResponse= utility_func.responseGenerator(
+                    utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+                    utility_func.statusGenerator(
+                        utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                        utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+                    true
+                )
+                logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(err))
+                res.status(parseInt(errResponse[utility_func.responseCons.RESP_CODE].slice(-3)));
+                res.send(errResponse);
+            }
+          });
+    } catch (error) {
+        let errResponse= utility_func.responseGenerator(
+                    utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+                    utility_func.statusGenerator(
+                        utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                        utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+                    true
+                )
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_CONTROLLER + ' => ' + func_name + ' error => ' + JSON.stringify(error))
+        res.status(parseInt(errResponse[utility_func.responseCons.RESP_CODE].slice(-3)));
+        res.send(errResponse);
     } 
 }

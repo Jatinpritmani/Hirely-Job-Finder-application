@@ -1,5 +1,8 @@
-import { Image, StyleSheet, useColorScheme, View } from 'react-native'
+import { Alert, Image, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useRef, useState } from 'react'
+import * as DocumentPicker from "expo-document-picker";
+import Toast from "react-native-toast-message";
+
 
 // local imports
 import { Colors } from '@/constants/Colors';
@@ -11,11 +14,11 @@ import HText from '../components/common/HText';
 import { useLocalSearchParams } from 'expo-router';
 import HInput from '../components/common/HInput';
 import HButton from '../components/common/HButton';
-import apiRequest, { FILE_BASE_URL } from '../components/api';
-import { APPLY_JOB } from '../components/apiConstants';
+import apiRequest, { FILE_BASE_URL, uploadFile } from '../components/api';
+import { APPLY_JOB, UPLOAD_COVER_LETTER } from '../components/apiConstants';
 import ApplySuccess from '../components/modals/applySuccess';
 import { useSelector } from 'react-redux';
-import { CheckMark } from '../assets/svgs';
+import { CheckMark, CrossIcon, DocumentIcon, FileUpload } from '../assets/svgs';
 import HKeyBoardAvoidWrapper from '../components/common/HKeyBoardAvoidWrapper';
 import images from '../assets/images';
 
@@ -32,6 +35,8 @@ const applyJob = () => {
     const [jodDetails, setJobDetails] = useState(JSON.parse(jobDetail))
     const [coverLetter, setCoverLetter] = useState('')
     const [coverLetterErrorMessage, setCoverLetterErrorMessage] = useState('')
+    const [selectedFile, setSelectedFile] = useState();
+
 
     /**
      * Updates the cover letter state and validates the input.
@@ -45,12 +50,22 @@ const applyJob = () => {
             setCoverLetterErrorMessage("");
         }
     };
-
+    console.log('====================================');
+    console.log('jodDetails', jodDetails);
+    console.log('====================================');
     /**
      * Handles the Apply Now button press event.
      * Validates the input fields and handles the job application process.
      */
     const onPressApply = async (text) => {
+        if (!selectedFile) {
+            Toast.show({
+                type: "error",
+                text1: "Please Select Cover Letter.",
+            });
+            return
+        }
+
         let payload = {
             recruiter_id: jodDetails?.recruiter_id,
             job_id: jodDetails?._id,
@@ -59,15 +74,73 @@ const applyJob = () => {
             status: "application_submitted",
             cover_letter: coverLetter || ''
         }
+
         try {
-            let response = await apiRequest("POST", APPLY_JOB, payload);
-            if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
-                applySuccessSheetRef?.current?.show()
+            let apiresponse = await apiRequest("POST", APPLY_JOB, payload);
+            if (apiresponse?.code == 'HJFA_MS_OK_200' && !apiresponse?.error_status) {
+                console.log('====================================');
+                console.log('response', apiresponse);
+                console.log('==================selectedFile==================', selectedFile);
+                try {
+                    const response = await uploadFile(
+                        UPLOAD_COVER_LETTER,
+                        selectedFile?.uri,
+                        selectedFile?.mimeType,
+                        selectedFile?.name,
+                        { application_id: apiresponse?.data?.application_id }
+                    );
+                    if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+
+                        Toast.show({
+                            type: 'success',
+                            text1: 'Upload Successful',
+                            text2: 'Your Cover Letter has been uploaded.',
+                        });
+                        applySuccessSheetRef?.current?.show()
+
+                    }
+                    else {
+                        Toast.show({
+                            type: 'error',
+                            text1: 'Upload Failed',
+                            text2: 'Failed to Upload your Resume.',
+                        });
+                    }
+                } catch (error) {
+                    console.error('Upload Error:', error);
+                }
+
             }
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
             setIsLoading(false)
+        }
+    };
+
+    /**
+         * Function to pick a PDF file from the device storage.
+         * Sets the selected file and updates the state.
+         */
+    const pickPDF = async () => {
+        try {
+            const result = await DocumentPicker.getDocumentAsync({
+                type: "application/pdf", // Only allow PDF files
+                copyToCacheDirectory: false, // Optional: avoid unnecessary copies
+            });
+
+            if (result.canceled) {
+                console.log("User canceled file selection");
+                return;
+            }
+
+            const file = result.assets[0]; // Access selected file details
+            console.log("Selected File:", file);
+            setSelectedFile(file);
+            return file; // Return file if needed for upload
+        } catch (error) {
+            console.error("Error picking file:", error);
+            Alert.alert("Error", "Failed to pick a file.");
         }
     };
 
@@ -124,17 +197,48 @@ const applyJob = () => {
                             (Optional)
                         </HText>
                     </HText>
-                    <HInput
-                        _value={coverLetter}
-                        // label="Job Description"
-                        placeHolder="Write a cover letter......"
-                        toGetTextFieldValue={onChangeCoverLetter}
-                        _errorText={coverLetterErrorMessage}
-                        required={true}
-                        multiline
-                        inputContainerStyle={[styles.mt15, { borderWidth: 0, backgroundColor: Colors[colorScheme]?.white }]}
-                        inputBoxStyle={[styles.pv15, styles.ml15]}
-                    />
+                    <View style={[styles.flexRow, styles.flex]}>
+                        <HInput
+                            _value={coverLetter}
+                            // label="Job Description"
+                            placeHolder="Write a cover letter......"
+                            toGetTextFieldValue={onChangeCoverLetter}
+                            _errorText={coverLetterErrorMessage}
+                            required={true}
+                            multiline
+                            inputContainerStyle={[styles.mt15, { borderWidth: 0, backgroundColor: Colors[colorScheme]?.white, width: '88%' }]}
+                            inputBoxStyle={[styles.pv15, styles.ml15]}
+                        />
+                        <TouchableOpacity onPress={pickPDF} style={[localstyles.uploadFileContainer, { backgroundColor: Colors[colorScheme]?.white }]}>
+                            <FileUpload />
+                            <HText type='R10' style={styles.mt10} align='center' color={Colors[colorScheme]?.primary}>
+                                Upload
+                                File
+                            </HText>
+                        </TouchableOpacity>
+                    </View>
+
+                    {selectedFile &&
+                        <View
+                            style={[
+                                localstyles.fileView,
+                                { backgroundColor: Colors[colorScheme]?.grayScale1 },
+                            ]}
+                        >
+                            <DocumentIcon />
+                            <HText
+                                type="M14"
+                                align="center"
+                                color={Colors[colorScheme]?.grayScale4}
+                                style={[{ width: '70%' }]}
+                            >
+                                {selectedFile?.name}
+                            </HText>
+                            <TouchableOpacity style={styles.p5} onPress={() => setSelectedFile(null)}>
+                                <CrossIcon />
+                            </TouchableOpacity>
+                        </View>
+                    }
                     <HButton
                         onPress={onPressApply}
                         textType={"S16"}
@@ -177,5 +281,20 @@ const localstyles = StyleSheet.create({
         ...styles.pv5,
         borderRadius: moderateScale(6),
         ...styles.selfCenter
-    }
+    },
+    uploadFileContainer: {
+        ...styles.center,
+        ...styles.flex,
+        ...styles.mt15,
+        marginLeft: moderateScale(-20),
+        ...styles.p5,
+        borderRadius: moderateScale(12),
+    },
+    fileView: {
+        ...styles.mt15,
+        ...styles.ph20,
+        ...styles.pv10,
+        borderRadius: moderateScale(12),
+        ...styles.rowSpaceBetween,
+    },
 })

@@ -17,6 +17,14 @@ export const FILE_BASE_URL = 'http://192.168.29.187:4402/resumes/'  // use your 
 const apiRequest = async (method = "GET", endpoint, data = {}, params = {}, headers = {}) => {
     try {
         const isFileUpload = data instanceof FormData; // Check if data is FormData
+        console.log('isFileUpload', isFileUpload);
+        console.log('data', data);
+        console.log('endpoint', endpoint);
+        console.log('params', params);
+        console.log('headers', headers);
+        console.log('method', method);
+        console.log('API_BASE_URL', `${API_BASE_URL}${endpoint}`);
+
         const response = await axios({
             method,
             url: `${API_BASE_URL}${endpoint}`,
@@ -63,6 +71,7 @@ export const deleteRequest = (endpoint) => apiRequest('DELETE', endpoint);
 export const uploadFile = (endpoint, fileUri, fileType, fileName, extraData) => {
     const formData = new FormData();
 
+
     formData.append('file', {
         uri: fileUri,
         type: fileType,
@@ -71,6 +80,10 @@ export const uploadFile = (endpoint, fileUri, fileType, fileName, extraData) => 
     Object.keys(extraData).forEach(key => {
         formData.append(key, extraData[key]);
     });
+    console.log('formData',
+        formData);
+    console.log('endpoint', endpoint);
+    console.log('fileUri', fileUri);
 
 
     return apiRequest('POST', endpoint, formData);

@@ -29,7 +29,9 @@ module.exports={
     updateNotificationRead:updateNotificationRead,
     uploadImage:uploadImage,
     logout:logout,
-    updateJobDetails:updateJobDetails
+    updateJobDetails:updateJobDetails,
+    uploadCoverLetter:uploadCoverLetter,
+    getCoverLetter:getCoverLetter
 }
 
 async function encryptPassword(password){
@@ -429,7 +431,7 @@ async function applyJob(req) {
         
         const applicationExists = await Application.findOne({job_id:job_id,job_seeker_id:job_seeker_id})
         const savedJobExists = await SavedJob.findOne({job_id:job_id,job_seeker_id:job_seeker_id})
-        
+        let applicationId
         if(apply_type == "save_job"){
             if(savedJobExists){
                 return utility_func.responseGenerator(
@@ -454,6 +456,7 @@ async function applyJob(req) {
            const applicationDetails = await Application.create( { job_id,job_seeker_id,recruiter_id,cover_letter ,status, status_history} );
            const jobSeekerDetails = await User.findOne({_id:job_seeker_id},{user_name:1})
            const recruiterDetails = await User.findOne({_id:recruiter_id},{fcm_token:1})
+           applicationId = applicationDetails._id
            if(applicationDetails){
                 let notification = {
                     job_id : applicationDetails.job_id, 
@@ -495,7 +498,8 @@ async function applyJob(req) {
             utility_func.statusGenerator(
                 utility_func.httpStatus.ReasonPhrases.OK,
                 utility_func.httpStatus.StatusCodes.OK),
-            false
+            false,
+            {application_id:applicationId}
         )
 
     } catch (error) {
@@ -636,7 +640,9 @@ async function getAppliedJobs(req) {
                     summary: "$jobDetails.summary",
                     requirenment: "$jobDetails.requirenment",
                     image:"$jobDetails.image",
-                    company_name:"$recruiterDetails.company_name"
+                    company_name:"$recruiterDetails.company_name",
+                    cover_letter:"$cover_letter",
+                    cover_letter_doc:"$cover_letter_doc"
                 }
             }
         ]);
@@ -771,6 +777,7 @@ async function recruiterDetails(req) {
                                     recruiter_id: "$$application.recruiter_id",
                                     status: "$$application.status",
                                     cover_letter: "$$application.cover_letter",
+                                    cover_letter_doc:"$$application.cover_letter_doc",
                                     job: {
                                         $arrayElemAt: [
                                             {
@@ -1067,3 +1074,82 @@ async function updateJobDetails(req) {
         )
     }
 }
+
+async function uploadCoverLetter(req) {
+    let func_name = "uploadCoverLetter"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let application_id = req.body.application_id         
+        
+        let applicationDetails = await Application.findOne({_id : application_id},
+            {cover_letter_doc:1}
+        )
+        applicationDetails = applicationDetails.toJSON(); 
+        
+        if(applicationDetails.cover_letter_doc){
+            const filePath = path.join(__dirname, "../coverLetters", applicationDetails.cover_letter_doc.originalname);
+            if(fs.existsSync(filePath)){
+                await fs.promises.unlink(filePath)
+            }
+        }
+        console.log("req.filereq.file",req.file);
+        console.log("application_id",application_id);
+        
+        if(req.file){
+            let cover_letter_doc={
+                filename: req.file.filename,
+                contentType: req.file.mimetype,
+                originalname:req.file.originalname,
+                path : path.join(__dirname, "../coverLetters", req.file.originalname)
+            }
+            
+            await Application.findByIdAndUpdate({_id:application_id},{$set:{cover_letter_doc:cover_letter_doc}})
+        }
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SUCCESS_MSG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.OK,
+                utility_func.httpStatus.StatusCodes.OK),
+            false
+        )
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        return utility_func.responseGenerator(
+            utility_func.responseCons.RESP_SOMETHING_WENT_WRONG,
+            utility_func.statusGenerator(
+                utility_func.httpStatus.ReasonPhrases.INTERNAL_SERVER_ERROR,
+                utility_func.httpStatus.StatusCodes.INTERNAL_SERVER_ERROR),
+            true
+        )
+    }
+}
+
+
+async function getCoverLetter(req) {
+    let func_name = "getCoverLetter"
+    logger.info(utility_func.logsCons.LOG_ENTER + utility_func.logsCons.LOG_SERVICE + ' => ' + func_name)
+
+    try {
+        let application_id = req.query.application_id 
+
+        let applicationDetails = await Application.findOne({_id : application_id},
+            {cover_letter_doc:1}
+        )
+        
+        applicationDetails = applicationDetails.toJSON(); 
+        let filePath
+        let filename=applicationDetails.cover_letter_doc.originalname
+        if(applicationDetails.cover_letter_doc){
+            // filePath = path.join(__dirname, "../resumes", userDetails.resume.originalname);
+            filePath = applicationDetails.cover_letter_doc.path
+        }
+        console.log("filePath",filePath);
+        
+        return {filename,filePath}
+    } catch (error) {
+        logger.error(utility_func.logsCons.LOG_EXIT + utility_func.logsCons.LOG_SERVICE +' '+JSON.stringify(error) + " => " + func_name);
+        throw error
+    }
+}
+

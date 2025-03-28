@@ -3,6 +3,8 @@ const router = express.Router();
 const middleware = require('../utilities/middlewares/validator.middlewares')
 const fileUploadMiddleware = require('../utilities/middlewares/fileUpload.middlewares')
 const imageUploadMiddleware = require('../utilities/middlewares/image.middlewares')
+const coverLetterMiddleware = require('../utilities/middlewares/coverLetter.middlewares')
+
 
 const jwtMiddleware = require('../utilities/middlewares/jwt-service.middlewares')
 const userMiddleware = require('../middlewares/user.middleware')
@@ -15,6 +17,8 @@ router.post('/userDetails/v1',userController.getUserDetails)
 router.get('/get/resume/v1',userController.getUserResume)
 router.post('/upload/resume/v1',fileUploadMiddleware.uploadFile,fileUploadMiddleware.handleFileUploadError,userController.uploadUserResume)
 router.post('/upload/image/v1',imageUploadMiddleware.uploadFile,imageUploadMiddleware.handleFileUploadError,userController.uploadImage)
+router.post('/upload/coverLetter/v1',coverLetterMiddleware.uploadFile,imageUploadMiddleware.handleFileUploadError,userController.uploadCoverLetter)
+router.get('/get/coverLetter/v1',userController.getCoverLetter)
 
 router.post('/createJobPost/v1',userController.createJobPost)
 router.post('/get/AllJobPosts/v1',userController.getAllJobPosts)
