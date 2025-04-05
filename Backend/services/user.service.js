@@ -378,7 +378,8 @@ async function getAllJobPosts(req) {
                     summary: "$summary",
                     requirenment: "$requirenment",
                     image: "$image",
-                    is_job_closed: "$is_job_closed"
+                    is_job_closed: "$is_job_closed",
+                    createdAt: "$createdAt"
                 }
             }
         ])
@@ -915,10 +916,10 @@ async function notificationList(req) {
         const user_id = req.body.user_id
         let notificationList
         if (req.body.user_id) {
-            notificationList = await Notification.find({ job_seeker_id: req.body.user_id, is_read: false }, {})
+            notificationList = await Notification.find({ job_seeker_id: req.body.user_id }, {})
         }
         if (req.body.recruiter_id) {
-            notificationList = await Notification.find({ recruiter_id: req.body.recruiter_id, is_read: false, type: "job_application" }, {})
+            notificationList = await Notification.find({ recruiter_id: req.body.recruiter_id, type: "job_application" }, {})
         }
 
         return utility_func.responseGenerator(
