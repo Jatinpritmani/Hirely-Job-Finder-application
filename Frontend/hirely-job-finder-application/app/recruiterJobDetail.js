@@ -26,6 +26,8 @@ const recruiterJobDetail = () => {
     const dispatch = useDispatch()
     const [jobDetails, setJobDetails] = useState(JSON.parse(jobDetail))
     const [responsibilities, setResponsibilities] = useState()
+    const [numberOfLines, setNumberOfLines] = useState(3)
+
     const allJobList = useSelector(state => state.jobReducer.allJobList)
     const recruiterDetails = useSelector(state => state.userReducer.recruiterDetails)
 
@@ -79,6 +81,20 @@ const recruiterJobDetail = () => {
     }
 
     /**
+     * Handles the Read More button press.
+     * Toggles the number of lines displayed for the job description.
+     * */
+    const onPressReadMore = () => {
+        console.log('numberOfLines', numberOfLines);
+
+        if (numberOfLines == 3) {
+            setNumberOfLines(0)
+        } else {
+            setNumberOfLines(3)
+        }
+    }
+
+    /**
      * Component for rendering the right icon in the header.
      */
     const RightIcon = () => {
@@ -128,7 +144,7 @@ const recruiterJobDetail = () => {
                         {jobDetails?.position}
                     </HText>
                     <HText type="M16" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
-                        {jobDetails?.company_name || 'Google'}
+                        {jobDetails?.company_name || ''}
                     </HText>
                     <View style={[styles.flexRow, styles.center, { gap: moderateScale(30) }]}>
                         <HText type="S16" align="center" style={styles.mt10} color={Colors[colorScheme]?.white}>
@@ -154,9 +170,14 @@ const recruiterJobDetail = () => {
                     <HText type="S16" align='left' color={Colors[colorScheme]?.headerColor} style={styles.mt25}  >
                         {'Job Description'}
                     </HText>
-                    <HText type="R14" align='left' numberOfLines={3} color={Colors[colorScheme]?.grayScale7} style={styles.mt15}  >
+                    <HText type="R14" align='left' numberOfLines={numberOfLines} color={Colors[colorScheme]?.grayScale7} style={styles.mt15}  >
                         {jobDetails?.summary}
                     </HText>
+                    <TouchableOpacity onPress={onPressReadMore} >
+                        <HText type="L12" color={Colors[colorScheme]?.subText} style={styles.mt10} >
+                            {numberOfLines == 3 ? '...Read More' : '...Read Less'}
+                        </HText>
+                    </TouchableOpacity>
                     <HText type="S16" align='left' color={Colors[colorScheme]?.headerColor} style={styles.mt25}  >
                         {'Responsibilities'}
                     </HText>

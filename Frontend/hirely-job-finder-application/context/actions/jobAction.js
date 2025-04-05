@@ -16,9 +16,10 @@ export const getAllJobList = userId => {
         try {
             let response = await apiRequest("POST", GET_ALL_JOBS, data);
             if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                let jobDetails = response?.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 dispatch(({
                     type: types.GET_ALL_JOB_LIST_SUCCESS,
-                    payload: response?.data
+                    payload: jobDetails
                 }))
 
             }

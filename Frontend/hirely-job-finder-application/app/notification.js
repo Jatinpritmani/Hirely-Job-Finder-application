@@ -53,13 +53,20 @@ const notification = () => {
         try {
             let response = await apiRequest("POST", GET_NOTIFICAITONS, data);
             if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
-                const jobNotifications = response?.data?.filter(item => item.type === "job_posted");
-                const statusNotifications = response?.data?.filter(item => item.type === "status_update");
-                const jobApplicationNotification = response?.data?.filter(item => item.type === "job_application");
+                if (response?.data?.length > 0) {
+                    const jobNotifications = response?.data?.filter(item => item.type === "job_posted");
+                    const statusNotifications = response?.data?.filter(item => item.type === "status_update");
+                    const jobApplicationNotification = response?.data?.filter(item => item.type === "job_application");
 
-                setJobNotificationData(jobNotifications);
-                setStatusNotificationData(statusNotifications);
-                setJobApplicationNotificationData(jobApplicationNotification);
+                    setJobNotificationData(jobNotifications);
+                    setStatusNotificationData(statusNotifications);
+                    setJobApplicationNotificationData(jobApplicationNotification);
+                }
+                else {
+                    setJobNotificationData([]);
+                    setStatusNotificationData([]);
+                    setJobApplicationNotificationData([]);
+                }
             }
             else {
                 console.error("Error fetching notifications:", response?.message);
@@ -84,7 +91,7 @@ const notification = () => {
      */
     const renderNotificaiton = ({ item, index }) => {
         return (
-            <NotificationCard item={item} index={index} />
+            <NotificationCard item={item} index={index} getAllNotifications={getAllNotifications} />
         )
     }
 

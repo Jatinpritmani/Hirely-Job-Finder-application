@@ -34,7 +34,7 @@ const AppliedJobCard = ({ item, index, cardStyle, }) => {
                     </HText>
 
                     <HText type="R12" style={{ opacity: 0.5 }}>
-                        {item?.company_name || 'Google'}
+                        {item?.company_name || ''}
                     </HText>
                 </View>
                 <View style={[styles.ph30, styles.pv5, { backgroundColor: Colors[colorScheme]?.yellow2, borderRadius: moderateScale(52) }]}>

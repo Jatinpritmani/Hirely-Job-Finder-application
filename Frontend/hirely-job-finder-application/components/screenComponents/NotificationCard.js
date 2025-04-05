@@ -8,12 +8,33 @@ import HText from '../common/HText'
 import { moderateScale } from '../../constants/constants'
 import { styles } from '../../themes'
 import { router } from 'expo-router';
+import { READ_NOTIFICAITONS } from '../apiConstants';
+import apiRequest from '../api';
 
-const NotificationCard = ({ item, index }) => {
+const NotificationCard = ({ item, index, getAllNotifications }) => {
     const colorsScheme = useColorScheme()
 
 
-    const readNotificaiton = async () => {
+
+    /**
+     * notification read api 
+     */
+    const readNotification = async () => {
+        let data =
+        {
+            "notification_id": item?.notification_id
+        }
+        try {
+            let response = await apiRequest("POST", READ_NOTIFICAITONS, data);
+            if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                getAllNotifications()
+            }
+            else {
+                console.error("Error fetching notifications:", response?.message);
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
         if (item?.type == "job_posted") {
             router.push({
                 pathname: "/jobDetail",
@@ -28,7 +49,7 @@ const NotificationCard = ({ item, index }) => {
         }
     }
     return (
-        <TouchableOpacity onPress={readNotificaiton} style={localStyles.main}>
+        <TouchableOpacity onPress={readNotification} style={localStyles.main}>
 
             <View>
 

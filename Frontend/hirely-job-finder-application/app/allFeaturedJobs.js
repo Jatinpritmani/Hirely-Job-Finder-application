@@ -89,7 +89,7 @@ const allFeaturedJobs = () => {
         <HSafeAreaView>
             <HHeader title={isUserRecruiter(currentUserDetail?.user_type) ? 'All Applicants' : 'All Featured Jobs'} />
             <FlatList
-                data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails?.reverse() : allJobListData?.reverse()}
+                data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails?.reverse() : allJobListData}
                 renderItem={renderJobCard}
                 onRefresh={onRefresh}
                 refreshing={refreshing}
