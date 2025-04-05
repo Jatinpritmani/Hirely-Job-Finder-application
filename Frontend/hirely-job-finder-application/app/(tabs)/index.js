@@ -340,9 +340,9 @@ const Home = () => {
                     </>
                     :
                     <>
-                        <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'your job posting' : 'Recommended Jobs'} onPressSeeAll={onPressSeeAllJobs} style={styles.mt30} />
+                        <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'your job posting' : 'New Posting'} onPressSeeAll={onPressSeeAllJobs} style={styles.mt30} />
                         <FlatList
-                            data={isUserRecruiter(currentUserDetail?.user_type) ? (recruiterDetailsData && recruiterDetailsData?.jobDetails?.slice(-2).reverse()) : (allJobList && allJobList.slice(-2).reverse())}
+                            data={isUserRecruiter(currentUserDetail?.user_type) ? (recruiterDetailsData && recruiterDetailsData?.jobDetails?.slice(-2).reverse()) : (allJobList && allJobList)}
                             renderItem={renderRecomendedJobItem}
                             style={[styles.mt25]}
                             scrollEnabled={false}
@@ -351,7 +351,7 @@ const Home = () => {
                         />
                         <TitleComponent title={isUserRecruiter(currentUserDetail?.user_type) ? 'Recent People Applied' : 'Featured Jobs'} onPressSeeAll={onPressSeeAllFeaturedJobs} />
                         <FlatList
-                            data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails?.reverse() : shuffleArray(allJobList)}
+                            data={isUserRecruiter(currentUserDetail?.user_type) ? recruiterDetailsData?.appliedJobDetails?.reverse() : allJobList}
                             renderItem={renderFeaturedJobItem}
                             style={[styles.mt25]}
                             horizontal

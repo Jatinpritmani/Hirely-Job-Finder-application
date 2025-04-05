@@ -30,7 +30,6 @@ const jobSeekerDetail = () => {
 
     const { jobseekerDetail, index } = useLocalSearchParams()
     const [jobSeekerData, setJobSeekerData] = useState(JSON.parse(jobseekerDetail))
-    const allJobList = useSelector(state => state.jobReducer.allJobList)
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
     const loading = useSelector(state => state.jobReducer.loading)
     const [currentStatus, setCurrentStatus] = useState()
@@ -266,7 +265,7 @@ const jobSeekerDetail = () => {
                                 color={Colors[colorScheme]?.white}
                                 title={currentStatus?.label}
                                 containerStyle={[styles.mv30,]}
-                                bgColor={Colors[colorScheme]?.primary}
+                                bgColor={currentStatus?.label == 'final_interview_success' ? Colors[colorScheme]?.primary : Colors[colorScheme]?.green}
                             ></HButton>
                             <HButton
                                 onPress={onPressJobStatuReject}

@@ -58,13 +58,7 @@ const applyJob = () => {
      * Validates the input fields and handles the job application process.
      */
     const onPressApply = async (text) => {
-        if (!selectedFile) {
-            Toast.show({
-                type: "error",
-                text1: "Please Select Cover Letter.",
-            });
-            return
-        }
+
 
         let payload = {
             recruiter_id: jodDetails?.recruiter_id,
@@ -81,34 +75,40 @@ const applyJob = () => {
                 console.log('====================================');
                 console.log('response', apiresponse);
                 console.log('==================selectedFile==================', selectedFile);
-                try {
-                    const response = await uploadFile(
-                        UPLOAD_COVER_LETTER,
-                        selectedFile?.uri,
-                        selectedFile?.mimeType,
-                        selectedFile?.name,
-                        { application_id: apiresponse?.data?.application_id }
-                    );
-                    if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                if (selectedFile) {
+                    try {
+                        const response = await uploadFile(
+                            UPLOAD_COVER_LETTER,
+                            selectedFile?.uri,
+                            selectedFile?.mimeType,
+                            selectedFile?.name,
+                            { application_id: apiresponse?.data?.application_id }
+                        );
+                        if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
 
-                        Toast.show({
-                            type: 'success',
-                            text1: 'Upload Successful',
-                            text2: 'Your Cover Letter has been uploaded.',
-                        });
-                        applySuccessSheetRef?.current?.show()
+                            Toast.show({
+                                type: 'success',
+                                text1: 'Upload Successful',
+                                text2: 'Your cover letter has been uploaded successfully.',
+                            });
+                            applySuccessSheetRef?.current?.show()
 
+                        }
+                        else {
+                            Toast.show({
+                                type: 'error',
+                                text1: 'Upload Failed',
+                                text2: 'Failed to Upload your Resume.',
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Upload Error:', error);
                     }
-                    else {
-                        Toast.show({
-                            type: 'error',
-                            text1: 'Upload Failed',
-                            text2: 'Failed to Upload your Resume.',
-                        });
-                    }
-                } catch (error) {
-                    console.error('Upload Error:', error);
                 }
+                else {
+                    applySuccessSheetRef?.current?.show()
+                }
+
 
             }
         } catch (error) {
@@ -167,7 +167,7 @@ const applyJob = () => {
                             </View>
                             <View style={styles.rowSpaceBetween}>
                                 <HText type="R12" style={{ opacity: 0.5 }}>
-                                    {jodDetails?.company_name || 'Google'}
+                                    {jodDetails?.company_name || ''}
                                 </HText>
                                 <HText type="R12" color={Colors[colorScheme]?.grayScale7}>
                                     {getLocationLabel(jodDetails?.location) || ''}

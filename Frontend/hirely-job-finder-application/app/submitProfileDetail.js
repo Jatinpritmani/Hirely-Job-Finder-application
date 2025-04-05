@@ -371,7 +371,7 @@ const ExperienceCard = ({ item, index, experience, setExperience }) => {
             </View>
             <View style={styles.rowSpaceBetween}>
                 <HText type="S14">
-                    {item?.company_name || 'Google'}
+                    {item?.company_name || ''}
                 </HText>
                 <HText type="R12">
                     {item?.experience_from} - {item?.experience_to}
