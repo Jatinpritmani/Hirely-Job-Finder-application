@@ -175,9 +175,12 @@ const jobDetail = () => {
                         </HText>
                     </View>
                     <View style={[localStyles.labelStyle, { backgroundColor: Colors[colorScheme]?.white15 }]}>
-                        <HText type="R12" color={Colors[colorScheme]?.white}>
+                        <View style={[localStyles.triangleRight, { borderLeftColor: '#476c99' }]} />
+
+                        <HText type="R12" style={[styles.ph20, styles.pv5]} color={Colors[colorScheme]?.white}>
                             {getJobTypeLabel(jobDetails?.job_type)}
                         </HText>
+                        <View style={[localStyles.triangleShapeLeft, { borderRightColor: '#476c99' }]} />
                     </View>
                 </View>
 
@@ -242,10 +245,27 @@ const localStyles = StyleSheet.create({
     labelStyle: {
         ...styles.mb30,
         ...styles.mt25,
-        ...styles.ph15,
-        ...styles.pv5,
         ...styles.selfCenter,
-        borderRadius: moderateScale(50)
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    triangleShapeLeft: {
+        width: 0,
+        height: 0,
+        borderTopWidth: 20,
+        borderBottomWidth: 20,
+        borderRightWidth: 15,
+        borderTopColor: 'transparent',
+        borderBottomColor: 'transparent',
+    },
+    triangleRight: {
+        width: 0,
+        height: 0,
+        borderTopWidth: 20,
+        borderBottomWidth: 20,
+        borderLeftWidth: 15,
+        borderTopColor: 'transparent',
+        borderBottomColor: 'transparent',
     },
     upperContainer: {
         borderBottomEndRadius: moderateScale(32),
