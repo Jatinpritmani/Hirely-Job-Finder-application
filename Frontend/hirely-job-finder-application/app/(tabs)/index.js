@@ -377,11 +377,11 @@ const TitleComponent = ({ title, onPressSeeAll, style }) => {
             <HText type="S16" style={styles.mt10}>
                 {title}
             </HText>
-            <TouchableOpacity onPress={onPressSeeAll}>
-                <HText type="R14" style={styles.mt10} color={Colors[colorScheme]?.subText}>
-                    {'See all'}
+            {title != 'Featured Jobs' && <TouchableOpacity onPress={onPressSeeAll}>
+                <HText type="R14" style={styles.mt10} color={Colors[colorScheme]?.primary}>
+                    {'See all >'}
                 </HText>
-            </TouchableOpacity>
+            </TouchableOpacity>}
         </View>
     )
 }
