@@ -337,6 +337,11 @@ async function getAllJobPosts(req) {
         const filters = {
             $and: []
         };
+        const user = await User.findById(user_id);
+        if (user && user.user_type === 'recruiter') {
+            filters.$and.push({ recruiter_id: user._id });
+        }
+        console.log("filters", filters, user);
 
         if (req.body.filter_by_location && req.body.filter_by_location.length > 0) {
             filters.$and.push({ location: { $in: req.body.filter_by_location } });
@@ -379,7 +384,8 @@ async function getAllJobPosts(req) {
                     requirenment: "$requirenment",
                     image: "$image",
                     is_job_closed: "$is_job_closed",
-                    createdAt: "$createdAt"
+                    createdAt: "$createdAt",
+                    number_of_opening: "$number_of_opening",
                 }
             }
         ])
