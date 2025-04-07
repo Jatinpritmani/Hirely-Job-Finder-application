@@ -1,6 +1,8 @@
 import { Image, ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import * as WebBrowser from 'expo-web-browser';
+import Toast from 'react-native-toast-message';
+
 
 // local imports
 import { Colors } from '@/constants/Colors';
@@ -49,9 +51,20 @@ const jobSeekerDetail = () => {
     }, [jobseekerDetail,])
 
     useEffect(() => {
+
         let job = recruiterDetails?.appliedJobDetails?.find(item => item?.applied_job_id == JSON.parse(jobseekerDetail)?.applied_job_id)
-        setJobSeekerData(job)
-        getNextStatus(job?.status)
+        if (!job) {
+            router.back()
+            Toast.show({
+                type: 'error',
+                text1: 'Detail doesn not exist',
+            });
+        } else {
+            setJobSeekerData(job)
+            getNextStatus(job?.status)
+        }
+
+
 
     })
 
@@ -156,7 +169,7 @@ const jobSeekerDetail = () => {
         }
     }
 
-    if (loader) {
+    if (loader || !jobSeekerData) {
         return <HLoader />;
     }
     return (
@@ -214,34 +227,36 @@ const jobSeekerDetail = () => {
                     </TouchableOpacity>
 
 
-                    <HText type="S16" align='left' color={Colors[colorScheme]?.headerColor} style={styles.mt25}  >
-                        {'Cover Letter'}
-                    </HText>
-                    <TouchableOpacity onPress={onPressCoverLetter} style={[localStyles.cvContainer, { backgroundColor: Colors[colorScheme]?.white }]}>
-                        <View style={styles.rowSpaceBetween}>
-                            <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.primary1 }]}>
-                                <HText type="M10" color={Colors[colorScheme]?.white} >
-                                    {'CL'}
-                                </HText>
-                            </View>
-                            <View>
-                                <HText type="B12" align='center' >
-                                    {jobSeekerData.user_name}
-                                </HText>
-                                <HText type="R12" align='center' color={Colors[colorScheme]?.subText}>
-                                    {jobSeekerData.designation}
-                                </HText>
-                            </View>
-                            <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.red80 }]}>
-                                <HText type="M10" color={Colors[colorScheme]?.white} >
-                                    {'PDF'}
-                                </HText>
-                            </View>
-                        </View>
-                        <HText type="L12" color={Colors[colorScheme]?.subText} style={styles.mt10} >
-                            {jobSeekerData.cover_letter}
+                    {jobSeekerData && jobSeekerData.cover_letter &&
+                        <><HText type="S16" align='left' color={Colors[colorScheme]?.headerColor} style={styles.mt25}  >
+                            {'Cover Letter'}
                         </HText>
-                    </TouchableOpacity>
+                            <TouchableOpacity onPress={onPressCoverLetter} style={[localStyles.cvContainer, { backgroundColor: Colors[colorScheme]?.white }]}>
+                                <View style={styles.rowSpaceBetween}>
+                                    <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.primary1 }]}>
+                                        <HText type="M10" color={Colors[colorScheme]?.white} >
+                                            {'CL'}
+                                        </HText>
+                                    </View>
+                                    <View>
+                                        <HText type="B12" align='center' >
+                                            {jobSeekerData.user_name}
+                                        </HText>
+                                        <HText type="R12" align='center' color={Colors[colorScheme]?.subText}>
+                                            {jobSeekerData.designation}
+                                        </HText>
+                                    </View>
+                                    <View style={[localStyles.cvText, { backgroundColor: Colors[colorScheme]?.red80 }]}>
+                                        <HText type="M10" color={Colors[colorScheme]?.white} >
+                                            {'PDF'}
+                                        </HText>
+                                    </View>
+                                </View>
+                                <HText type="L12" color={Colors[colorScheme]?.subText} style={styles.mt10} >
+                                    {jobSeekerData.cover_letter}
+                                </HText>
+                            </TouchableOpacity>
+                        </>}
 
 
                     <>
@@ -255,7 +270,8 @@ const jobSeekerDetail = () => {
                                 </HText>
                             </TouchableOpacity>
                         </View>
-                        <ExperienceCard item={jobSeekerData?.experience[0]} isShowDelete={false} cardStyle={localStyles.experiencecardStyle} />
+
+                        <ExperienceCard item={jobSeekerData?.experience && jobSeekerData?.experience[0]} isShowDelete={false} cardStyle={localStyles.experiencecardStyle} />
                     </>
                     {nextStatus && currentStatus != 'rejected' &&
                         <>
@@ -265,7 +281,7 @@ const jobSeekerDetail = () => {
                                 color={Colors[colorScheme]?.white}
                                 title={currentStatus?.label}
                                 containerStyle={[styles.mv30,]}
-                                bgColor={currentStatus?.label == 'final_interview_success' ? Colors[colorScheme]?.primary : Colors[colorScheme]?.green}
+                                bgColor={currentStatus?.status == 'final_interview_success' ? Colors[colorScheme]?.green : Colors[colorScheme]?.primary}
                             ></HButton>
                             <HButton
                                 onPress={onPressJobStatuReject}
@@ -328,7 +344,7 @@ const localStyles = StyleSheet.create({
         borderWidth: 0
     },
     resumeContainerStyle: {
-        ...styles.mt45,
+        ...styles.mt25,
         ...styles.rowSpaceBetween
     },
 })

@@ -17,6 +17,7 @@ import { USER_LOGIN } from "../components/apiConstants";
 import apiRequest from "../components/api";
 import { getUserDetail } from "../context/actions/userActions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import HKeyBoardAvoidWrapper from "../components/common/HKeyBoardAvoidWrapper";
 
 /**
  * This component renders the login screen.
@@ -142,11 +143,13 @@ const login = () => {
 
     return (
         <HSafeAreaView >
-            <AuthHeader
-                title="Welcome Back"
-                description={currentUserType == 'job_seeker' ? "Let’s Login. Apply to jobs!" : "Let’s Login. Start hiring top talent today!"}
-            />
-            <View style={localStyles.innerContainer}>
+            <HKeyBoardAvoidWrapper containerStyle={[localStyles.inputContainer, styles.flexGrow1]} >
+                <AuthHeader
+                    title="Welcome Back"
+                    description={currentUserType == 'job_seeker' ? "Let’s Login. Apply to jobs!" : "Let’s Login. Start hiring top talent today!"}
+                />
+
+
                 <View style={localStyles.inputContainer}>
                     <HInput
                         _value={email}
@@ -184,25 +187,25 @@ const login = () => {
                         }
                     ></HButton>
                 </View>
-                <View style={localStyles.haventAccountContainer}>
+            </HKeyBoardAvoidWrapper>
+            <View style={localStyles.haventAccountContainer}>
+                <HText
+                    align={"center"}
+                    color={Colors[colorScheme]?.grayScale6}
+                    type="M14"
+                >
+                    Haven’t an account?
+                </HText>
+                <TouchableOpacity onPress={onPressRegister} >
                     <HText
                         align={"center"}
-                        color={Colors[colorScheme]?.grayScale6}
+                        style={styles.ml5}
+                        color={Colors[colorScheme]?.primary}
                         type="M14"
                     >
-                        Haven’t an account?
+                        Register
                     </HText>
-                    <TouchableOpacity onPress={onPressRegister} >
-                        <HText
-                            align={"center"}
-                            style={styles.ml5}
-                            color={Colors[colorScheme]?.primary}
-                            type="M14"
-                        >
-                            Register
-                        </HText>
-                    </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
             </View>
         </HSafeAreaView>
     );
@@ -211,10 +214,6 @@ const login = () => {
 export default login;
 
 const localStyles = StyleSheet.create({
-    innerContainer: {
-        ...styles.justifyBetween,
-        ...styles.flex,
-    },
     inputContainer: {
         ...styles.mt10,
     },

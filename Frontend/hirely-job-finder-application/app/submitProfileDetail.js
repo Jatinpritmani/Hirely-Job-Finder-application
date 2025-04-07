@@ -22,6 +22,7 @@ import MonthYearPicker from "../components/modals/monthYearPicker";
 import { isTruthyString } from "../utils/validator";
 import { TrashIcon } from "../assets/svgs";
 import HHeader from "../components/common/HHeader";
+import HKeyBoardAvoidWrapper from "../components/common/HKeyBoardAvoidWrapper";
 
 const SubmitPforileDetail = () => {
     const colorScheme = useColorScheme();
@@ -212,139 +213,142 @@ const SubmitPforileDetail = () => {
                 containerStyle={styles.ph20}
             />
             <View style={localStyles.innerContainer}>
-                <ScrollView showsVerticalScrollIndicator={false} style={localStyles.inputContainer}>
-                    <View >
-                        <View style={styles.mh20}>
-                            <HInput
-                                _value={about}
-                                label="About"
-                                placeHolder="About Yourself"
-                                toGetTextFieldValue={onChangeabout}
-                                _errorText={aboutErrorMessage}
-                                required={true}
-                                multiline
-                            />
-                            <HInput
-                                _value={jobRole}
-                                label="Job Role"
-                                placeHolder="Job Role"
-                                toGetTextFieldValue={onChangeJobRole}
-                                _errorText={jobRoleErrorMessage}
-                                required={true}
-                            />
-                        </View>
-                        {experience?.length > 0 && (
-                            <>
-                                <HText type="S14" style={[styles.mt10, styles.mh20]}>
-                                    Experiences
-                                </HText>
-                                <FlatList
-                                    data={experience}
-                                    renderItem={renderItem}
-                                    style={styles.mt10}
+                <HKeyBoardAvoidWrapper containerStyle={[localStyles.inputContainer, styles.flexGrow1]} >
+
+                    <ScrollView showsVerticalScrollIndicator={false} style={localStyles.inputContainer}>
+                        <View >
+                            <View style={styles.mh20}>
+                                <HInput
+                                    _value={about}
+                                    label="About"
+                                    placeHolder="About Yourself"
+                                    toGetTextFieldValue={onChangeabout}
+                                    _errorText={aboutErrorMessage}
+                                    required={true}
+                                    multiline
                                 />
-                            </>
-                        )}
-                        {
-                            isShowExperienceFields ? (
-                                <View style={styles.mh20}>
-                                    <HInput
-                                        _value={companyName}
-                                        label="Company Name"
-                                        placeHolder="Company Name"
-                                        toGetTextFieldValue={onChangeCompanyName}
-                                        _errorText={companyNameErrorMessage}
-                                        required={true}
+                                <HInput
+                                    _value={jobRole}
+                                    label="Job Role"
+                                    placeHolder="Job Role"
+                                    toGetTextFieldValue={onChangeJobRole}
+                                    _errorText={jobRoleErrorMessage}
+                                    required={true}
+                                />
+                            </View>
+                            {experience?.length > 0 && (
+                                <>
+                                    <HText type="S14" style={[styles.mt10, styles.mh20]}>
+                                        Experiences
+                                    </HText>
+                                    <FlatList
+                                        data={experience}
+                                        renderItem={renderItem}
+                                        style={styles.mt10}
                                     />
-                                    <HInput
-                                        _value={experienceJobRole}
-                                        label="Job Role At Company"
-                                        placeHolder="Job Role At Company"
-                                        toGetTextFieldValue={onChangeExperienceJobRole}
-                                        _errorText={experienceJobRoleErrorMessage}
-                                        required={true}
-                                    />
-                                    <HInput
-                                        _value={companyLocation}
-                                        label="Company Location"
-                                        placeHolder="Comapny Location"
-                                        toGetTextFieldValue={onChangeCompanyLocation}
-                                        _errorText={companyLocationErrorMessage}
-                                        required={true}
-                                    />
-                                    <View style={localStyles.experincePeriodStyle}>
-                                        <View style={styles.flex}>
-                                            <TouchableOpacity onPress={onPressStartDate} style={[localStyles.periodboxStyle, { borderColor: Colors[colorScheme]?.borderColor }]}>
-                                                <HText type={'M14'}>
-                                                    {startFromDate || 'Start Date'}
-                                                </HText>
-                                            </TouchableOpacity>
-                                            {startDateErrorMessage && <HText type={'R12'} style={[localStyles.errorStyle, { color: Colors[colorScheme]?.danger }]}>
-                                                {startDateErrorMessage}
-                                            </HText>}
-                                        </View>
-                                        <View style={styles.flex}>
+                                </>
+                            )}
+                            {
+                                isShowExperienceFields ? (
+                                    <View style={styles.mh20}>
+                                        <HInput
+                                            _value={companyName}
+                                            label="Company Name"
+                                            placeHolder="Company Name"
+                                            toGetTextFieldValue={onChangeCompanyName}
+                                            _errorText={companyNameErrorMessage}
+                                            required={true}
+                                        />
+                                        <HInput
+                                            _value={experienceJobRole}
+                                            label="Job Role At Company"
+                                            placeHolder="Job Role At Company"
+                                            toGetTextFieldValue={onChangeExperienceJobRole}
+                                            _errorText={experienceJobRoleErrorMessage}
+                                            required={true}
+                                        />
+                                        <HInput
+                                            _value={companyLocation}
+                                            label="Company Location"
+                                            placeHolder="Comapny Location"
+                                            toGetTextFieldValue={onChangeCompanyLocation}
+                                            _errorText={companyLocationErrorMessage}
+                                            required={true}
+                                        />
+                                        <View style={localStyles.experincePeriodStyle}>
+                                            <View style={styles.flex}>
+                                                <TouchableOpacity onPress={onPressStartDate} style={[localStyles.periodboxStyle, { borderColor: Colors[colorScheme]?.borderColor }]}>
+                                                    <HText type={'M14'}>
+                                                        {startFromDate || 'Start Date'}
+                                                    </HText>
+                                                </TouchableOpacity>
+                                                {startDateErrorMessage && <HText type={'R12'} style={[localStyles.errorStyle, { color: Colors[colorScheme]?.danger }]}>
+                                                    {startDateErrorMessage}
+                                                </HText>}
+                                            </View>
+                                            <View style={styles.flex}>
 
-                                            <TouchableOpacity onPress={onPressEndDate} style={[localStyles.periodboxStyle, { borderColor: Colors[colorScheme]?.borderColor }]}>
-                                                <HText type={'M14'} >
-                                                    {endToDate || 'End Date'}
-                                                </HText>
-                                            </TouchableOpacity>
-                                            {endDateErrorMessage && <HText type={'R12'} style={[localStyles.errorStyle, { color: Colors[colorScheme]?.danger }]}>
-                                                {endDateErrorMessage}
-                                            </HText>}
+                                                <TouchableOpacity onPress={onPressEndDate} style={[localStyles.periodboxStyle, { borderColor: Colors[colorScheme]?.borderColor }]}>
+                                                    <HText type={'M14'} >
+                                                        {endToDate || 'End Date'}
+                                                    </HText>
+                                                </TouchableOpacity>
+                                                {endDateErrorMessage && <HText type={'R12'} style={[localStyles.errorStyle, { color: Colors[colorScheme]?.danger }]}>
+                                                    {endDateErrorMessage}
+                                                </HText>}
+                                            </View>
                                         </View>
+                                        <HButton
+                                            onPress={onPressConfirmAddExperience}
+                                            textType={"S16"}
+                                            color={Colors[colorScheme]?.white}
+                                            title={"Add Experience"}
+                                            containerStyle={[localStyles.addExperienceBtnStyle,
+                                            (startDateErrorMessage || endDateErrorMessage) && styles.mt10
+                                            ]}
+                                            bgColor={Colors[colorScheme]?.primary}
+                                        ></HButton>
                                     </View>
+                                ) :
                                     <HButton
-                                        onPress={onPressConfirmAddExperience}
+                                        onPress={onPressAddExperince}
                                         textType={"S16"}
-                                        color={Colors[colorScheme]?.white}
+                                        color={Colors[colorScheme]?.grayScale6}
                                         title={"Add Experience"}
-                                        containerStyle={[localStyles.addExperienceBtnStyle,
-                                        (startDateErrorMessage || endDateErrorMessage) && styles.mt10
-                                        ]}
-                                        bgColor={Colors[colorScheme]?.primary}
+                                        containerStyle={[localStyles.addExperienceBtnStyle, {
+                                            borderColor: Colors[colorScheme]?.primary, borderWidth: moderateScale(1),
+                                            borderStyle: 'dashed',
+                                            ...styles.mh20
+                                        }]}
+                                        bgColor={Colors[colorScheme]?.background}
                                     ></HButton>
-                                </View>
-                            ) :
-                                <HButton
-                                    onPress={onPressAddExperince}
-                                    textType={"S16"}
-                                    color={Colors[colorScheme]?.grayScale6}
-                                    title={"Add Experience"}
-                                    containerStyle={[localStyles.addExperienceBtnStyle, {
-                                        borderColor: Colors[colorScheme]?.primary, borderWidth: moderateScale(1),
-                                        borderStyle: 'dashed',
-                                        ...styles.mh20
-                                    }]}
-                                    bgColor={Colors[colorScheme]?.background}
-                                ></HButton>
-                        }
-
-
-
-
-                        <HButton
-                            // disabled={isNextDisabled}
-                            onPress={onPressNext}
-                            textType={"S16"}
-                            color={
-                                isNextDisabled
-                                    ? Colors[colorScheme]?.grayScale6
-                                    : Colors[colorScheme]?.white
                             }
-                            title={"Next"}
-                            containerStyle={[localStyles.btnStyle]}
-                            bgColor={
-                                isNextDisabled
-                                    ? Colors[colorScheme]?.grayScale5
-                                    : Colors[colorScheme]?.primary
-                            }
-                        ></HButton>
-                        <MonthYearPicker keyss='startdate' modalVisible={startfromModal} setModalVisible={setStartfromModal} setDate={setStartFromDate} />
-                        <MonthYearPicker key='enddate' modalVisible={endToModal} setModalVisible={setendToModal} setDate={setEndToDate} minMonthYear={startFromDate} />
-                    </View>
-                </ScrollView>
+
+
+
+
+                            <HButton
+                                // disabled={isNextDisabled}
+                                onPress={onPressNext}
+                                textType={"S16"}
+                                color={
+                                    isNextDisabled
+                                        ? Colors[colorScheme]?.grayScale6
+                                        : Colors[colorScheme]?.white
+                                }
+                                title={"Next"}
+                                containerStyle={[localStyles.btnStyle]}
+                                bgColor={
+                                    isNextDisabled
+                                        ? Colors[colorScheme]?.grayScale5
+                                        : Colors[colorScheme]?.primary
+                                }
+                            ></HButton>
+                            <MonthYearPicker keyss='startdate' modalVisible={startfromModal} setModalVisible={setStartfromModal} setDate={setStartFromDate} />
+                            <MonthYearPicker key='enddate' modalVisible={endToModal} setModalVisible={setendToModal} setDate={setEndToDate} minMonthYear={startFromDate} />
+                        </View>
+                    </ScrollView>
+                </HKeyBoardAvoidWrapper>
 
             </View>
         </HSafeAreaView>
