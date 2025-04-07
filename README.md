@@ -19,6 +19,15 @@ Hirely-JobFinder/
 - [Node.js](https://nodejs.org/) installed
 - [MongoDB](https://www.mongodb.com/) installed and running locally or a cloud database like MongoDB Atlas
 
+## Setup Mongodb Compass
+
+1. Download MongoDb Compass
+   https://www.mongodb.com/products/tools/compass
+
+2. Install Mogodb Compass
+
+3. Make a new connection in Mongodb server
+
 ### Steps to Run the Backend
 
 1. Navigate to the backend directory:
