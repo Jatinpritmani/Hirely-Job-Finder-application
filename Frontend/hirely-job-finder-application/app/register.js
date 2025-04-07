@@ -14,7 +14,7 @@ import { EyeIconDark, EyeIconLight, TickSquare, TickSquareChecked } from "../ass
 import HInput from "../components/common/HInput";
 import HText from "../components/common/HText";
 import HButton from "../components/common/HButton";
-import { moderateScale } from "../constants/constants";
+import { isUserRecruiter, moderateScale } from "../constants/constants";
 import { Colors } from "@/constants/Colors";
 import { isTruthyString, isValidEmail } from "../utils/validator";
 import { router } from "expo-router";
@@ -162,7 +162,8 @@ const Register = () => {
                 user_email: email,
                 user_password: password,
                 user_name: fullName,
-                user_type: currentUserType
+                user_type: currentUserType,
+                company_name: isUserRecruiter(currentUserType) ? companyName : undefined,
             }
             if (currentUserType == 'job_seeker') {
                 // route to complete profile if usertype is job_seeker

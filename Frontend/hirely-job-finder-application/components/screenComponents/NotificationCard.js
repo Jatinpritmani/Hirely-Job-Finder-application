@@ -20,20 +20,22 @@ const NotificationCard = ({ item, index, getAllNotifications }) => {
      * notification read api 
      */
     const readNotification = async () => {
-        let data =
-        {
-            "notification_id": item?.notification_id
-        }
-        try {
-            let response = await apiRequest("POST", READ_NOTIFICAITONS, data);
-            if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
-                getAllNotifications()
+        if (!item?.is_read) {
+            let data =
+            {
+                "notification_id": item?.notification_id
             }
-            else {
-                console.error("Error fetching notifications:", response?.message);
+            try {
+                let response = await apiRequest("POST", READ_NOTIFICAITONS, data);
+                if (response?.code == 'HJFA_MS_OK_200' && !response?.error_status) {
+                    getAllNotifications()
+                }
+                else {
+                    console.error("Error fetching notifications:", response?.message);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
-        } catch (error) {
-            console.error("Error fetching data:", error);
         }
         if (item?.type == "job_posted") {
             router.push({
@@ -45,6 +47,12 @@ const NotificationCard = ({ item, index, getAllNotifications }) => {
             router.push({
                 pathname: "/trackJob",
                 params: { jobDetail: JSON.stringify(item) }, // Pass parameters
+            })
+        }
+        if (item?.type == "job_application") {
+            router.push({
+                pathname: "/jobSeekerDetail",
+                params: { jobseekerDetail: JSON.stringify(item), index: index }, // Pass parameters
             })
         }
     }

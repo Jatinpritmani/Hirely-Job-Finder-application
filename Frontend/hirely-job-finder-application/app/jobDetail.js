@@ -32,7 +32,10 @@ const jobDetail = () => {
     const allJobList = useSelector(state => state.jobReducer.allJobList)
     const currentUserDetail = useSelector(state => state.userReducer.currentUserDetail)
     const loading = useSelector(state => state.jobReducer.loading)
-    const [numberOfLines, setNumberOfLines] = useState(3)
+    const [showReadMore, setShowReadMore] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+
+
 
     /**
      * Effect to update job details and responsibilities when loading changes.
@@ -139,15 +142,17 @@ const jobDetail = () => {
      * Handles the Read More button press.
      * Toggles the number of lines displayed for the job description.
      * */
-    const onPressReadMore = () => {
-        console.log('numberOfLines', numberOfLines);
+    const toggleReadMore = () => {
+        setExpanded(!expanded);
+    };
 
-        if (numberOfLines == 3) {
-            setNumberOfLines(0)
-        } else {
-            setNumberOfLines(3)
+    const handleTextLayout = (e) => {
+
+        const { lines } = e.nativeEvent;
+        if (lines.length > 3 && !showReadMore) {
+            setShowReadMore(true);
         }
-    }
+    };
 
     return (
         <HSafeAreaView containerStyle={styles.ph0} style={localStyles.main}>
@@ -193,14 +198,16 @@ const jobDetail = () => {
                     <HText type="S16" align='left' color={Colors[colorScheme]?.headerColor} style={styles.mt25}  >
                         {'Job Description'}
                     </HText>
-                    <HText type="R14" align='left' numberOfLines={numberOfLines} color={Colors[colorScheme]?.grayScale7} style={styles.mt15}  >
+                    <HText onTextLayout={handleTextLayout} type="R14" align='left' numberOfLines={expanded ? 0 : 3} color={Colors[colorScheme]?.grayScale7} style={styles.mt15}  >
                         {jobDetails?.summary}
                     </HText>
-                    <TouchableOpacity onPress={onPressReadMore} >
-                        <HText type="L12" color={Colors[colorScheme]?.subText} style={styles.mt10} >
-                            {numberOfLines == 3 ? '...Read More' : '...Read Less'}
-                        </HText>
-                    </TouchableOpacity>
+                    {showReadMore && (
+                        <TouchableOpacity onPress={toggleReadMore} >
+                            <HText type="L12" color={Colors[colorScheme]?.primary} style={styles.mt10} >
+                                {expanded ? '...Read Less' : '...Read More'}
+                            </HText>
+                        </TouchableOpacity>
+                    )}
                     <HText type="S16" align='left' color={Colors[colorScheme]?.headerColor} style={styles.mt25}  >
                         {'Responsibilities'}
                     </HText>
