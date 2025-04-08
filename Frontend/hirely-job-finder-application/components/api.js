@@ -1,7 +1,9 @@
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 
-export const API_BASE_URL = 'http://192.168.29.187:4402/hjfa/';
+// export const API_BASE_URL = 'http://192.168.29.187:4402/hjfa/';
+export const API_BASE_URL = 'http://35.182.112.171:4402/hjfa/';
+
 
 
 // iOS Simulator	http://localhost:4402
@@ -10,7 +12,8 @@ export const API_BASE_URL = 'http://192.168.29.187:4402/hjfa/';
 
 
 /// File Base Url 
-export const FILE_BASE_URL = 'http://192.168.29.187:4402/resumes/'  // use your machines IP here for real devices
+// export const FILE_BASE_URL = 'http://192.168.29.187:4402/resumes/'  // use your machines IP here for real devices
+export const FILE_BASE_URL = 'http://35.182.112.171:4402/resumes/'  // use your machines IP here for real devices
 
 
 // Common API function 
